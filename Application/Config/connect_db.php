@@ -3,10 +3,10 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "methode";
-
+$dbname = "journale";
+$po=3308;
 // Créer la connexion
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $username, $password, $dbname,$po);
 
 // Vérifier la connexion
 if ($conn->connect_error) {
