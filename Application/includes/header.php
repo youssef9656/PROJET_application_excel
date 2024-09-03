@@ -5,21 +5,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../includes/jquery.sheetjs.css">
-    <script src="../../includes/jquery.sheetjs.js"></script>
+<!--    <script src="../../includes/jquery.sheetjs.js"></script>-->
+    <link rel="stylesheet" href="../../includes/css/bootstrap.css">
+<!--    <script src="../../includes/js/bootstrap.js"></script>-->
+
     <title>Catalogue de Temps</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-        integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <style>
+
         .navbar-light {
-            background-color: #000060 !important;
+            background-color: #000060 ;
         }
 
         .navbar-light .navbar-brand, .navbar-light .nav-link {
-            color: #e7e8ea !important;
+            color: #e7e8ea;
         }
 
         .filter-inputs input {
@@ -86,27 +86,27 @@
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="#"><?= $pageName ?></a>
+    <nav class="navbar navbar-expand-lg navbar-light" style="padding-left: 20px">
+        <a class="navbar-brand" style="color: #2ecc71" href="#"><?= $pageName ?></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="../catalogueTemps/catalogueTemps.php?produit">Catalogue du temps</a>
+                <li class="nav-item item-hover">
+                    <a class="nav-link" href="../lot_et_souslot/lot_souslot.php">lot / sous lot</a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="../gamme/gamme.php">La gamme</a>
+                <li class="nav-item item-hover">
+                    <a class="nav-link" href="../"></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../polyvalence/polyvalence.php">La polyvalence</a>
+                <li class="nav-item item-hover">
+                    <a class="nav-link" href="../"></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../equilibrage/equilibrage.php">Équilibrage</a>
+                <li class="nav-item item-hover">
+                    <a class="nav-link" href="../"></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../operatrice/operatrice.php">Operatrice</a>
+                <li class="nav-item item-hover">
+                    <a class="nav-link" href="../"></a>
                 </li>
             </ul>
         </div>
