@@ -230,7 +230,7 @@
     element.offsetHeight; // eslint-disable-line no-unused-expressions
   };
   const getjQuery = () => {
-    if (window.jQuery && !document.body.hasAttribute('data-bs-no-jquery')) {
+    if (window.jQuery && !document.body.hasAttribute('data-bs-no-jquery123')) {
       return window.jQuery;
     }
     return null;

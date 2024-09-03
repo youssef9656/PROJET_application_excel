@@ -15,9 +15,8 @@ $stmt = $conn->prepare($query);
 $stmt->bind_param('si', $lot_name, $lot_id);
 
 if ($stmt->execute()) {
-    header('Location: lot_table.php');
-    exit();
+    echo json_encode(['success' => true]);
 } else {
-    die('Erreur lors de la mise à jour du lot.');
+    echo json_encode(['success' => false, 'error' => $stmt->error]);
 }
 ?>
