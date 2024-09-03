@@ -65,3 +65,4 @@ try {
     die('Erreur lors de la suppression du lot : ' . $e->getMessage());
 }
 ?>
+
