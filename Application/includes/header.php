@@ -97,7 +97,7 @@
                     <a class="nav-link" href="../lot_et_souslot/lot_souslot.php">lot / sous lot</a>
                 </li>
                 <li class="nav-item item-hover">
-                    <a class="nav-link" href="../"></a>
+                    <a class="nav-link" href="../fournisseurs/fournisseurs.php">fournisseurs</a>
                 </li>
                 <li class="nav-item item-hover">
                     <a class="nav-link" href="../"></a>

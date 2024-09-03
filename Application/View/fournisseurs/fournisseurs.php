@@ -1,10 +1,3 @@
-<?php
-include "../../Config/connect_db.php"
-
-
-
-?>
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -12,9 +5,17 @@ include "../../Config/connect_db.php"
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="../../includes/jquery.sheetjs.js"></script>
+
     <title>Document</title>
     <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
     <style>
+        #tbl_fournisseur {
+            width: 98%;
+            height: 80vh;
+            overflow: auto;
+            /*border: 1px solid #ccc;*/
+        }
 
         .form-container {
             display: none; /* Masquer le formulaire par défaut */
@@ -101,13 +102,26 @@ include "../../Config/connect_db.php"
         th {
             background-color: #f4f4f4;
         }
+        #tblfr th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
-<h1 class="ms-5">Les Fournisseurs</h1>
+<?php
+$pageName= 'Fournisseurs';
+include '../../includes/header.php';
+?>
+
+<h4 class="mt-2 ms-5">Les Fournisseurs  <button class="show-form-btn" onclick="toggleForm()">+</button> </h4>
 <div id="ajouter_fr" style="width: 100%">
 
-    <button class="show-form-btn" onclick="toggleForm()">+</button>
+
+
+
 
     <div class="form-container" id="formContainer">
         <span class="close-btn" onclick="toggleForm()">×</span>
@@ -195,6 +209,7 @@ include "../../Config/connect_db.php"
             </div>
             <div class="form-group">
                 <input type="submit" value="Envoyer">
+                <input type="submit" value="modifier" id="modifier_fr" style="display: none">
             </div>
         </form>
     </div>
@@ -202,7 +217,7 @@ include "../../Config/connect_db.php"
 
 
 
-<div id="tbl_fournisseur">
+<div id="tbl_fournisseur" class="container" >
 
 </div>
 
@@ -213,7 +228,7 @@ include "../../Config/connect_db.php"
         const formContainer = document.getElementById('formContainer');
         formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
     }
-
+    toggleForm()
     document.getElementById('fournisseurForm').addEventListener('submit', function(event) {
         event.preventDefault(); // Empêcher le rechargement de la page
 
@@ -227,13 +242,127 @@ include "../../Config/connect_db.php"
             .then(result => {
                 console.log('Réponse du serveur:', result);
                 // Vous pouvez ajouter ici une logique pour gérer la réponse du serveur
-                toggleForm(); // Masquer le formulaire après l'envoi
+                toggleForm();
+                $('#tbl_fournisseur').load('afficherfournisseur.php',function (){
+
+
+                });
             })
             .catch(error => {
                 console.error('Erreur:', error);
             });
     });
+    function toggleForm() {
+        $('#formContainer').toggle(); // Afficher ou cacher le formulaire
+    }
 
+    function editFournisseur(button, id) {
+        const formContainer = document.getElementById('formContainer');
+        formContainer.style.display = formContainer.style.display === '' ? 'block' : '';
+        document.getElementById("modifier_fr").style.display=""
+        var row = $(button).closest('tr');
+
+        // Extraire les valeurs des cellules de la ligne
+        var nom = row.find('td:eq(1)').text();
+        var prenom = row.find('td:eq(2)').text();
+        var cp = row.find('td:eq(3)').text();
+        var ville = row.find('td:eq(4)').text();
+        var pay = row.find('td:eq(5)').text();
+        var telFixe = row.find('td:eq(6)').text();
+        var telPortable = row.find('td:eq(7)').text();
+        var commande = row.find('td:eq(8)').text();
+        var conditionLivraison = row.find('td:eq(9)').text();
+        var coordLivreur = row.find('td:eq(10)').text();
+        var calendrierLivraison = row.find('td:eq(11)').text();
+        var detailsLivraison = row.find('td:eq(12)').text();
+        var conditionPaiement = row.find('td:eq(13)').text();
+        var facturation = row.find('td:eq(14)').text();
+        var certificatione = row.find('td:eq(15)').text();
+        var produitService = row.find('td:eq(16)').text();
+        var siuvi = row.find('td:eq(17)').text();
+        var mail = row.find('td:eq(18)').text();
+        var groupe = row.find('td:eq(19)').text();
+        var adresse = row.find('td:eq(20)').text();
+
+        // Remplir le formulaire avec les valeurs extraites
+        $('#formContainer #nom_fournisseur').val(nom);
+        $('#formContainer #prenom_fournisseur').val(prenom);
+        $('#formContainer #cp_fournisseur').val(cp);
+        $('#formContainer #ville_fournisseur').val(ville);
+        $('#formContainer #pay_fournisseur').val(pay);
+        $('#formContainer #telephone_fixe_fournisseur').val(telFixe);
+        $('#formContainer #telephone_portable_fournisseur').val(telPortable);
+        $('#formContainer #commande_fournisseur').val(commande);
+        $('#formContainer #condition_livraison').val(conditionLivraison);
+        $('#formContainer #coord_livreur').val(coordLivreur);
+        $('#formContainer #calendrier_livraison').val(calendrierLivraison);
+        $('#formContainer #details_livraison').val(detailsLivraison);
+        $('#formContainer #condition_paiement').val(conditionPaiement);
+        $('#formContainer #facturation').val(facturation);
+        $('#formContainer #certificatione').val(certificatione);
+        $('#formContainer #produit_service_fourni').val(produitService);
+        $('#formContainer #siuvi_fournisseur').val(siuvi);
+        $('#formContainer #mail_fournisseur').val(mail);
+        $('#formContainer #groupe_fournisseur').val(groupe);
+        $('#formContainer #adress_fournisseur').val(adresse);
+
+        // Ajouter un champ caché pour l'ID du fournisseur
+        $('#formContainer').append('<input type="hidden" id="fournisseur_id" name="fournisseur_id" value="' + id + '">');
+
+        // Afficher le formulaire
+    }
+
+    // Soumettre le formulaire via AJAX
+    document.getElementById("modifier_fr").addEventListener("click",function (event){
+            event.preventDefault(); // Empêche la soumission normale du formulaire
+
+            var formData = $(this).serialize(); // Sérialiser les données du formulaire
+
+            $.ajax({
+                url: 'modifyfournisseur.php', // URL de la page PHP qui traitera les données
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    // Gérer la réponse du serveur
+                    alert('Fournisseur modifié avec succès');
+                    toggleForm(); // Cacher le formulaire après l'envoi
+                    // Optionnel: Actualiser la liste des fournisseurs ou le tableau
+                },
+                error: function(xhr, status, error) {
+                    // Gérer les erreurs
+                    alert('Une erreur est survenue : ' + error);
+                }
+            });
+
+    })
+
+
+    function deleteFournisseur(id) {
+        // Code pour supprimer le fournisseur
+        if (confirm('Êtes-vous sûr de vouloir supprimer ce fournisseur ?')) {
+            fetch('deletefournisseur.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id_fournisseur=' + id
+            })
+                .then(response => response.text())
+                .then(result => {
+                    alert(result);
+                    location.reload(); // Recharger la page pour voir les changements
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                });
+        }
+    }
+
+            // Charger le contenu du tableau via AJAX
+    $('#tbl_fournisseur').load('afficherfournisseur.php #tblfr',function (){
+
+
+    });
 
 </script>
 

@@ -15,6 +15,24 @@ $result = $conn->query($sql);
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
         <title>Liste des Fournisseurs</title>
         <style>
+            #tblfr th {
+                background-color: #f2f2f2;
+                position: sticky;
+                top: 0;
+                z-index: 1;
+            }
+
+            /*#tblfr tbody {*/
+            /*    display: block;*/
+            /*    height: 300px; !* يمكنك ضبط الارتفاع كما تريد *!*/
+            /*    overflow-y: auto;*/
+            /*}*/
+
+            /*#tblfr thead, #tblfr tbody tr {*/
+            /*    display: table;*/
+            /*    width: 100%;*/
+            /*    table-layout: fixed;*/
+            /*}*/
             
             table {
                 width: 600px;
@@ -52,7 +70,7 @@ $result = $conn->query($sql);
     </head>
     <body>
         <h1>Liste des Fournisseurs</h1>
-        <table>
+        <table id="tblfr" class="table table-light  table-bordered table-hover " >
             <thead>
                 <tr>
                     <th>ID</th>
@@ -107,8 +125,8 @@ $result = $conn->query($sql);
                 <td>" . htmlspecialchars($row['groupe_fournisseur']) . "</td>
                 <td>" . htmlspecialchars($row['adress_fournisseur']) . "</td>
                 <td class='actions'>
-                    <button onclick='editFournisseur(" . $row['id_fournisseur'] . ")'>Modifier</button>
-                    <button onclick='deleteFournisseur(" . $row['id_fournisseur'] . ")'>Supprimer</button>
+                    <button onclick='editFournisseur(this, " . $row['id_fournisseur'] . ")' class='btn btn-success' style='font-size: 10px; width: 60px'>Modifier</button>
+                    <button onclick='deleteFournisseur(" . $row['id_fournisseur'] . ")' class='btn btn-danger' style='font-size: 10px;width: 60px'>Supprimer </button>
                 </td>
             </tr>";
     }}
@@ -117,33 +135,9 @@ $result = $conn->query($sql);
 ?>
  </tbody>
         </table>
-        <script>
-            function editFournisseur(id) {
-                // Code pour modifier le fournisseur
-                alert('Modifier fournisseur avec ID: ' + id);
-            }
+        </div>
 
-            function deleteFournisseur(id) {
-                // Code pour supprimer le fournisseur
-                if (confirm('Êtes-vous sûr de vouloir supprimer ce fournisseur ?')) {
-                    fetch('deletefournisseur.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: 'id_fournisseur=' + id
-                    })
-                    .then(response => response.text())
-                    .then(result => {
-                        alert(result);
-                        location.reload(); // Recharger la page pour voir les changements
-                    })
-                    .catch(error => {
-                        console.error('Erreur:', error);
-                    });
-                }
-            }
-        </script>
+
     </body>
     </html>";
 
