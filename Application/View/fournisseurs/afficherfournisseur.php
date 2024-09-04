@@ -1,12 +1,18 @@
 <?php
 // Inclure le fichier de configuration pour la connexion à la base de données
 include "../../Config/connect_db.php";
+$querySelect = "SELECT * FROM fournisseurs WHERE 1=1 ";
+if (isset($_GET['nom_fournisseur']) && !empty($_GET['nom_fournisseur']))
+    $querySelect .= " AND nom_fournisseur ='" . $_GET['nom_fournisseur'] . "' ";
+if (isset($_GET['prenom_fournisseur']) &&  !empty($_GET['prenom_fournisseur']))
+    $querySelect .= " AND prenom_fournisseur ='" . $_GET['prenom_fournisseur'] . "' ";
 
-// Requête pour récupérer tous les fournisseurs
-$sql = "SELECT * FROM fournisseurs";
-$result = $conn->query($sql);
 
-// Vérifier si la requête a renvoyé des résultats
+$paramsSelect = [];
+$result = $conn->query($querySelect);
+
+//$result = selectData($querySelect, $paramsSelect);
+
 ?>
 <!DOCTYPE html>
     <html lang='fr'>
@@ -126,7 +132,7 @@ $result = $conn->query($sql);
                 <td>" . htmlspecialchars($row['adress_fournisseur']) . "</td>
                 <td class='actions'>
                     <button onclick='editFournisseur(this, " . $row['id_fournisseur'] . ")' class='btn btn-success' style='font-size: 10px; width: 60px'>Modifier</button>
-                    <button onclick='deleteFournisseur(" . $row['id_fournisseur'] . ")' class='btn btn-danger' style='font-size: 10px;width: 60px'>Supprimer </button>
+<button onclick='deleteFournisseur(" . $row['id_fournisseur'] . ")' class='btn btn-danger' style='font-size: 10px; width: 60px;'>Supprimer</button>
                 </td>
             </tr>";
     }}
@@ -139,5 +145,5 @@ $result = $conn->query($sql);
 
 
     </body>
-    </html>";
+    </html>
 

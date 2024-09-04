@@ -14,7 +14,7 @@ if (isset($_POST['id_fournisseur'])) {
     }
 
     // Lier les paramètres
-    $stmt->bind_param("i", $id_fournisseur);
+    $stmt->bind_param("i", $id_fournisseur); // 'i' pour integer
 
     // Exécuter la requête
     if ($stmt->execute()) {

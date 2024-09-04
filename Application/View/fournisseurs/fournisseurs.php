@@ -1,3 +1,23 @@
+
+
+<?php include '../../Config/connect_db.php'; $pageName= 'Catalogue du temps'; ?>
+<?php
+$querySelect = "SELECT * FROM fournisseurs";
+$paramsSelect = [];
+$data = selectData($querySelect, $paramsSelect);
+
+$queryProduit = "SELECT DISTINCT nom_fournisseur FROM fournisseurs";
+$nom_fournisseur = selectData($queryProduit, []);
+
+$queryElement = "SELECT DISTINCT prenom_fournisseur FROM fournisseurs";
+$prenom_fournisseur = selectData($queryElement, []);
+
+//$queryFamille = "SELECT DISTINCT FamilleOperation FROM fournisseurs";
+//$Familles = selectData($queryFamille, []);
+?>
+
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,7 +33,8 @@
         #tbl_fournisseur {
             width: 98%;
             height: 80vh;
-            overflow: auto;
+            overflow-y: auto;
+
             /*border: 1px solid #ccc;*/
         }
 
@@ -62,18 +83,8 @@
             border-radius: 4px;
             font-size: 14px; /* Taille de police réduite pour les champs de saisie */
         }
-        .form-group input[type="submit"] {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            cursor: pointer;
-            width: auto; /* Largeur automatique pour le bouton d'envoi */
-            padding: 10px 20px;
-            font-size: 16px;
-        }
-        .form-group input[type="submit"]:hover {
-            background-color: #218838;
-        }
+
+
         .show-form-btn {
             margin-bottom: 20px;
             padding: 10px 20px;
@@ -116,13 +127,42 @@ $pageName= 'Fournisseurs';
 include '../../includes/header.php';
 ?>
 
-<h4 class="mt-2 ms-5">Les Fournisseurs  <button class="show-form-btn" onclick="toggleForm()">+</button> </h4>
+<div style="display:flex;flex-flow: row wrap ; ">
+    <h4 class="mt-2 ms-5">Les Fournisseurs  <button class="show-form-btn" onclick="toggleForm()">+</button> </h4>
+    <div class="col ms-5 mt-2">
+        <div class="filter-inputs mb-3">
+            <div class="form row" >
+                <div class="col-3">
+                    <input type="text" list='nom' class="form-control keepDatalist" placeholder="Nom"
+                           id="nom_fournisseur" onchange="filterTable()">
+                    <datalist id='nom'>
+                        <option value=""></option>
+                            <?php foreach($nom_fournisseur as $p):?>
+                        <option value='<?= $p['nom_fournisseur'] ?>'><?= $p['nom_fournisseur'] ?></option>
+                        <?php endforeach;?>
+                    </datalist>
+                </div>
+                <div class="col-3">
+                    <input type="text" list='prenom' class="form-control keepDatalist" placeholder="Prenom"
+                           id="prenom_fournisseur" onchange="filterTable()">
+                    <datalist id='prenom'>
+                        <option value=""></option>
+                        <?php foreach($prenom_fournisseur as $e):?>
+                            <option value='<?= $e['prenom_fournisseur'] ?>'><?= $e['prenom_fournisseur'] ?></option>
+                        <?php endforeach;?>
+                    </datalist>
+                </div>
+            </div>
+        </div>
+
+        <div id='tbl'>
+
+        </div>
+    </div>
+</div>
+
+
 <div id="ajouter_fr" style="width: 100%">
-
-
-
-
-
     <div class="form-container" id="formContainer">
         <span class="close-btn" onclick="toggleForm()">×</span>
         <h2>Formulaire d'ajout de fournisseur</h2>
@@ -208,12 +248,13 @@ include '../../includes/header.php';
                 <input type="text" id="adress_fournisseur" name="adress_fournisseur" required>
             </div>
             <div class="form-group">
-                <input type="submit" value="Envoyer">
-                <input type="submit" value="modifier" id="modifier_fr" style="display: none">
+                <input   type="submit" value="Enregistrer" id="Enregistrer" class="btn btn-primary w-100">
+                <button class="btn btn-success w-100" id="modifier_fr" style="display: " type="button" >Modifier</button>
             </div>
         </form>
     </div>
 </div>
+
 
 
 
@@ -224,9 +265,37 @@ include '../../includes/header.php';
 </body>
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const  nom_fournisseur = document.getElementById('nom_fournisseur');
+        const  prenom_fournisseur = document.getElementById('prenom_fournisseur');
+        window.filterTable = function() {
+
+
+            var url = 'afficherfournisseur.php?nom_fournisseur=' + encodeURI(nom_fournisseur.value) + '&prenom_fournisseur=' + encodeURI(prenom_fournisseur.value);
+            $('#tbl_fournisseur').load(url + ' #tblfr',function (){
+
+
+            });
+
+        }
+
+    });
+
+
+
+
+
     function toggleForm() {
         const formContainer = document.getElementById('formContainer');
         formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
+        vide()
+        document.getElementById('Enregistrer').style.display=""
+        document.getElementById('modifier_fr').style.display="none"
+
+
+
+
+
     }
     toggleForm()
     document.getElementById('fournisseurForm').addEventListener('submit', function(event) {
@@ -243,7 +312,7 @@ include '../../includes/header.php';
                 console.log('Réponse du serveur:', result);
                 // Vous pouvez ajouter ici une logique pour gérer la réponse du serveur
                 toggleForm();
-                $('#tbl_fournisseur').load('afficherfournisseur.php',function (){
+                $('#tbl_fournisseur').load('afficherfournisseur.php #tblfr',function (){
 
 
                 });
@@ -252,89 +321,89 @@ include '../../includes/header.php';
                 console.error('Erreur:', error);
             });
     });
-    function toggleForm() {
-        $('#formContainer').toggle(); // Afficher ou cacher le formulaire
-    }
+    // function toggleForm() {
+    //     $('#formContainer').toggle(); // Afficher ou cacher le formulaire
+    // }
 
     function editFournisseur(button, id) {
+        toggleForm()
+        document.getElementById('Enregistrer').style.display="none"
+        document.getElementById('modifier_fr').style.display=""
+
+
+
         const formContainer = document.getElementById('formContainer');
-        formContainer.style.display = formContainer.style.display === '' ? 'block' : '';
-        document.getElementById("modifier_fr").style.display=""
+        formContainer.style.display = 'block';
+
         var row = $(button).closest('tr');
 
-        // Extraire les valeurs des cellules de la ligne
-        var nom = row.find('td:eq(1)').text();
-        var prenom = row.find('td:eq(2)').text();
-        var cp = row.find('td:eq(3)').text();
-        var ville = row.find('td:eq(4)').text();
-        var pay = row.find('td:eq(5)').text();
-        var telFixe = row.find('td:eq(6)').text();
-        var telPortable = row.find('td:eq(7)').text();
-        var commande = row.find('td:eq(8)').text();
-        var conditionLivraison = row.find('td:eq(9)').text();
-        var coordLivreur = row.find('td:eq(10)').text();
-        var calendrierLivraison = row.find('td:eq(11)').text();
-        var detailsLivraison = row.find('td:eq(12)').text();
-        var conditionPaiement = row.find('td:eq(13)').text();
-        var facturation = row.find('td:eq(14)').text();
-        var certificatione = row.find('td:eq(15)').text();
-        var produitService = row.find('td:eq(16)').text();
-        var siuvi = row.find('td:eq(17)').text();
-        var mail = row.find('td:eq(18)').text();
-        var groupe = row.find('td:eq(19)').text();
-        var adresse = row.find('td:eq(20)').text();
+        $('#id_fournisseur').val(id);
+        $('#nom_fournisseur').val(row.find('td:eq(1)').text());
+        $('#prenom_fournisseur').val(row.find('td:eq(2)').text());
+        $('#cp_fournisseur').val(row.find('td:eq(3)').text());
+        $('#ville_fournisseur').val(row.find('td:eq(4)').text());
+        $('#pay_fournisseur').val(row.find('td:eq(5)').text());
+        $('#telephone_fixe_fournisseur').val(row.find('td:eq(6)').text());
+        $('#telephone_portable_fournisseur').val(row.find('td:eq(7)').text());
+        $('#commande_fournisseur').val(row.find('td:eq(8)').text());
+        $('#condition_livraison').val(row.find('td:eq(9)').text());
+        $('#coord_livreur').val(row.find('td:eq(10)').text());
+        $('#calendrier_livraison').val(row.find('td:eq(11)').text());
+        $('#details_livraison').val(row.find('td:eq(12)').text());
+        $('#condition_paiement').val(row.find('td:eq(13)').text());
+        $('#facturation').val(row.find('td:eq(14)').text());
+        $('#certificatione').val(row.find('td:eq(15)').text());
+        $('#produit_service_fourni').val(row.find('td:eq(16)').text());
+        $('#siuvi_fournisseur').val(row.find('td:eq(17)').text());
+        $('#mail_fournisseur').val(row.find('td:eq(18)').text());
+        $('#groupe_fournisseur').val(row.find('td:eq(19)').text());
+        $('#adress_fournisseur').val(row.find('td:eq(20)').text());
 
-        // Remplir le formulaire avec les valeurs extraites
-        $('#formContainer #nom_fournisseur').val(nom);
-        $('#formContainer #prenom_fournisseur').val(prenom);
-        $('#formContainer #cp_fournisseur').val(cp);
-        $('#formContainer #ville_fournisseur').val(ville);
-        $('#formContainer #pay_fournisseur').val(pay);
-        $('#formContainer #telephone_fixe_fournisseur').val(telFixe);
-        $('#formContainer #telephone_portable_fournisseur').val(telPortable);
-        $('#formContainer #commande_fournisseur').val(commande);
-        $('#formContainer #condition_livraison').val(conditionLivraison);
-        $('#formContainer #coord_livreur').val(coordLivreur);
-        $('#formContainer #calendrier_livraison').val(calendrierLivraison);
-        $('#formContainer #details_livraison').val(detailsLivraison);
-        $('#formContainer #condition_paiement').val(conditionPaiement);
-        $('#formContainer #facturation').val(facturation);
-        $('#formContainer #certificatione').val(certificatione);
-        $('#formContainer #produit_service_fourni').val(produitService);
-        $('#formContainer #siuvi_fournisseur').val(siuvi);
-        $('#formContainer #mail_fournisseur').val(mail);
-        $('#formContainer #groupe_fournisseur').val(groupe);
-        $('#formContainer #adress_fournisseur').val(adresse);
-
-        // Ajouter un champ caché pour l'ID du fournisseur
-        $('#formContainer').append('<input type="hidden" id="fournisseur_id" name="fournisseur_id" value="' + id + '">');
-
-        // Afficher le formulaire
-    }
-
-    // Soumettre le formulaire via AJAX
-    document.getElementById("modifier_fr").addEventListener("click",function (event){
-            event.preventDefault(); // Empêche la soumission normale du formulaire
-
-            var formData = $(this).serialize(); // Sérialiser les données du formulaire
-
+        $('#modifier_fr').on('click', function() {
+            var formData = {
+                id_fournisseur: id,
+                nom_fournisseur: $('#formContainer #nom_fournisseur').val(),
+                prenom_fournisseur: $('#formContainer #prenom_fournisseur').val(),
+                cp_fournisseur: $('#formContainer #cp_fournisseur').val(),
+                ville_fournisseur: $('#formContainer #ville_fournisseur').val(),
+                pay_fournisseur: $('#formContainer #pay_fournisseur').val(),
+                telephone_fixe_fournisseur: $('#formContainer #telephone_fixe_fournisseur').val(),
+                telephone_portable_fournisseur: $('#formContainer #telephone_portable_fournisseur').val(),
+                commande_fournisseur: $('#formContainer #commande_fournisseur').val(),
+                condition_livraison: $('#formContainer #condition_livraison').val(),
+                coord_livreur: $('#formContainer #coord_livreur').val(),
+                calendrier_livraison: $('#formContainer #calendrier_livraison').val(),
+                details_livraison: $('#formContainer #details_livraison').val(),
+                condition_paiement: $('#formContainer #condition_paiement').val(),
+                facturation: $('#formContainer #facturation').val(),
+                certificatione: $('#formContainer #certificatione').val(),
+                produit_service_fourni: $('#formContainer #produit_service_fourni').val(),
+                siuvi_fournisseur: $('#formContainer #siuvi_fournisseur').val(),
+                mail_fournisseur: $('#formContainer #mail_fournisseur').val(),
+                groupe_fournisseur: $('#formContainer #groupe_fournisseur').val(),
+                adress_fournisseur: $('#formContainer #adress_fournisseur').val()
+            };
             $.ajax({
-                url: 'modifyfournisseur.php', // URL de la page PHP qui traitera les données
-                type: 'POST',
+                type: "POST",
+                url: "modifyfournisseur.php",  //
                 data: formData,
                 success: function(response) {
-                    // Gérer la réponse du serveur
-                    alert('Fournisseur modifié avec succès');
-                    toggleForm(); // Cacher le formulaire après l'envoi
-                    // Optionnel: Actualiser la liste des fournisseurs ou le tableau
+                    alert(response);
+                    $('#formContainer').hide();
+                    $('#tbl_fournisseur').load('afficherfournisseur.php #tblfr',function (){
+
+
+                    });
                 },
-                error: function(xhr, status, error) {
-                    // Gérer les erreurs
-                    alert('Une erreur est survenue : ' + error);
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert("Error: " + textStatus + " - " + errorThrown);  // عرض رسالة خطأ إذا فشل الطلب
                 }
             });
+        });
 
-    })
+    }
+
+
 
 
     function deleteFournisseur(id) {
@@ -349,7 +418,7 @@ include '../../includes/header.php';
             })
                 .then(response => response.text())
                 .then(result => {
-                    alert(result);
+                    // alert(result);
                     location.reload(); // Recharger la page pour voir les changements
                 })
                 .catch(error => {
@@ -363,6 +432,34 @@ include '../../includes/header.php';
 
 
     });
+
+
+    function vide() {
+        $('#nom_fournisseur').val("");
+        $('#prenom_fournisseur').val("");
+        $('#cp_fournisseur').val("");
+        $('#ville_fournisseur').val("");
+        $('#pay_fournisseur').val("");
+        $('#telephone_fixe_fournisseur').val("");
+        $('#telephone_portable_fournisseur').val("");
+        $('#commande_fournisseur').val("");
+        $('#condition_livraison').val("");
+        $('#coord_livreur').val("");
+        $('#calendrier_livraison').val("");
+        $('#details_livraison').val("");
+        $('#condition_paiement').val("");
+        $('#facturation').val("");
+        $('#certificatione').val("");
+        $('#produit_service_fourni').val("");
+        $('#siuvi_fournisseur').val("");
+        $('#mail_fournisseur').val("");
+        $('#groupe_fournisseur').val("");
+        $('#adress_fournisseur').val("");
+    }
+
+
+
+
 
 </script>
 
