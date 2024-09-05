@@ -11,17 +11,17 @@ $sous_lot_name = selectData($queryProduit, []);
 
 
 
-$sqle1="SELECT * FROM article
-WHERE id_article IN (
-    SELECT article_id
-    FROM `sous_lot_articles`
-    WHERE sous_lot_id = (
-        SELECT sous_lot_id
-        FROM `sous_lots`
-        WHERE sous_lot_name = 'Sous-lot A1'
-    )
-);
-";
+//$sqle1="SELECT * FROM article
+//WHERE id_article IN (
+//    SELECT article_id
+//    FROM `sous_lot_articles`
+//    WHERE sous_lot_id = (
+//        SELECT sous_lot_id
+//        FROM `sous_lots`
+//        WHERE sous_lot_name = 'Sous-lot A1'
+//    )
+//);
+//";
 
 
 
