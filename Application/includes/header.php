@@ -87,23 +87,24 @@
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light" style="padding-left: 20px">
-        <a class="navbar-brand" style="color: #2ecc71" href="#"><?= $pageName ?></a>
+        <a class="navbar-brand" style="color: #4fff41;font-size: 25px;font-weight: bold" href="#"><?= $pageName ?></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item item-hover">
-                    <a class="nav-link" href="../lot_et_souslot/lot_souslot.php">lot / sous lot</a>
-                </li>
-                <li class="nav-item item-hover">
                     <a class="nav-link" href="../fournisseurs/fournisseurs.php">fournisseurs</a>
                 </li>
+                <li class="nav-item item-hover">
+                    <a class="nav-link" href="../lot_et_souslot/lot_souslot.php">lot / sous lot</a>
+                </li>
+
                 <li class="nav-item item-hover">
                     <a class="nav-link" href="../pageArticle/article.php">article</a>
                 </li>
                 <li class="nav-item item-hover">
-                    <a class="nav-link" href="../"></a>
+                    <a class="nav-link" href="../addarticle_souslot/article_sous_lot.php">BASE DE DONNÉES ARTICLES </a>
                 </li>
                 <li class="nav-item item-hover">
                     <a class="nav-link" href="../"></a>

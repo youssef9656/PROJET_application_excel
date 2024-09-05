@@ -26,18 +26,18 @@ WHERE id_article IN (
 <div id="tblarARlot">
     <?php if ($result->num_rows > 0): ?>
     <table class="table table-bordered" id="tblarticle">
-<!--        <thead>-->
-<!--        <tr>-->
-<!--            <th>ID</th>-->
-<!--            <th>Nom</th>-->
-<!--            <th>Description</th>-->
-<!--            <th>Stock Min</th>-->
-<!--            <th>Stock Initial</th>-->
-<!--            <th>Prix</th>-->
-<!--            <th>Unité</th>-->
-<!--            <th>Action</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Stock Min</th>
+            <th>Stock Initial</th>
+            <th>Prix</th>
+            <th>Unité</th>
+            <th>Action</th>
+        </tr>
+        </thead>
         <tbody>
         <?php while($row = $result->fetch_assoc()): ?>
             <tr id="<?php echo $row['id_article']; ?>">
