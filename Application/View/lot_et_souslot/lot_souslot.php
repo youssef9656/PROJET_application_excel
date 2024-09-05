@@ -521,6 +521,7 @@ if (isset($_GET['message'])) {
                     if (response.success) {
                         $('#ajouterLotModal').modal('hide');
                         alert('Le lot a été ajouté avec succès.');
+                        location.reload()
                         // Rechargez ou mettez à jour la table des lots ici si nécessaire
                         $.ajax({
                             url: 'lot_table.php',
