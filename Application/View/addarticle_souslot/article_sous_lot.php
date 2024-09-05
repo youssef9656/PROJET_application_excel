@@ -143,7 +143,6 @@ $sous_lot_name = selectData($queryProduit, []);
 
 <div style="display: flex;flex-flow: row">
 <div>
-    <h1>Article</h1>
     <div id="table1_ar"  style="width: 600px;overflow: auto;font-size: 10px">
 
     </div>

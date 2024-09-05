@@ -176,76 +176,77 @@ include '../../includes/header.php';
                 <input type="text" id="prenom_fournisseur" name="prenom_fournisseur" required>
             </div>
             <div class="form-group">
+                <label for="mail_fournisseur">Email :</label>
+                <input type="email" id="mail_fournisseur" name="mail_fournisseur" >
+            </div>
+            <div class="form-group">
                 <label for="cp_fournisseur">Code postal :</label>
-                <input type="text" id="cp_fournisseur" name="cp_fournisseur" required>
+                <input type="text" id="cp_fournisseur" name="cp_fournisseur" >
             </div>
             <div class="form-group">
                 <label for="ville_fournisseur">Ville :</label>
-                <input type="text" id="ville_fournisseur" name="ville_fournisseur" required>
+                <input type="text" id="ville_fournisseur" name="ville_fournisseur" >
             </div>
             <div class="form-group">
                 <label for="pay_fournisseur">Pays :</label>
-                <input type="text" id="pay_fournisseur" name="pay_fournisseur" required>
+                <input type="text" id="pay_fournisseur" name="pay_fournisseur" >
             </div>
             <div class="form-group">
                 <label for="telephone_fixe_fournisseur">Téléphone fixe :</label>
-                <input type="text" id="telephone_fixe_fournisseur" name="telephone_fixe_fournisseur" required>
+                <input type="text" id="telephone_fixe_fournisseur" name="telephone_fixe_fournisseur" >
             </div>
             <div class="form-group">
                 <label for="telephone_portable_fournisseur">Téléphone portable :</label>
-                <input type="text" id="telephone_portable_fournisseur" name="telephone_portable_fournisseur" required>
+                <input type="text" id="telephone_portable_fournisseur" name="telephone_portable_fournisseur" >
             </div>
             <div class="form-group">
                 <label for="commande_fournisseur">Commande fournisseur :</label>
-                <input type="text" id="commande_fournisseur" name="commande_fournisseur" required>
+                <input type="text" id="commande_fournisseur" name="commande_fournisseur" >
             </div>
             <div class="form-group">
                 <label for="condition_livraison">Conditions de livraison :</label>
-                <input type="text" id="condition_livraison" name="condition_livraison" required>
+                <input type="text" id="condition_livraison" name="condition_livraison" >
             </div>
             <div class="form-group">
                 <label for="coord_livreur">Coordonnées du livreur :</label>
-                <input type="text" id="coord_livreur" name="coord_livreur" required>
+                <input type="text" id="coord_livreur" name="coord_livreur" >
             </div>
             <div class="form-group">
                 <label for="calendrier_livraison">Calendrier de livraison :</label>
-                <input type="text" id="calendrier_livraison" name="calendrier_livraison" required>
+                <input type="text" id="calendrier_livraison" name="calendrier_livraison" >
             </div>
             <div class="form-group">
                 <label for="details_livraison">Détails de livraison :</label>
-                <input type="text" id="details_livraison" name="details_livraison" required>
+                <input type="text" id="details_livraison" name="details_livraison" >
             </div>
             <div class="form-group">
                 <label for="condition_paiement">Conditions de paiement :</label>
-                <input type="text" id="condition_paiement" name="condition_paiement" required>
+                <input type="text" id="condition_paiement" name="condition_paiement" >
             </div>
             <div class="form-group">
                 <label for="facturation">Facturation :</label>
-                <input type="text" id="facturation" name="facturation" required>
+                <input type="text" id="facturation" name="facturation" >
             </div>
             <div class="form-group">
                 <label for="certificatione">Certification :</label>
-                <input type="text" id="certificatione" name="certificatione" required>
+                <input type="text" id="certificatione" name="certificatione" >
             </div>
             <div class="form-group">
                 <label for="produit_service_fourni">Produit/Service fourni :</label>
-                <input type="text" id="produit_service_fourni" name="produit_service_fourni" required>
+                <input type="text" id="produit_service_fourni" name="produit_service_fourni" >
             </div>
             <div class="form-group">
                 <label for="siuvi_fournisseur">SIUVI fournisseur :</label>
-                <input type="text" id="siuvi_fournisseur" name="siuvi_fournisseur" required>
+                <input type="text" id="siuvi_fournisseur" name="siuvi_fournisseur" >
             </div>
-            <div class="form-group">
-                <label for="mail_fournisseur">Email :</label>
-                <input type="email" id="mail_fournisseur" name="mail_fournisseur" required>
-            </div>
+
             <div class="form-group">
                 <label for="groupe_fournisseur">Groupe du fournisseur :</label>
-                <input type="text" id="groupe_fournisseur" name="groupe_fournisseur" required>
+                <input type="text" id="groupe_fournisseur" name="groupe_fournisseur" >
             </div>
             <div class="form-group">
                 <label for="adress_fournisseur">Adresse du fournisseur :</label>
-                <input type="text" id="adress_fournisseur" name="adress_fournisseur" required>
+                <input type="text" id="adress_fournisseur" name="adress_fournisseur" >
             </div>
             <div class="form-group">
                 <input   type="submit" value="Enregistrer" id="Enregistrer" class="btn btn-primary w-100">
