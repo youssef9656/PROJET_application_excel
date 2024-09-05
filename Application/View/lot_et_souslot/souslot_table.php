@@ -13,13 +13,13 @@ if (!$result) {
     die('Erreur de requête : ' . mysqli_error($conn));
 }
 ?>
-<table id="sousLotsTable" class="table-bordered">
+<table id="sousLotsTable" class="table table-striped table-hover table-bordered">
     <thead>
     <tr>
-        <th style="min-width: 100px">Order</th>
-        <th style="min-width: 100px">Lot</th>
-        <th style="min-width: 100px">Sous-Lot</th><!-- Nouvelle colonne pour le nom du lot -->
-        <th style="min-width: 100px">Action</th> <!-- Colonne d'actions -->
+        <th style="min-width: 100px ; padding: 5px">Order</th>
+        <th style="min-width: 100px ; padding: 5px">Lot</th>
+        <th style="min-width: 100px ; padding: 5px">Sous-Lot</th><!-- Nouvelle colonne pour le nom du lot -->
+        <th style="min-width: 100px ; padding: 5px">Action</th> <!-- Colonne d'actions -->
     </tr>
     </thead>
     <tbody>
@@ -27,10 +27,10 @@ if (!$result) {
     // Afficher les données en HTML
     while ($row = mysqli_fetch_assoc($result)) {
         echo '<tr>';
-        echo '<td>' . htmlspecialchars($row['sous_lot_id']) . '</td>';
-        echo '<td>' . htmlspecialchars($row['lot_name']) . '</td>'; // Affichage du nom du lot
-        echo '<td>' . htmlspecialchars($row['sous_lot_name']) . '</td>';
-        echo '<td>';
+        echo '<td  style="padding: 5px">' . htmlspecialchars($row['sous_lot_id']) . '</td>';
+        echo '<td  style="padding: 5px">' . htmlspecialchars($row['lot_name']) . '</td>'; // Affichage du nom du lot
+        echo '<td  style="padding: 5px">' . htmlspecialchars($row['sous_lot_name']) . '</td>';
+        echo '<td  style="padding: 5px" class="text-center">';
         echo '<a href="#" style="color:green;" class="modify-btn" id="id1" data-id="' . htmlspecialchars($row['sous_lot_id']) . '" data-name="' . htmlspecialchars($row['sous_lot_name']) . '" data-lot-id="' . htmlspecialchars($row['lot_id']) . '">';
         echo '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/></svg>';
         echo '</a> | ';

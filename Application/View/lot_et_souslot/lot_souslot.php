@@ -1,4 +1,41 @@
 <?php $pageName = 'lot / sous lot'; include '../../config/connect_db.php'; include '../../includes/header.php'; ?>
+<?php
+if (isset($_GET['message'])) {
+    switch ($_GET['message']) {
+        case 'success':
+            echo '<div class="alert alert-dismissible alert-success">
+                    Le sous-lot a été ajouté avec succès.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>';
+            break;
+        case 'duplicate_sous_lot':
+            echo '<div class="alert alert-dismissible alert-danger">
+                        Erreur: Le sous-lot existe déjà dans un lot.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>';
+            break;
+        case 'error':
+            echo '<div class="alert alert-dismissible alert-danger">
+                        Erreur lors de l\'ajout du sous-lot.
+                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                   </div>';
+            break;
+        case 'empty_fields':
+            echo '<div class="alert alert-dismissible alert-danger">
+                        Erreur: Tous les champs sont requis.
+                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                   </div>';
+            break;
+
+        case 'fournisseur_deleted':
+            echo '<div class="alert alert-dismissible alert-success">
+                        Fournisseur supprimé avec succès !
+                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                   </div>';
+            break;
+    }
+}
+?>
 
 <!doctype html>
 <html lang="en">
@@ -28,6 +65,7 @@
         align-items: center;
         flex-direction: column;
         margin-top: 40px;
+        /*overflow: scroll;*/
     }
     .table1 ,.table2{
         margin-top: 50px;
@@ -53,6 +91,19 @@
         display: flex;
         justify-content: space-between;
         margin-top: 20px;
+    }
+    .table-fournisseur{
+        margin-top: 40px;
+    }
+    .table-fournisseur-tete{
+        margin: 30px;
+        display: flex;
+    }
+    .table-fournisseur-tete{
+        font-size: 30px;
+        color: transparent;
+        background-image: linear-gradient(-20deg , #00a357, #21ffe8);
+        background-clip: text;
     }
 </style>
 
@@ -170,6 +221,84 @@
     </div>
 </div>
 
+<!-- Modal pour ajouter fournisseur -->
+<div class="modal fade" id="ajouterFournisseurModal" tabindex="-1" aria-labelledby="ajouterFournisseurModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ajouterFournisseurModalLabel">Ajouter un Fournisseur au Lot</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="ajouterFournisseurForm">
+                    <div class="mb-3">
+                        <label for="lot_id" class="form-label">Nom du Lot</label>
+                        <select class="form-select" id="lot_id" name="lot_id" required>
+                            <option value="" selected disabled>Choisir un lot</option>
+                            <?php
+                            // Récupérer les lots depuis la base de données
+                            $lotQuery = "SELECT lot_id, lot_name FROM lots";
+                            $lotResult = mysqli_query($conn, $lotQuery);
+                            while ($lotRow = mysqli_fetch_assoc($lotResult)) {
+                                echo '<option value="' . htmlspecialchars($lotRow['lot_id']) . '">' . htmlspecialchars($lotRow['lot_name']) . '</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fournisseur_id" class="form-label">Nom du Fournisseur</label>
+                        <select class="form-select" id="fournisseur_id" name="fournisseur_id" required>
+                            <option value="" selected disabled>Choisir un fournisseur</option>
+                            <?php
+                            // Récupérer les fournisseurs depuis la base de données
+                            $fournisseurQuery = "SELECT id_fournisseur, nom_fournisseur FROM fournisseurs";
+                            $fournisseurResult = mysqli_query($conn, $fournisseurQuery);
+                            while ($fournisseurRow = mysqli_fetch_assoc($fournisseurResult)) {
+                                echo '<option value="' . htmlspecialchars($fournisseurRow['id_fournisseur']) . '">' . htmlspecialchars($fournisseurRow['nom_fournisseur']) . '</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div id="ajouterFournisseurResult"></div>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour modifier fournisseur -->
+<div class="modal fade" id="modifierFournisseurModal" tabindex="-1" role="dialog" aria-labelledby="modifierFournisseurModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modifierFournisseurModalLabel">Modifier Fournisseur</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="modifierFournisseurForm">
+                    <div class="form-group">
+                        <label for="fournisseurNom">Nom du Fournisseur</label>
+                        <input type="text" class="form-control" id="fournisseurNom" name="fournisseurNom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lotSelect">Lot Associé</label>
+                        <select class="form-control" id="lotSelect" name="lotSelect" required>
+                            <!-- Options chargées via AJAX -->
+                        </select>
+                    </div>
+                    <input type="hidden" id="fournisseurId" name="fournisseurId">
+                    <button type="submit" class="btn btn-primary">Sauvegarder les Modifications</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 <div class="les-tables">
     <div class="div-table1">
@@ -185,7 +314,49 @@
 
 
         <div class="table1">
-            <!-- Le tableau de données sera inséré ici via AJAX -->
+            <!-- le tableau de donnêes de lot           -->
+        </div>
+        <div class="table-fournisseur-tete">
+            <div>Gérer vos fournisseurs ici</div> <!-- Bouton pour ouvrir la modal d'ajout de fournisseur -->
+            <button type="button" style="background: green; color:white; border: 1px solid white ; border-radius: 4px; font-size: 20px ; margin-left: 10px;padding-bottom: 4px" class="btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterFournisseurModal">
+                +
+            </button>
+        </div>
+        <!-- Inputs pour filtrer les données -->
+        <div class="mb-3">
+            <label for="filterLotfournisseur" class="form-label">Filtrer par Lot</label>
+            <input type="text" id="filterLotfourniseur" class="form-control" placeholder="Tapez pour filtrer" list="lotOptions">
+            <datalist id="lotOptions">
+                <?php
+                // Récupérer les lots depuis la base de données pour le datalist
+                $lotQuery = "SELECT DISTINCT l.lot_name FROM lot_fournisseurs lf JOIN lots l ON lf.lot_id = l.lot_id";
+                $lotResult = mysqli_query($conn, $lotQuery);
+                while ($lotRow = mysqli_fetch_assoc($lotResult)) {
+                    echo '<option value="' . htmlspecialchars($lotRow['lot_name']) . '">';
+                }
+
+                ?>
+            </datalist>
+        </div>
+
+        <div class="mb-3">
+            <label for="filterFournisseur" class="form-label">Filtrer par Fournisseur</label>
+            <input type="text" id="filterFournisseur" class="form-control" placeholder="Tapez pour filtrer" list="fournisseurOptions">
+            <datalist id="fournisseurOptions">
+                <?php
+                // Récupérer les fournisseurs depuis la base de données pour le datalist
+                $fournisseurQuery = "SELECT DISTINCT f.nom_fournisseur FROM lot_fournisseurs lf JOIN fournisseurs f ON lf.id_fournisseur = f.id_fournisseur";
+                $fournisseurResult = mysqli_query($conn, $fournisseurQuery);
+                while ($fournisseurRow = mysqli_fetch_assoc($fournisseurResult)) {
+                    echo '<option value="' . htmlspecialchars($fournisseurRow['nom_fournisseur']) . '">';
+                }
+                ?>
+            </datalist>
+        </div>
+
+
+        <div class="table-fournisseur">
+            <!-- Le tableau de données de fournisseurs            -->
         </div>
     </div>
 
@@ -248,7 +419,7 @@
 
         <div class="table2">
 
-            <!-- Le tableau de données sera inséré ici via AJAX -->
+            <!-- Le tableau de données de sous lots -->
         </div>
     </div>
 
@@ -321,10 +492,17 @@
         });
     });
 
+
+    // ajouter un lot
+
     $(document).ready(function() {
         // Gérer le clic sur le bouton d'ajout de lot
         $('#openAddLotModal').on('click', function(e) {
             e.preventDefault();
+
+            // Réinitialiser le formulaire et les messages d'erreur/succès
+            $('#ajouterLotForm')[0].reset();
+            $('#ajouterLotResult').html('');
 
             // Ouvrir le modal
             $('#ajouterLotModal').modal('show');
@@ -351,6 +529,9 @@
                                 $('.table1').html(response);
                             }
                         });
+                        // Réinitialiser le formulaire et les messages d'erreur/succès
+                        $('#ajouterLotForm')[0].reset();
+                        $('#ajouterLotResult').html('');
                     } else {
                         $('#ajouterLotResult').html('<div class="alert alert-danger">Erreur: ' + response.error + '</div>');
                     }
@@ -361,6 +542,7 @@
             });
         });
     });
+
 
 // sous lot codes
 
@@ -511,6 +693,144 @@
     }
     });
 
+    //     fournisseurs codes
+
+    $(document).ready(function() {
+        // Fonction pour charger les données dans le div
+        function loadFournisseurTable() {
+            $.ajax({
+                url: 'fournisseur_table.php', // URL de votre fichier PHP
+                method: 'GET',
+                success: function(response) {
+                    $('.table-fournisseur').html(response); // Injecter le tableau HTML dans le div
+                },
+                error: function(xhr, status, error) {
+                    $('.table-fournisseur').html('<div class="alert alert-danger">Erreur de connexion au serveur.</div>');
+                }
+            });
+        }
+
+        // Charger la table lors du chargement de la page
+        loadFournisseurTable();
+    });
+
+
+//     ajouter fournisseur
+
+    $(document).ready(function() {
+        // Gérer la soumission du formulaire d'ajout de fournisseur
+        $('#ajouterFournisseurForm').on('submit', function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: 'ajouter_fournisseur.php',
+                method: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        $('#ajouterFournisseurModal').modal('hide');
+                        alert('Le fournisseur a été ajouté avec succès.');
+                        location.reload()
+                        // Rechargez ou mettez à jour la table des fournisseurs si nécessaire
+                    } else {
+                        $('#ajouterFournisseurResult').html('<div class="alert alert-danger">Erreur: ' + response.error + '</div>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('#ajouterFournisseurResult').html('<div class="alert alert-danger">Erreur de connexion au serveur.</div>');
+                }
+            });
+        });
+    });
+
+    //  filtrer fournisseurs
+
+    document.addEventListener('DOMContentLoaded', function() {
+        function filterTable() {
+            var lotFilter = document.getElementById('filterLotfourniseur').value.toLowerCase();
+            var fournisseurFilter = document.getElementById('filterFournisseur').value.toLowerCase();
+
+            var rows = document.querySelectorAll('#fournisseursTable tbody tr');
+
+            rows.forEach(function(row) {
+                var lotName = row.cells[1].textContent.toLowerCase(); // Colonne Lot
+                var fournisseurName = row.cells[2].textContent.toLowerCase(); // Colonne Fournisseur
+
+                var isLotMatch = lotName.includes(lotFilter);
+                var isFournisseurMatch = fournisseurName.includes(fournisseurFilter);
+
+                if (isLotMatch && isFournisseurMatch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        document.getElementById('filterLotfourniseur').addEventListener('input', filterTable);
+        document.getElementById('filterFournisseur').addEventListener('input', filterTable);
+    });
+
+//     modifier fournisseur
+
+    $(document).ready(function() {
+        // Lorsque le bouton de modification est cliqué
+        setTimeout(()=>{
+
+            $('.modifierFournisseurBtn').on('click', function() {
+                var fournisseurId = $(this).data('id');
+                var fournisseurNom = $(this).data('name');
+
+                // Remplir les champs du modal
+                $('#fournisseurId').val(fournisseurId);
+                $('#fournisseurNom').val(fournisseurNom);
+
+                // Charger les options de lot via AJAX
+                $.ajax({
+                    url: 'get_lots.php',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        var options = '';
+                        $.each(data, function(index, lot) {
+                            options += '<option value="' + lot.id + '">' + lot.name + '</option>';
+                        });
+                        $('#lotSelect').html(options);
+                    },
+                    error: function() {
+                        alert('Erreur lors du chargement des lots.');
+                    }
+                });
+
+                // Afficher le modal
+                $('#modifierFournisseurModal').modal('show');
+            });
+
+            // Lorsque le formulaire est soumis
+            $('#modifierFournisseurForm').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: 'modifier_fournisseur.php',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        alert(response); // Afficher le message de succès
+                        $('#modifierFournisseurModal').modal('hide');
+                        // Rechargez la table ou mettez à jour le DOM comme nécessaire
+                    },
+                    error: function() {
+                        alert('Erreur lors de la modification du fournisseur.');
+                    }
+                });
+            });
+
+
+
+
+        } , 100)
+    });
 
 
 
