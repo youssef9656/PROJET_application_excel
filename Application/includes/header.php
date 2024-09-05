@@ -100,7 +100,7 @@
                     <a class="nav-link" href="../fournisseurs/fournisseurs.php">fournisseurs</a>
                 </li>
                 <li class="nav-item item-hover">
-                    <a class="nav-link" href="../"></a>
+                    <a class="nav-link" href="../pageArticle/article.php">article</a>
                 </li>
                 <li class="nav-item item-hover">
                     <a class="nav-link" href="../"></a>
