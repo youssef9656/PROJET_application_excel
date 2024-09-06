@@ -9,20 +9,38 @@ $data = selectData($querySelect, $paramsSelect);
 $queryProduit = "SELECT DISTINCT lot_name FROM lots";
 $lot_name = selectData($queryProduit, []);
 
-$queryElement = "SELECT DISTINCT prenom_fournisseur FROM fournisseurs";
-$prenom_fournisseur = selectData($queryElement, []);
 
-if( !empty(isset($_GET["lot_name"]))){
+if( isset($_GET["lot_name"]) && empty(isset($_GET["sous_lot_name"]))){
     $lot_name = $_GET["lot_name"];
+
     $query2 = "
     SELECT sous_lots.sous_lot_id, sous_lots.sous_lot_name, sous_lots.lot_id, lots.lot_name
     FROM sous_lots
     JOIN lots ON sous_lots.lot_id = lots.lot_id where lots.lot_name ='$lot_name'";
-    $result2 = mysqli_query($conn, $query2);
+
+    $queryProduit = "SELECT DISTINCT lot_name FROM lots";
+
+    $lot_name = selectData($queryProduit, []);
+    $sous_lot_name = mysqli_query($conn, $query2);
+
 };
 
-if (!empty(isset($_GET["lot_name"])) && !empty(isset($_GET["lot_name"]))){
+if (!empty(isset($_GET["lot_name"])) && !empty(isset($_GET["sous_lot_name"]))){
+    echo "hhhh";
+    $lot_name = $_GET["lot_name"];
+    $sous_lot_name = $_GET["sous_lot_name"];
 
+    $sql ="SELECT * FROM article
+WHERE id_article IN (
+    SELECT article_id
+    FROM `sous_lot_articles`
+    WHERE sous_lot_id = (
+        SELECT sous_lot_id
+        FROM `sous_lots`
+        WHERE sous_lot_name = '$sous_lot_name'
+    )
+);";
+ $result = $conn->query($sql);
 
 
 
@@ -52,10 +70,10 @@ include '../../includes/header.php';
         <h4 class="mt-2 ms-5"> Opration  <button class="show-form-btn" onclick="toggleForm()">+</button> </h4>
         <div class="col ms-5 mt-2">
             <div class="filter-inputs mb-3">
-                <div class="form row" >
+                <div class="form row"  id="divlotSous">
                     <div class="col-3">
                         <input type="text" list='nom' class="form-control keepDatalist" placeholder="Nom"
-                               id="nom_fournisseur" onchange="filterTable()">
+                               id="lot_name" onchange="filterTable()">
                         <datalist id='nom'>
                             <option value=""></option>
                             <?php foreach($lot_name as $p):?>
@@ -63,13 +81,13 @@ include '../../includes/header.php';
                             <?php endforeach;?>
                         </datalist>
                     </div>
-                    <div class="col-3">
-                        <input type="text" list='prenom' class="form-control keepDatalist" placeholder="Prenom"
-                               id="prenom_fournisseur" onchange="filterTable()">
-                        <datalist id='prenom'>
+                    <div class="col-3" id="divsous_lot">
+                        <input type="text" list='sous_lot' class="form-control keepDatalist" placeholder="Prenom"
+                               id="sous_lot_name" >
+                        <datalist id='sous_lot'>
                             <option value=""></option>
-                            <?php foreach($prenom_fournisseur as $e):?>
-                                <option value='<?= $e['prenom_fournisseur'] ?>'><?= $e['prenom_fournisseur'] ?></option>
+                            <?php foreach($sous_lot_name as $e):?>
+                                <option value='<?= $e['sous_lot_name'] ?>'><?= $e['sous_lot_name'] ?></option>
                             <?php endforeach;?>
                         </datalist>
                     </div>
@@ -92,6 +110,26 @@ include '../../includes/header.php';
 </body>
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const  lot_name = document.getElementById('lot_name');
+        const  sous_lot_name = document.getElementById('sous_lot_name');
+        window.filterTable = function() {
+
+
+            var url = 'option_Ent_Sor.php?lot_name=' + encodeURI(lot_name.value) + '&sous_lot_name=' + encodeURI(sous_lot_name.value);
+            $("#divsous_lot").load(url + ' #divsous_lot',function (){
+                console.log(lot_name.value)
+                console.log(sous_lot_name.value)
+
+                 document.getElementById('lot_name').value= lot_name.value
+                 // document.getElementById('sous_lot_name').value= sous_lot_name
+            });
+
+        }
+
+    });
+
+
 
     $('#tab1').load('operation_table.php #tableoperationdiv');
 
