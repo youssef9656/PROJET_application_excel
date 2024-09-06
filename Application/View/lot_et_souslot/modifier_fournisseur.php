@@ -1,28 +1,29 @@
 <?php
 include '../../config/connect_db.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $fournisseurId = $_POST['fournisseurId'];
-    $fournisseurNom = $_POST['fournisseurNom'];
-    $lotId = $_POST['lotSelect'];
+// Vérifier si les données ont été envoyées via POST
+if (isset($_POST['id']) && isset($_POST['fournisseur_id']) && isset($_POST['lot_id'])) {
+    // Récupérer les données envoyées
+    $id = mysqli_real_escape_string($conn, $_POST['id']);
+    $fournisseurId = mysqli_real_escape_string($conn, $_POST['fournisseur_id']);
+    $lotId = mysqli_real_escape_string($conn, $_POST['lot_id']);
 
-    // Préparer la requête SQL pour mettre à jour le fournisseur
+    // Préparer la requête SQL pour mettre à jour les données
     $query = "
-        UPDATE lot_fournisseurs
-        JOIN fournisseurs ON lot_fournisseurs.id_fournisseur = fournisseurs.id_fournisseur
-        SET fournisseurs.nom_fournisseur = ?, lot_fournisseurs.lot_id = ?
-        WHERE fournisseurs.id_fournisseur = ?
+        UPDATE lot_fournisseurs 
+        SET lot_id = '$lotId', id_fournisseur = '$fournisseurId' 
+        WHERE id = '$id'
     ";
 
-    $stmt = mysqli_prepare($conn, $query);
-    mysqli_stmt_bind_param($stmt, 'sii', $fournisseurNom, $lotId, $fournisseurId);
-
-    if (mysqli_stmt_execute($stmt)) {
-        echo 'Succès';
+    // Exécuter la requête
+    if (mysqli_query($conn, $query)) {
+        echo json_encode(['status' => 'success']);
     } else {
-        echo 'Erreur : ' . mysqli_error($conn);
+        echo json_encode(['status' => 'error', 'message' => mysqli_error($conn)]);
     }
 
-    mysqli_stmt_close($stmt);
+    mysqli_close($conn);
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Données manquantes.']);
 }
 ?>
