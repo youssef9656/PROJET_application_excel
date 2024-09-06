@@ -175,7 +175,7 @@ if (isset($_GET['message'])) {
                             $lotQuery = "SELECT lot_id, lot_name FROM lots";
                             $lotResult = mysqli_query($conn, $lotQuery);
                             while ($lotRow = mysqli_fetch_assoc($lotResult)) {
-                                echo '<opration value="' . htmlspecialchars($lotRow['lot_id']) . '">' . htmlspecialchars($lotRow['lot_name']) . '</opration>';
+                                echo '<option value="' . htmlspecialchars($lotRow['lot_id']) . '">' . htmlspecialchars($lotRow['lot_name']) . '</option>';
                             }
                             ?>
                         </select>
@@ -240,7 +240,7 @@ if (isset($_GET['message'])) {
                             $lotQuery = "SELECT lot_id, lot_name FROM lots";
                             $lotResult = mysqli_query($conn, $lotQuery);
                             while ($lotRow = mysqli_fetch_assoc($lotResult)) {
-                                echo '<opration value="' . htmlspecialchars($lotRow['lot_id']) . '">' . htmlspecialchars($lotRow['lot_name']) . '</opration>';
+                                echo '<option value="' . htmlspecialchars($lotRow['lot_id']) . '">' . htmlspecialchars($lotRow['lot_name']) . '</option>';
                             }
                             ?>
                         </select>
@@ -254,7 +254,7 @@ if (isset($_GET['message'])) {
                             $fournisseurQuery = "SELECT id_fournisseur, nom_fournisseur FROM fournisseurs";
                             $fournisseurResult = mysqli_query($conn, $fournisseurQuery);
                             while ($fournisseurRow = mysqli_fetch_assoc($fournisseurResult)) {
-                                echo '<opration value="' . htmlspecialchars($fournisseurRow['id_fournisseur']) . '">' . htmlspecialchars($fournisseurRow['nom_fournisseur']) . '</opration>';
+                                echo '<option value="' . htmlspecialchars($fournisseurRow['id_fournisseur']) . '">' . htmlspecialchars($fournisseurRow['nom_fournisseur']) . '</option>';
                             }
                             ?>
                         </select>
@@ -332,7 +332,7 @@ if (isset($_GET['message'])) {
                 $lotQuery = "SELECT DISTINCT l.lot_name FROM lot_fournisseurs lf JOIN lots l ON lf.lot_id = l.lot_id";
                 $lotResult = mysqli_query($conn, $lotQuery);
                 while ($lotRow = mysqli_fetch_assoc($lotResult)) {
-                    echo '<opration value="' . htmlspecialchars($lotRow['lot_name']) . '">';
+                    echo '<option value="' . htmlspecialchars($lotRow['lot_name']) . '">';
                 }
 
                 ?>
@@ -348,7 +348,7 @@ if (isset($_GET['message'])) {
                 $fournisseurQuery = "SELECT DISTINCT f.nom_fournisseur FROM lot_fournisseurs lf JOIN fournisseurs f ON lf.id_fournisseur = f.id_fournisseur";
                 $fournisseurResult = mysqli_query($conn, $fournisseurQuery);
                 while ($fournisseurRow = mysqli_fetch_assoc($fournisseurResult)) {
-                    echo '<opration value="' . htmlspecialchars($fournisseurRow['nom_fournisseur']) . '">';
+                    echo '<option value="' . htmlspecialchars($fournisseurRow['nom_fournisseur']) . '">';
                 }
                 ?>
             </datalist>
@@ -377,7 +377,7 @@ if (isset($_GET['message'])) {
                     $query = "SELECT DISTINCT sous_lot_id FROM sous_lots";
                     $result = mysqli_query($conn, $query);
                     while ($row = mysqli_fetch_assoc($result)) {
-                        echo '<opration value="' . htmlspecialchars($row['sous_lot_id']) . '">';
+                        echo '<option value="' . htmlspecialchars($row['sous_lot_id']) . '">';
                     }
                     ?>
                 </datalist>
@@ -391,7 +391,7 @@ if (isset($_GET['message'])) {
                     $query = "SELECT DISTINCT lot_name FROM lots";
                     $result = mysqli_query($conn, $query);
                     while ($row = mysqli_fetch_assoc($result)) {
-                        echo '<opration value="' . htmlspecialchars($row['lot_name']) . '">';
+                        echo '<option value="' . htmlspecialchars($row['lot_name']) . '">';
                     }
                     ?>
                 </datalist>
@@ -407,7 +407,7 @@ if (isset($_GET['message'])) {
                     $query = "SELECT DISTINCT sous_lot_name FROM sous_lots";
                     $result = mysqli_query($conn, $query);
                     while ($row = mysqli_fetch_assoc($result)) {
-                        echo '<opration value="' . htmlspecialchars($row['sous_lot_name']) . '">';
+                        echo '<option value="' . htmlspecialchars($row['sous_lot_name']) . '">';
                     }
                     ?>
                 </datalist>
@@ -610,7 +610,7 @@ if (isset($_GET['message'])) {
                     var lots = JSON.parse(xhr.responseText);
 
                     lots.forEach(function(lot) {
-                        var option = document.createElement('opration');
+                        var option = document.createElement('option');
                         option.value = lot.id;
                         option.textContent = lot.name;
                         if (lot.id == selectedLotId) {
@@ -795,7 +795,7 @@ if (isset($_GET['message'])) {
                     success: function(data) {
                         var options = '';
                         $.each(data, function(index, lot) {
-                            options += '<opration value="' + lot.id + '">' + lot.name + '</opration>';
+                            options += '<option value="' + lot.id + '">' + lot.name + '</option>';
                         });
                         $('#lotSelect').html(options);
                     },
