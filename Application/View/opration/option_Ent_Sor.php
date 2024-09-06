@@ -109,6 +109,7 @@ include '../../includes/header.php';
 
 </body>
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const  lot_name = document.getElementById('lot_name');
