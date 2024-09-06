@@ -17,15 +17,54 @@ WHERE id_article IN (
     )
 );
 ";
-    $result = $conn->query($sql);
+$result = $conn->query($sql);
 
+
+
+$query2 = "
+    SELECT sous_lots.sous_lot_id, sous_lots.sous_lot_name, sous_lots.lot_id, lots.lot_name
+    FROM sous_lots
+    JOIN lots ON sous_lots.lot_id = lots.lot_id where sous_lots.sous_lot_name ='$sous_lot_name'
+";
+$result2 = mysqli_query($conn, $query2);
 }
+
+
+$query3 = "
+    SELECT f.id_fournisseur, f.nom_fournisseur, l.lot_name
+    FROM lot_fournisseurs lf
+    JOIN fournisseurs f ON lf.id_fournisseur = f.id_fournisseur
+    JOIN lots l ON lf.lot_id = l.lot_id where l.lot_name =( SELECT  lots.lot_name FROM sous_lots JOIN lots ON sous_lots.lot_id = lots.lot_id where sous_lots.sous_lot_name ='$sous_lot_name') 
+    ORDER BY l.lot_name
+";
+$result3 = mysqli_query($conn, $query3);
+
 
 ?>
 
 <div id="tblarARlot">
+    <table  class="table table-bordered text-center m-0"  style="font-size: 10px;height: 100px" >
+        <thead><th >lot</th><th>Fournisseur</th></thead>
+        <tr>
+    <?php
+    while ($row = mysqli_fetch_assoc($result2)) {
+
+        echo '<td  style="padding: 0px ; text-align: center; vertical-align: middle;font-weight:bold;font-size: 16px;background-color: #3dd5f3  ">' . htmlspecialchars($row['lot_name']) . '</td>';
+        echo '<td style="padding: 0;" >';
+    while ($row3 = mysqli_fetch_assoc($result3)) {
+
+        echo '<p  style="padding:0 ;margin: 0; background-color: gold"  >' . htmlspecialchars($row3['nom_fournisseur']) . '</p><hr style="margin: 0">';
+
+    }
+
+        echo '</td></tr>';
+        echo '<thead> <th  style="padding: 5px;background-color: #17944b !important;"  colspan="2">' . htmlspecialchars($row['sous_lot_name']) . '</th></thead>';
+    }
+    ?>
+
+    </table>
     <?php if ($result->num_rows > 0): ?>
-    <table class="table table-bordered" id="tblarticle">
+    <table class="table table-bordered text-center table-hover"  style="font-size: 13px" id="tblarticle">
         <thead>
         <tr>
             <th>ID</th>

@@ -6,6 +6,9 @@ include '../../Config/connect_db.php';
 $sql = "SELECT * FROM article WHERE id_article NOT IN (SELECT article_id FROM sous_lot_articles);";
 $result = $conn->query($sql);
 
+$sql1 = "SELECT * FROM article WHERE id_article NOT IN (SELECT article_id FROM sous_lot_articles);";
+$result1 = $conn->query($sql);
+
 ?>
 
 <!DOCTYPE html>
@@ -18,10 +21,9 @@ $result = $conn->query($sql);
 <body>
 <h1>Liste des Articles</h1>
 <div id="tblar">
-    <h4 class="text-center m-2">Article</h4>
 
     <?php if ($result->num_rows > 0): ?>
-    <table class="table table-bordered" id="tble1">
+    <table class="table table-bordered table-hover table-light text-center" id="tble1">
         <thead>
         <tr>
             <th>ID</th>
@@ -31,7 +33,7 @@ $result = $conn->query($sql);
             <th>Stock Initial</th>
             <th>Prix</th>
             <th>Unité</th>
-            <th>Action</th>
+<!--            <th>Action</th>-->
         </tr>
         </thead>
 <tbody>
@@ -44,14 +46,14 @@ $result = $conn->query($sql);
                 <td><?php echo $row['stock_initial']; ?></td>
                 <td><?php echo is_null($row['prix']) ? 'N/A' : $row['prix']; ?></td>
                 <td><?php echo $row['unite']; ?></td>
-                <td>
-                    <a href="#" onclick='deleteArticle(<?php echo $row["id_article"]; ?>)' style="color:red">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
-                        </svg>
-                    </a>
-
-                </td>
+<!--                <td>-->
+<!--                    <a href="#" onclick='deleteArticle()' style="color:red">-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">-->
+<!--                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>-->
+<!--                        </svg>-->
+<!--                    </a>-->
+<!---->
+<!--                </td>-->
             </tr>
         <?php endwhile; ?>
 </tbody>

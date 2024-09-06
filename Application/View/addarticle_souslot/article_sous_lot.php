@@ -135,7 +135,32 @@ $sous_lot_name = selectData($queryProduit, []);
             padding: 10px; /* Ajuste le padding pour les cellules du tableau */
             border-bottom: 1px solid #ddd; /* Ajoute une bordure sous chaque cellule */
         }
+        #table1_ar {
+            width: 560px; /* Largeur fixe du conteneur de la table */
+            height: 80vh; /* Hauteur fixe du conteneur de la table */
+            overflow: auto; /* Activer les barres de défilement si nécessaire */
+            font-size: 10px; /* Taille de la police */
+        }
+        #table2_souslot {
+            width: 100%; /* Largeur fixe du conteneur de la table */
+            height: 80vh; /* Hauteur fixe du conteneur de la table */
+            overflow: auto; /* Activer les barres de défilement si nécessaire */
+            font-size: 10px; /* Taille de la police */
+        }
 
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd; /* Bordure des cellules */
+            padding: 5px; /* Espacement intérieur des cellules */
+        }
+
+        th {
+            background-color: #f2f2f2; /* Couleur de fond des en-têtes */
+        }
     </style>
 </head>
 <body>
@@ -143,6 +168,8 @@ $sous_lot_name = selectData($queryProduit, []);
 
 <div style="display: flex;flex-flow: row">
 <div>
+    <h4 class="text-center m-2">Liste des Articles</h4>
+
     <div id="table1_ar"  style="width: 600px;overflow: auto;font-size: 10px">
 
     </div>
@@ -150,11 +177,11 @@ $sous_lot_name = selectData($queryProduit, []);
 </div>
 
 
-        <div class="col ms-5 mt-2">
+        <div class="w-75 m-3 mt-2">
             <div class="filter-inputs mb-3">
                 <div class="form row text-center" style="display: flex;flex-flow: row;justify-content: center " >
                     <div class="w-25">
-                        <input type="text" list='nom' class="form-control keepDatalist" placeholder="nam sous lot"
+                        <input  type="text" list='nom' class="form-control keepDatalist w-100" placeholder="nam sous lot"
                                id="sous_lot_name" onchange="filterTable()">
                         <datalist id='nom'>
                             <option value=""></option>
