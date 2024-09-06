@@ -4334,7 +4334,7 @@
     _initializeBackDrop() {
       return new Backdrop({
         isVisible: Boolean(this._config.backdrop),
-        // 'static' option will be translated to true, and booleans will keep their value,
+        // 'static' opration will be translated to true, and booleans will keep their value,
         isAnimated: this._isAnimated()
       });
     }
@@ -4657,7 +4657,7 @@
         this.hide();
       };
 
-      // 'static' option will be translated to true, and booleans will keep their value
+      // 'static' opration will be translated to true, and booleans will keep their value
       const isVisible = Boolean(this._config.backdrop);
       return new Backdrop({
         className: CLASS_NAME_BACKDROP,

@@ -168,7 +168,7 @@ $sous_lot_name = selectData($queryProduit, []);
 
 <div style="display: flex;flex-flow: row">
 <div>
-    <h4 class="text-center m-2">Liste des Articles</h4>
+    <h4 class="text-center m-2">Liste des Articles Son sous lot</h4>
 
     <div id="table1_ar"  style="width: 600px;overflow: auto;font-size: 10px">
 

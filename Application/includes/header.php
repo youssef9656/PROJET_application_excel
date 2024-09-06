@@ -17,6 +17,9 @@
         .navbar-light {
             background-color: #08808c;
         }
+        .dropdown-menu{
+
+        }
 
         .navbar-light .navbar-brand, .navbar-light .nav-link {
             color: #e7e8ea;
@@ -94,20 +97,30 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item item-hover">
-                    <a class="nav-link" href="../fournisseurs/fournisseurs.php">fournisseurs</a>
+                    <a class="nav-link" href="../opration/option_Ent_Sor.php">Journal entrées et sorties</a>
                 </li>
                 <li class="nav-item item-hover">
-                    <a class="nav-link" href="../lot_et_souslot/lot_souslot.php">lot / sous lot</a>
+                    <a class="nav-link" href="#">Etat des stocks</a>
                 </li>
 
                 <li class="nav-item item-hover">
-                    <a class="nav-link" href="../pageArticle/article.php">article</a>
+                    <a class="nav-link" href="#">Bon Réception et commande </a>
                 </li>
                 <li class="nav-item item-hover">
-                    <a class="nav-link" href="../addarticle_souslot/article_sous_lot.php">BASE DE DONNÉES ARTICLES </a>
+                    <a class="nav-link" href="../addarticle_souslot/article_sous_lot.php"> </a>
                 </li>
                 <li class="nav-item item-hover">
                     <a class="nav-link" href="../"></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">les données Articles</a>
+                    <ul class="dropdown-menu ">
+                        <li><a class="dropdown-item text-center fs-5 fw-bold " href="../fournisseurs/fournisseurs.php">Fournisseurs</a></li>
+                        <li><a class="dropdown-item text-center fs-5 fw-bold  " href="../lot_et_souslot/lot_souslot.php">Lot / Sous lot</a></li>
+                        <li><a class="dropdown-item text-center fs-5 fw-bold " href="../pageArticle/article.php">Article</a></li>
+                        <li><hr class="dropdown-divider text-center fs-5 fw-bold "></li>
+                        <li><a class="dropdown-item text-center  fw-bold " href="../addarticle_souslot/article_sous_lot.php">BASE DE DONNÉES ARTICLES </a></li>
+                    </ul>
                 </li>
             </ul>
         </div>
