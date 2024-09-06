@@ -3,7 +3,7 @@ include '../../config/connect_db.php';
 
 // Exécution de la requête pour obtenir les données des opérations
 $query = "
-    SELECT id, lot_name, sous_lot_name, nom_article, date_operation, entree_operation, sortie_operation, prix_operation
+    SELECT id, lot_name, sous_lot_name, nom_article, date_operation, entree_operation, sortie_operation, pj_operation ,nom_pre_fournisseur , service_operation,prix_operation
     FROM operation
 ";
 $result = mysqli_query($conn, $query);
@@ -21,12 +21,13 @@ if (!$result) {
         <thead>
         <tr>
             <th style="min-width: 100px; padding: 5px">ID</th>
-            <th style="min-width: 100px; padding: 5px">Lot</th>
-            <th style="min-width: 100px; padding: 5px">Sous-Lot</th>
             <th style="min-width: 150px; padding: 5px">Article</th>
             <th style="min-width: 150px; padding: 5px">Date</th>
             <th style="min-width: 100px; padding: 5px">Entrée</th>
             <th style="min-width: 100px; padding: 5px">Sortie</th>
+            <th style="min-width: 100px; padding: 5px">pj Operation</th>
+            <th style="min-width: 100px; padding: 5px">Fournisseur</th>
+            <th style="min-width: 100px; padding: 5px">service</th>
             <th style="min-width: 100px; padding: 5px">Prix</th>
             <th style="min-width: 100px; padding: 5px">Action</th> <!-- Colonne d'actions -->
         </tr>
@@ -37,12 +38,13 @@ if (!$result) {
         while ($row = mysqli_fetch_assoc($result)) {
             echo '<tr>';
             echo '<td style="padding: 5px">' . htmlspecialchars($row['id']) . '</td>';
-            echo '<td style="padding: 5px">' . htmlspecialchars($row['lot_name']) . '</td>';
-            echo '<td style="padding: 5px">' . htmlspecialchars($row['sous_lot_name']) . '</td>';
             echo '<td style="padding: 5px">' . htmlspecialchars($row['nom_article']) . '</td>';
             echo '<td style="padding: 5px">' . htmlspecialchars($row['date_operation']) . '</td>';
-            echo '<td style="padding: 5px">' . htmlspecialchars($row['entree_operation']) . '</td>';
-            echo '<td style="padding: 5px">' . htmlspecialchars($row['sortie_operation']) . '</td>';
+            echo '<td style="padding: 5px'  . ($row['entree_operation'] == 0 ? '; background-color: orange' : '') . '">' . htmlspecialchars($row['entree_operation']) . '</td>';
+            echo '<td style="padding: 5px' . ($row['sortie_operation'] == 0 ? '; background-color: yellow' : '') . '">' . htmlspecialchars($row['sortie_operation']) . '</td>';
+            echo '<td style="padding: 5px">' . htmlspecialchars($row['pj_operation']) . '</td>';
+            echo '<td style="padding: 5px' . ($row['nom_pre_fournisseur'] == 0 ? '; background-color: orange' : '') . '">' . htmlspecialchars($row['nom_pre_fournisseur']) . '</td>';
+            echo '<td style="padding: 5px' . ($row['service_operation'] == 0 ? '; background-color: yellow' : '') . '">' . htmlspecialchars($row['service_operation']) . '</td>';
             echo '<td style="padding: 5px">' . htmlspecialchars($row['prix_operation']) . '</td>';
             echo '<td style="padding: 5px" class="text-center">';
             echo '<a href="#" style="color:green;" class="modify-btn" data-id="' . htmlspecialchars($row['id']) . '" data-lot="' . htmlspecialchars($row['lot_name']) . '" data-sous-lot="' . htmlspecialchars($row['sous_lot_name']) . '" data-article="' . htmlspecialchars($row['nom_article']) . '">';
@@ -58,6 +60,9 @@ if (!$result) {
         </tbody>
     </table>
 
+
 </div>
+
+
 
 
