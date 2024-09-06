@@ -65,12 +65,12 @@ $pageName= 'Opration';
 include '../../includes/header.php';
 ?>
 <div>
-    <div style="display:flex;flex-flow: row wrap ; ">
+    <div style="display:flex;flex-flow: row wrap ;" id="divlotSous">
         <form>
         <h4 class="mt-2 ms-5"> Opration  <button class="show-form-btn" onclick="toggleForm()">+</button> </h4>
         <div class="col ms-5 mt-2">
             <div class="filter-inputs mb-3">
-                <div class="form row"  id="divlotSous">
+                <div class="form row"  >
                     <div class="col-3">
                         <input type="text" list='nom' class="form-control keepDatalist" placeholder="Nom"
                                id="lot_name" onchange="filterTable()">
@@ -117,8 +117,8 @@ include '../../includes/header.php';
         window.filterTable = function() {
 
 
-            var url = 'option_Ent_Sor.php?lot_name=' + encodeURI(lot_name.value) + '&sous_lot_name=' + encodeURI(sous_lot_name.value);
-            $("#divsous_lot").load(url + ' #divsous_lot',function (){
+            var url = 'filtreoption.php?lot_name=' + encodeURI(lot_name.value) + '&sous_lot_name=' + encodeURI(sous_lot_name.value);
+            $("#divlotSous").load(url + ' #divlotSous',function (){
                 console.log(lot_name.value)
                 console.log(sous_lot_name.value)
 
