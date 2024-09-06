@@ -92,10 +92,8 @@ include '../../includes/header.php';
 </body>
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
 <script>
-    $('#tbl_fournisseur').load('operation_table.php #tab1',function (){
 
-
-    });
+    $('#tab1').load('operation_table.php #tableoperationdiv');
 
 
 </script>
