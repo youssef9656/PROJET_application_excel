@@ -78,11 +78,11 @@ include '../../includes/header.php';
         </form>
 
         </div>
-    </div>
-
 </div>
 
+<div id="tab1">
 
+</div>
 
 
 
@@ -92,7 +92,7 @@ include '../../includes/header.php';
 </body>
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
 <script>
-    $('#tbl_fournisseur').load('afficherfournisseur.php #tblfr',function (){
+    $('#tbl_fournisseur').load('operation_table.php #tab1',function (){
 
 
     });
