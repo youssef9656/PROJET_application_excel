@@ -3,7 +3,7 @@ include '../../config/connect_db.php';
 
 // Exécution de la requête pour obtenir les données des opérations
 $query = "
-    SELECT id, lot_name, sous_lot_name, nom_article, date_operation, entree_operation, sortie_operation, pj_operation ,nom_pre_fournisseur , service_operation,prix_operation
+    SELECT id, lot_name, sous_lot_name, nom_article, date_operation, entree_operation, sortie_operation, pj_operation ,nom_pre_fournisseur , service_operation ,unite_operation,prix_operation
     FROM operation
 ";
 $result = mysqli_query($conn, $query);
@@ -17,6 +17,29 @@ if (!$result) {
 
 <div id="tableoperationdiv">
 
+    <style>
+        #filters{
+            width: 100%;
+            margin: 20px;
+
+        }
+    </style>
+
+
+    <div id="filters">
+        <label for="startDate">Date de début:</label>
+        <input type="date" id="startDate" name="startDate">
+
+        <label for="endDate">Date de fin:</label>
+        <input type="date" id="endDate" name="endDate">
+
+        <button id="filterBtn">Filtrer</button>
+        <button id="afficher_tous">Afficher tous</button>
+    </div>
+
+
+
+
     <table id="operationTable" class="table table-striped table-hover table-bordered">
         <thead>
         <tr>
@@ -28,6 +51,7 @@ if (!$result) {
             <th style="min-width: 100px; padding: 5px">pj Operation</th>
             <th style="min-width: 100px; padding: 5px">Fournisseur</th>
             <th style="min-width: 100px; padding: 5px">service</th>
+            <th style="min-width: 100px; padding: 5px">unité</th>
             <th style="min-width: 100px; padding: 5px">Prix</th>
             <th style="min-width: 100px; padding: 5px">Action</th> <!-- Colonne d'actions -->
         </tr>
@@ -43,8 +67,9 @@ if (!$result) {
             echo '<td style="padding: 5px'  . ($row['entree_operation'] == 0 ? '; background-color: orange' : '') . '">' . htmlspecialchars($row['entree_operation']) . '</td>';
             echo '<td style="padding: 5px' . ($row['sortie_operation'] == 0 ? '; background-color: yellow' : '') . '">' . htmlspecialchars($row['sortie_operation']) . '</td>';
             echo '<td style="padding: 5px">' . htmlspecialchars($row['pj_operation']) . '</td>';
-            echo '<td style="padding: 5px' . ($row['nom_pre_fournisseur'] == 0 ? '; background-color: orange' : '') . '">' . htmlspecialchars($row['nom_pre_fournisseur']) . '</td>';
-            echo '<td style="padding: 5px' . ($row['service_operation'] == 0 ? '; background-color: yellow' : '') . '">' . htmlspecialchars($row['service_operation']) . '</td>';
+            echo '<td style="padding: 5px' . ($row['nom_pre_fournisseur'] == null ? '; background-color: orange' : '') . '">' . htmlspecialchars($row['nom_pre_fournisseur']) . '</td>';
+            echo '<td style="padding: 5px' . ($row['service_operation'] == null ? '; background-color: yellow' : '') . '">' . htmlspecialchars($row['service_operation']) . '</td>';
+            echo '<td style="padding: 5px' . ($row['unite_operation'] == 0 ? '; background-color: yellow' : '') . '">' . htmlspecialchars($row['unite_operation']) . '</td>';
             echo '<td style="padding: 5px">' . htmlspecialchars($row['prix_operation']) . '</td>';
             echo '<td style="padding: 5px" class="text-center">';
             echo '<a href="#" style="color:green;" class="modify-btn" data-id="' . htmlspecialchars($row['id']) . '" data-lot="' . htmlspecialchars($row['lot_name']) . '" data-sous-lot="' . htmlspecialchars($row['sous_lot_name']) . '" data-article="' . htmlspecialchars($row['nom_article']) . '">';
