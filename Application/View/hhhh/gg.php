@@ -11,18 +11,8 @@
         body {
             padding: 20px;
         }
-        .table-container {
-            max-height: 400px; /* Adjust as needed */
-            overflow-y: auto;
-            border: 1px solid #dee2e6;
-            border-radius: .25rem;
-        }
-        .table thead th {
-            position: sticky;
-            top: 0;
-            background-color: #343a40; /* Dark background for sticky header */
-            color: white;
-            z-index: 10;
+        table {
+            margin-top: 20px;
         }
         .btn {
             margin-top: 10px;
@@ -55,26 +45,24 @@
     <button onclick="fetchData()" class="btn btn-primary">Rechercher</button>
 
     <!-- Table to display the articles data -->
-    <div class="table-container mt-4">
-        <table id="articles_table" class="table table-striped table-bordered">
-            <thead class="thead-dark">
-            <tr>
-                <th>ID</th>
-                <th>Article</th>
-                <th>Stock Initial</th>
-                <th>Total Entrées</th>
-                <th>Total Sorties</th>
-                <th>Stock Final</th>
-                <th>Prix Moyen</th>
-                <th>Valeur Stock</th>
-                <th>Stock Min</th>
-                <th>Besoin</th>
-            </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
+    <table id="articles_table" class="table table-striped table-bordered mt-4">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Article</th>
+            <th>Stock Initial</th>
+            <th>Total Entrées</th>
+            <th>Total Sorties</th>
+            <th>Stock Final</th>
+            <th>Prix Moyen</th>
+            <th>Valeur Stock</th>
+            <th>Stock Min</th>
+            <th>Besoin</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </div>
 
 <!-- Bootstrap JS and dependencies -->
@@ -88,7 +76,7 @@
         const endDate = document.getElementById('end_date').value || new Date().toISOString().split('T')[0]; // Default end date
         const statusFilter = document.getElementById('status_filter').value;
 
-        fetch(`fetch_data.php?start_date=${startDate}&end_date=${endDate}&status_filter=${statusFilter}`)
+        fetch(`jj.php?start_date=${startDate}&end_date=${endDate}&status_filter=${statusFilter}`)
             .then(response => response.json())
             .then(data => {
                 const tableBody = document.getElementById('articles_table').getElementsByTagName('tbody')[0];
