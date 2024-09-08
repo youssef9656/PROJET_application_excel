@@ -100,7 +100,7 @@
                     <a class="nav-link" href="../opration/option_Ent_Sor.php">Journal entrées et sorties</a>
                 </li>
                 <li class="nav-item item-hover">
-                    <a class="nav-link" href="#">Etat des stocks</a>
+                    <a class="nav-link" href="../eata_stock/etat_de_stocks.php">Etat des stocks</a>
                 </li>
 
                 <li class="nav-item item-hover">

@@ -1,0 +1,112 @@
+<?php
+insst_etat_stocks();
+function insst_etat_stocks() {
+
+    include '../../config/connect_db.php';
+
+    $start_date = '1000-01-01'; // تاريخ البداية
+    $end_date = '9024-12-31'; // تاريخ النهاية
+
+    $sql_select = "
+    SELECT 
+        a.id_article AS ID,
+        a.nom AS Article,
+        a.stock_initial AS Stock_Initial,
+        COALESCE(SUM(o.entree_operation), 0) AS Total_Entry_Operations,
+        COALESCE(SUM(o.sortie_operation), 0) AS Total_Exit_Operations,
+        a.stock_initial + COALESCE(SUM(o.entree_operation), 0) - COALESCE(SUM(o.sortie_operation), 0) AS Stock_Final,
+        (
+            SELECT AVG(p.prix_operation)
+            FROM operation p
+            WHERE p.nom_article = a.nom
+            AND p.date_operation BETWEEN '$start_date' AND '$end_date'
+            ORDER BY p.date_operation DESC
+            
+            LIMIT 30
+        ) AS  Prix,
+        (
+            a.stock_initial + COALESCE(SUM(o.entree_operation), 0) - COALESCE(SUM(o.sortie_operation), 0)
+        ) * (
+            SELECT AVG(p.prix_operation)
+            FROM operation p
+            WHERE p.nom_article = a.nom
+            AND p.date_operation BETWEEN '$start_date' AND '$end_date'
+            ORDER BY p.date_operation DESC
+            LIMIT 30
+        ) AS Stock_Value,
+        a.stock_min AS Stock_Min,
+        CASE 
+            WHEN a.stock_initial + COALESCE(SUM(o.entree_operation), 0) - COALESCE(SUM(o.sortie_operation), 0) < a.stock_min 
+            THEN 'besoin' 
+            ELSE 'bon' 
+        END AS Requirement_Status
+    FROM 
+        article a
+    LEFT JOIN 
+        operation o ON o.nom_article = a.nom
+    WHERE 
+        o.date_operation BETWEEN '$start_date' AND '$end_date'
+    GROUP BY 
+        a.id_article, a.nom, a.stock_initial, a.stock_min
+    LIMIT 0, 25
+";
+
+    $result = $conn->query($sql_select);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $id = $row['ID'];
+            $article = $row['Article'];
+            $stock_initial = $row['Stock_Initial'];
+            $total_entry_operations = $row['Total_Entry_Operations'];
+            $total_exit_operations = $row['Total_Exit_Operations'];
+            $stock_final = $row['Stock_Final'];
+            $prix = $row['Prix'];
+            $stock_value = $row['Stock_Value'];
+            $stock_min = $row['Stock_Min'];
+            $requirement_status = $row['Requirement_Status'];
+
+            // التحقق مما إذا كانت البيانات موجودة في الجدول الجديد
+            $sql_check = "SELECT ID FROM etat_de_stocks WHERE ID = ?";
+            $stmt = $conn->prepare($sql_check);
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $stmt->store_result();
+
+            if ($stmt->num_rows > 0) {
+                // تحديث البيانات إذا كانت موجودة
+                $sql_update = "TRUNCATE TABLE etat_de_stocks";
+                if ($conn->query($sql_update) === TRUE) {
+                    $sql_insert = "
+                INSERT INTO etat_de_stocks (ID, Article, Stock_Initial, Total_Entry_Operations, Total_Exit_Operations, 
+                    Stock_Final, Prix, Stock_Value, Stock_Min, Requirement_Status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ";
+                    $stmt = $conn->prepare($sql_insert);
+                    $stmt->bind_param("siiiididss", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $stock_min, $requirement_status);
+
+                }
+
+            } else {
+                // إدراج البيانات إذا لم تكن موجودة
+                $sql_insert = "
+                INSERT INTO etat_de_stocks (ID, Article, Stock_Initial, Total_Entry_Operations, Total_Exit_Operations, 
+                    Stock_Final, Prix, Stock_Value, Stock_Min, Requirement_Status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ";
+                $stmt = $conn->prepare($sql_insert);
+                $stmt->bind_param("siiiididss", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $stock_min, $requirement_status);
+            }
+
+            $stmt->execute();
+        }
+    } else {
+        echo "لا توجد بيانات للمعالجة.";
+    }
+
+    $conn->close();
+
+
+}
+?>
+
