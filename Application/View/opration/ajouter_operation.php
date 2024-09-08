@@ -1,8 +1,8 @@
 <?php
 // Affichage des erreurs pour le débogage
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 
 // Connexion à la base de données
 include '../../config/connect_db.php';
@@ -11,11 +11,11 @@ include '../../config/connect_db.php';
 $lotId = $_POST['lot'];
 $sousLotId = $_POST['sousLot'];
 $articleId = $_POST['article'];
-$entree = $_POST['entree'] ?? 0.00;
-$sortie = $_POST['sortie'] ?? 0.00;
+$entree = $_POST['entree'] ?? null;
+$sortie = $_POST['sortie'] ?? null;
 $fournisseurId = $_POST['fournisseur'] ?? null;
 $serviceId = $_POST['service'] ?? null;
-$prix = $_POST['prix'] ?? 0.00;
+$prix = $_POST['prix'] ?? null;
 
 // Obtenir le nom du lot
 $queryLot = "SELECT lot_name FROM lots WHERE lot_id = ?";

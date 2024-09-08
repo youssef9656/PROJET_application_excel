@@ -43,6 +43,7 @@ setTimeout(() => {
 }, 1000)
 
 
+// ajouter operation
 document.addEventListener('DOMContentLoaded', function() {
     // Gérer le changement de lot pour charger les sous-lots et les fournisseurs
     document.getElementById('lot').addEventListener('change', function() {
@@ -195,79 +196,134 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // modifier operation codes
 
+
 $(document).ready(function() {
-    // Ouvrir le modal avec les données actuelles de l'article
-   setTimeout(()=>{
-       $(document).on('click', '.btn-modifier-article', function () {
-           const articleId = $(this).data('id');
-           $('#modifierArticleModal').modal('show');
-           // Faire une requête pour récupérer les informations de l'article
-           $.ajax({
-               url: 'get_article_details.php', // Un fichier PHP qui récupère les détails d'un article
-               type: 'GET',
-               data: { id_article: articleId },
-               success: function(response) {
-                   $('#submitButton').prop('disabled', false);  // Réactiver le bouton
+    // Ouvrir le modal avec les données actuelles de l'opération
+    setTimeout(function () {
 
-                   console.log("Réponse du serveur : ", response);  // Affiche la réponse pour débogage
+        $(document).ready(function() {
+            $('#modifierOperationForm').on('submit', function(e) {
+                e.preventDefault(); // Empêcher le rechargement de la page
 
-                   try {
-                       var data = JSON.parse(response);  // Tente de parser la réponse JSON
-                       if (data.status === 'success') {
-                           alert(data.message);  // Affiche le message de succès
-                       } else {
-                           alert(data.message);  // Affiche le message d'erreur
-                       }
-                   } catch (e) {
-                       console.error("Erreur lors du parsing JSON:", e);
-                       alert('Réponse inattendue du serveur.');
-                   }
-               }
+                var id = $('#operationId').val();
+                if (!id) {
+                    alert('ID de l\'opération est manquant.');
+                    return;
+                }
+
+                var formData = $(this).serialize(); // Sérialiser les données du formulaire
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'modifier_operation.php', // Page PHP qui traite la modification
+                    data: formData,
+                    success: function(response) {
+                        alert('Opération modifiée avec succès');
+                        $('#modifierOperationModal').modal('hide'); // Fermer le modal
+                        location.reload(); // Rafraîchir la page pour voir les changements
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Erreur lors de la modification de l\'opération : ' + error);
+                    }
+                });
+            });
+
+            // Ouvrir le modal avec les données actuelles de l'opération
+            $(document).on('click', '.modify-btn', function() {
+                var id = $(this).data('id');
+                var lotId = $(this).data('lot-id');
+                var sousLotId = $(this).data('sous-lot-id');
+                var articleId = $(this).data('article-id');
+                var date = $(this).closest('tr').find('td:nth-child(3)').text().trim();
+                var entree = $(this).closest('tr').find('td:nth-child(4)').text().trim();
+                var sortie = $(this).closest('tr').find('td:nth-child(5)').text().trim();
+                var fournisseur = $(this).closest('tr').find('td:nth-child(7)').text().trim();
+                var prix = $(this).closest('tr').find('td:nth-child(10)').text().trim();
+                var service = $(this).closest('tr').find('td:nth-child(9)').text().trim();
+
+                // Convertir la date au format requis pour datetime-local
+                var formattedDate = new Date(date).toISOString().slice(0,16); // Format YYYY-MM-DDTHH:MM
+
+                $('#operationId').val(id);
+                $('#operationDate').val(formattedDate);
+                $('#operationEntree').val(entree);
+                $('#operationSortie').val(sortie);
+                $('#operationFournisseur').val(fournisseur);
+                $('#operationPrix').val(prix);
+                $('#operationService').val(service);
+
+                // Charger les options des selects
+                loadOptions('get_lots.php', '#operationLot', lotId, 'lot_id', 'lot_name');
+                loadOptions('get_sous_lots.php', '#operationSousLot', sousLotId, 'sous_lot_id', 'sous_lot_name', { lot_id: lotId });
+                loadOptions('get_articles.php', '#operationArticle', articleId, 'id_article', 'nom', { sous_lot_id: sousLotId });
+                loadOptions('get_fournisseurs.php', '#operationFournisseur', fournisseur, 'id_fournisseur', 'nom_fournisseur', { lot_id: lotId });
+                loadOptions('get_services.php', '#operationService', service, 'id', 'nom_service');
+
+                $('#modifierOperationModal').modal('show');
+            });
+
+            // Fonction pour charger les options dans un select
+            function loadOptions(url, selectId, selectedId, idField, nameField, params = {}) {
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    data: params,
+                    success: function(data) {
+                        try {
+                            var options = JSON.parse(data);
+                            var select = $(selectId);
+                            select.empty(); // Vider les options existantes
+                            select.append('<option value="">Sélectionner</option>'); // Option par défaut
+                            $.each(options, function(index, item) {
+                                var selected = item[idField] == selectedId ? ' selected' : '';
+                                select.append('<option value="' + item[idField] + '"' + selected + '>' + item[nameField] + '</option>');
+                            });
+                        } catch (e) {
+                            console.error('Erreur de parsing JSON :', e);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Erreur lors du chargement des options : ' + error);
+                    }
+                });
+            }
+
+            // Gestion des champs
+            $('#operationEntree').on('input', function() {
+                var entree = $(this).val();
+                $('#operationSortie').prop('disabled', entree.length > 0);
+                $('#operationFournisseur').prop('disabled', entree.length > 0);
+            });
+
+            $('#operationSortie').on('input', function() {
+                var sortie = $(this).val();
+                $('#operationEntree').prop('disabled', sortie.length > 0);
+                $('#operationFournisseur').prop('disabled', sortie.length > 0);
+            });
+
+            // Charger les sous-lots lorsque le lot change
+            $('#operationLot').on('change', function() {
+                var lotId = $(this).val();
+                loadOptions('get_sous_lots.php', '#operationSousLot', '', 'sous_lot_id', 'sous_lot_name', { lot_id: lotId });
+                $('#operationArticle').empty().append('<option value="">Sélectionner</option>'); // Réinitialiser les articles
+            });
+
+            // Charger les articles lorsque le sous-lot change
+            $('#operationSousLot').on('change', function() {
+                var sousLotId = $(this).val();
+                loadOptions('get_articles.php', '#operationArticle', '', 'id_article', 'nom', { sous_lot_id: sousLotId });
+            });
+        });
 
 
-           });
-       });
-
-       // Désactiver le bouton de soumission lors de l'envoi du formulaire
-       $('#formulaire').on('submit', function(e) {
-           e.preventDefault(); // Empêche l'envoi du formulaire normal
-
-           // Crée un objet FormData à partir du formulaire
-           var formData = new FormData(this);
-
-           $('#modifierArticleForm').prop('disabled', true); // Désactiver le bouton de soumission
-
-           $.ajax({
-               url: 'modifier_article.php',
-               type: 'POST',
-               data: formData,
-               processData: false, // Indispensable pour envoyer des données au format FormData
-               contentType: false, // Empêche jQuery de définir un Content-Type incorrect
-               success: function(response) {
-                   $('#submitButton').prop('disabled', false);  // Réactiver le bouton
-                   try {
-                       var data = JSON.parse(response);
-                       if (data.status === 'success') {
-                           alert(data.message);  // Affiche le message de succès
-                       } else {
-                           alert(data.message);  // Affiche le message d'erreur
-                       }
-                   } catch (e) {
-                       console.error("Erreur lors du parsing JSON:", e);
-                       alert('Réponse inattendue du serveur.');
-                   }
-               },
-               error: function(xhr, status, error) {
-                   $('#submitButton').prop('disabled', false);  // Réactiver le bouton
-                   console.error('Erreur AJAX:', xhr, status, error);
-                   alert('Une erreur est survenue : ' + error);
-               }
-           });
-       });
 
 
 
-   } , 100)
+
+
+
+
+    }, 100)
 
 
 });

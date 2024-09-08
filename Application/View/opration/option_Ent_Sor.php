@@ -1,9 +1,9 @@
 
 <?php $pageName = 'operation'; include '../../config/connect_db.php'; include '../../includes/header.php'; ?>
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 // Récupérer les lots pour la première liste déroulante
 $queryLots = "SELECT lot_id, lot_name FROM lots";
 $resultLots = mysqli_query($conn, $queryLots);
@@ -11,51 +11,7 @@ $resultLots = mysqli_query($conn, $queryLots);
 if (!$resultLots) {
     die('Erreur de requête : ' . mysqli_error($conn));
 }
-
-//$querySelect = "SELECT * FROM lots";
-//$paramsSelect = [];
-//$data = selectData($querySelect, $paramsSelect);
-//
-//$queryProduit = "SELECT DISTINCT lot_name FROM lots";
-//$lot_name = selectData($queryProduit, []);
-//
-//
-//if( isset($_GET["lot_name"]) && empty(isset($_GET["sous_lot_name"]))){
-//    $lot_name = $_GET["lot_name"];
-//
-//    $query2 = "
-//    SELECT sous_lots.sous_lot_id, sous_lots.sous_lot_name, sous_lots.lot_id, lots.lot_name
-//    FROM sous_lots
-//    JOIN lots ON sous_lots.lot_id = lots.lot_id where lots.lot_name ='$lot_name'";
-//
-//    $queryProduit = "SELECT DISTINCT lot_name FROM lots";
-//
-//    $lot_name = selectData($queryProduit, []);
-//    $sous_lot_name = mysqli_query($conn, $query2);
-//
-//};
-//
-//if (!empty(isset($_GET["lot_name"])) && !empty(isset($_GET["sous_lot_name"]))){
-//    echo "hhhh";
-//    $lot_name = $_GET["lot_name"];
-//    $sous_lot_name = $_GET["sous_lot_name"];
-//
-//    $sql ="SELECT * FROM article
-//WHERE id_article IN (
-//    SELECT article_id
-//    FROM `sous_lot_articles`
-//    WHERE sous_lot_id = (
-//        SELECT sous_lot_id
-//        FROM `sous_lots`
-//        WHERE sous_lot_name = '$sous_lot_name'
-//    )
-//);";
-// $result = $conn->query($sql);
-//
-//
-//
-//}
-//?>
+?>
 
 <!doctype html>
 <html lang="en">
@@ -105,7 +61,7 @@ if (!$resultLots) {
 
                     <div class="mb-3">
                         <label for="article" class="form-label">Sélectionner Article:</label>
-                        <select id="article" name="article" class="form-select" disabled>
+                        <select id="article" name="article" class="form-select" disabled required>
                             <option value="">-- Sélectionner Article --</option>
                         </select>
                     </div>
@@ -147,58 +103,67 @@ if (!$resultLots) {
 </div>
 
 <!-- Modal de modification d'article -->
-<div class="modal fade" id="modifierArticleModal" tabindex="-1" aria-labelledby="modifierArticleLabel" aria-hidden="true">
-    <div class="modal-dialog">
+
+
+<!-- Modal Structure -->
+<!-- Modal -->
+<!-- Modal pour modifier une opération -->
+<div id="modifierOperationModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modifierArticleLabel">Modifier l'Article</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title">Modifier Opération</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-                <form id="modifierArticleForm">
-                    <input type="hidden" name="id_article" id="modifier_id_article">
-
-                    <div class="mb-3">
-                        <label for="modifier_nom_article" class="form-label">Nom de l'article</label>
-                        <input type="text" class="form-control" id="modifier_nom_article" name="nom_article" required>
+                <form id="modifierOperationForm">
+                    <input type="hidden" id="operationId" name="operationId" value="">
+                    <div class="form-group">
+                        <label for="operationDate">Date</label>
+                        <input type="datetime-local" id="operationDate" name="date_operation" class="form-control">
                     </div>
-
-                    <div class="mb-3">
-                        <label for="modifier_description" class="form-label">Description</label>
-                        <textarea class="form-control" id="modifier_description" name="description" required></textarea>
+                    <div class="form-group">
+                        <label for="operationLot">Lot</label>
+                        <select id="operationLot" name="lot_id" class="form-control"></select>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="modifier_stock_min" class="form-label">Stock minimum</label>
-                        <input type="number" class="form-control" id="modifier_stock_min" name="stock_min" required>
+                    <div class="form-group">
+                        <label for="operationSousLot">Sous-lot</label>
+                        <select id="operationSousLot" name="sous_lot_id" class="form-control"></select>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="modifier_stock_initial" class="form-label">Stock initial</label>
-                        <input type="number" class="form-control" id="modifier_stock_initial" name="stock_initial" required>
+                    <div class="form-group">
+                        <label for="operationArticle">Article</label>
+                        <select id="operationArticle" name="article_id" class="form-control"></select>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="modifier_prix" class="form-label">Prix</label>
-                        <input type="number" class="form-control" id="modifier_prix" name="prix" step="0.01" required>
+                    <div class="form-group">
+                        <label for="operationEntree">Entrée</label>
+                        <input type="number" step="0.01" id="operationEntree" name="entree_operation" class="form-control">
                     </div>
-
-                    <div class="mb-3">
-                        <label for="modifier_unite" class="form-label">Unité</label>
-                        <input type="text" class="form-control" id="modifier_unite" name="unite" required>
+                    <div class="form-group">
+                        <label for="operationSortie">Sortie</label>
+                        <input type="number" step="0.01" id="operationSortie" name="sortie_operation" class="form-control">
                     </div>
-
-                    <div class="mb-3">
-                        <label for="modifier_date_operation" class="form-label">Date d'opération</label>
-                        <input type="date" class="form-control" id="modifier_date_operation" name="date_operation" required>
+                    <div class="form-group">
+                        <label for="operationFournisseur">Fournisseur</label>
+                        <select id="operationFournisseur" name="fournisseur_id" class="form-control"></select>
                     </div>
-
+                    <div class="form-group">
+                        <label for="operationPrix">Prix</label>
+                        <input type="number" step="0.01" id="operationPrix" name="prix_operation" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="operationService">Service</label>
+                        <select id="operationService" name="service_id" class="form-control"></select>
+                    </div>
                     <button type="submit" class="btn btn-primary">Modifier</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
 
 
 
@@ -231,25 +196,6 @@ if (!$resultLots) {
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
 <script src="script.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const  lot_name = document.getElementById('lot_name');
-        const  sous_lot_name = document.getElementById('sous_lot_name');
-        window.filterTable = function() {
-
-
-            var url = 'filtreoption.php?lot_name=' + encodeURI(lot_name.value) + '&sous_lot_name=' + encodeURI(sous_lot_name.value);
-            $("#divlotSous").load(url + ' #divlotSous',function (){
-                console.log(lot_name.value)
-                console.log(sous_lot_name.value)
-
-                 document.getElementById('lot_name').value= lot_name.value
-                 // document.getElementById('sous_lot_name').value= sous_lot_name
-            });
-
-        }
-
-    });
-
 
 
     $('#tab1').load('operation_table.php #tableoperationdiv');
