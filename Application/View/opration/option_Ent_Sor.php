@@ -71,12 +71,12 @@ if (!$resultLots) {
 </head>
 <body>
 
-<!-- Bouton pour ouvrir la modal -->
+<!-- Bouton pour ouvrir la modal ajouter operation-->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterOperationModal">
     Ajouter Opération
 </button>
 
-<!-- Modal -->
+<!-- Modal ajouter operation -->
 <div class="modal fade" id="ajouterOperationModal" tabindex="-1" aria-labelledby="ajouterOperationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -145,6 +145,78 @@ if (!$resultLots) {
         </div>
     </div>
 </div>
+
+<!-- Modal de modification d'article -->
+<div class="modal fade" id="modifierArticleModal" tabindex="-1" aria-labelledby="modifierArticleLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modifierArticleLabel">Modifier l'Article</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="modifierArticleForm">
+                    <input type="hidden" name="id_article" id="modifier_id_article">
+
+                    <div class="mb-3">
+                        <label for="modifier_nom_article" class="form-label">Nom de l'article</label>
+                        <input type="text" class="form-control" id="modifier_nom_article" name="nom_article" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="modifier_description" class="form-label">Description</label>
+                        <textarea class="form-control" id="modifier_description" name="description" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="modifier_stock_min" class="form-label">Stock minimum</label>
+                        <input type="number" class="form-control" id="modifier_stock_min" name="stock_min" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="modifier_stock_initial" class="form-label">Stock initial</label>
+                        <input type="number" class="form-control" id="modifier_stock_initial" name="stock_initial" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="modifier_prix" class="form-label">Prix</label>
+                        <input type="number" class="form-control" id="modifier_prix" name="prix" step="0.01" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="modifier_unite" class="form-label">Unité</label>
+                        <input type="text" class="form-control" id="modifier_unite" name="unite" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="modifier_date_operation" class="form-label">Date d'opération</label>
+                        <input type="date" class="form-control" id="modifier_date_operation" name="date_operation" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <div id="tab1">
 

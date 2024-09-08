@@ -193,3 +193,83 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+// modifier operation codes
+
+$(document).ready(function() {
+    // Ouvrir le modal avec les données actuelles de l'article
+   setTimeout(()=>{
+       $(document).on('click', '.btn-modifier-article', function () {
+           const articleId = $(this).data('id');
+           $('#modifierArticleModal').modal('show');
+           // Faire une requête pour récupérer les informations de l'article
+           $.ajax({
+               url: 'get_article_details.php', // Un fichier PHP qui récupère les détails d'un article
+               type: 'GET',
+               data: { id_article: articleId },
+               success: function(response) {
+                   $('#submitButton').prop('disabled', false);  // Réactiver le bouton
+
+                   console.log("Réponse du serveur : ", response);  // Affiche la réponse pour débogage
+
+                   try {
+                       var data = JSON.parse(response);  // Tente de parser la réponse JSON
+                       if (data.status === 'success') {
+                           alert(data.message);  // Affiche le message de succès
+                       } else {
+                           alert(data.message);  // Affiche le message d'erreur
+                       }
+                   } catch (e) {
+                       console.error("Erreur lors du parsing JSON:", e);
+                       alert('Réponse inattendue du serveur.');
+                   }
+               }
+
+
+           });
+       });
+
+       // Désactiver le bouton de soumission lors de l'envoi du formulaire
+       $('#formulaire').on('submit', function(e) {
+           e.preventDefault(); // Empêche l'envoi du formulaire normal
+
+           // Crée un objet FormData à partir du formulaire
+           var formData = new FormData(this);
+
+           $('#modifierArticleForm').prop('disabled', true); // Désactiver le bouton de soumission
+
+           $.ajax({
+               url: 'modifier_article.php',
+               type: 'POST',
+               data: formData,
+               processData: false, // Indispensable pour envoyer des données au format FormData
+               contentType: false, // Empêche jQuery de définir un Content-Type incorrect
+               success: function(response) {
+                   $('#submitButton').prop('disabled', false);  // Réactiver le bouton
+                   try {
+                       var data = JSON.parse(response);
+                       if (data.status === 'success') {
+                           alert(data.message);  // Affiche le message de succès
+                       } else {
+                           alert(data.message);  // Affiche le message d'erreur
+                       }
+                   } catch (e) {
+                       console.error("Erreur lors du parsing JSON:", e);
+                       alert('Réponse inattendue du serveur.');
+                   }
+               },
+               error: function(xhr, status, error) {
+                   $('#submitButton').prop('disabled', false);  // Réactiver le bouton
+                   console.error('Erreur AJAX:', xhr, status, error);
+                   alert('Une erreur est survenue : ' + error);
+               }
+           });
+       });
+
+
+
+   } , 100)
+
+
+});
+
+
