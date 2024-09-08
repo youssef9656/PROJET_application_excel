@@ -182,7 +182,7 @@ include '../../includes/header.php';
 
 <div style="display:flex;flex-flow: row">
     <div class="table-container mt-4" >
-        <table id="articles_table" class="table table-Primary table-bordered table-hover " >
+        <table id="articles_table" class="table table-Primary table-bordered table-hover  table-group-divider" >
             <thead class="thead-dark ">
             <tr>
                 <th>ID</th>
@@ -202,7 +202,7 @@ include '../../includes/header.php';
         </table>
     </div>
 
-    <table class="table table-bordered table-hover table-danger" style="width: 150px; margin-left:10px; height: 150px ">
+    <table class="table table-bordered table-hover table-primary" style="width: 150px; margin-left:10px; height: 150px ">
         <thead>
         <tr>
             <th>Prix Moyen</th>
@@ -212,7 +212,7 @@ include '../../includes/header.php';
         <tbody>
         <tr>
             <td id="totale_prix"></td>
-            <td></td>
+            <td id="totale_Stock"></td>
 
         </tr>
         </tbody>
@@ -283,13 +283,16 @@ include '../../includes/header.php';
 
     function calcule(){
         var prix_toutal=0
-        var prix_toutal=0
+        var totale_Stock=0
 
         document.querySelectorAll("#articles_table > tbody > tr").forEach((row)=>{
 
             prix_toutal+=parseFloat(row.children[6].innerText)
+            totale_Stock+=parseFloat(row.children[7].innerText)
       })
-document.getElementById("totale_prix").innerText=prix_toutal
+document.getElementById("totale_prix").innerText=prix_toutal.toFixed(2)
+document.getElementById("totale_Stock").innerText=totale_Stock.toFixed(2)
+
     }
 
     function printtable(){
