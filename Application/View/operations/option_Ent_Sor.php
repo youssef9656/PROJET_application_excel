@@ -27,11 +27,50 @@ if (!$resultLots) {
 </head>
 <body>
 
-<!-- Bouton pour ouvrir la modal ajouter operation-->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterOperationModal">
-    Ajouter Opération
-</button>
+<style>
 
+    .ajouter-fournisseur-btn{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    #ajouterOperationModal{
+        /*display: flex;*/
+        /*justify-content: center;*/
+        /*align-items: center;*/
+
+    }
+    .table-operation{
+        width: 100%;
+        overflow: scroll;
+
+    }
+    .table-operation thead{
+        position: sticky;
+        overflow: auto;
+    }
+    .table-operation th{
+        position: sticky;
+        top: 0;
+    }
+
+
+
+</style>
+
+
+
+<!--Boutton pour ouvrir le modal ajouter operation-->
+<div class="ajouter-fournisseur-btn">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterOperationModal">
+        Ajouter Opération
+    </button>
+
+</div>
 <!-- Modal ajouter operation -->
 <div class="modal fade" id="ajouterOperationModal" tabindex="-1" aria-labelledby="ajouterOperationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -183,7 +222,7 @@ if (!$resultLots) {
 
 
 
-<div id="tab1">
+<div id="tab1" class="table-operation">
 
 </div>
 

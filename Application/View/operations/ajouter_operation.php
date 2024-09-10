@@ -12,7 +12,9 @@ $lotId = $_POST['lot'];
 $sousLotId = $_POST['sousLot'];
 $articleId = $_POST['article'];
 $entree = $_POST['entree'] ?? null;
+//$entree = $_POST['entree'] ?? 0.00;
 $sortie = $_POST['sortie'] ?? null;
+//$sortie = $_POST['sortie'] ?? 0.00;
 $fournisseurId = $_POST['fournisseur'] ?? null;
 $serviceId = $_POST['service'] ?? null;
 $prix = $_POST['prix'] ?? null;
@@ -89,6 +91,8 @@ $stmt->bind_param("sssdssssss", $lotName, $sousLotName, $articleName, $entree, $
 // Exécution de la requête
 if ($stmt->execute()) {
     echo "Opération ajoutée avec succès.";
+    include "../eata_stock/issrt.php";
+//    insst_etat_stocks();
     header("Location: option_Ent_Sor.php");
 } else {
     echo "Erreur lors de l'ajout de l'opération : " . $stmt->error;
