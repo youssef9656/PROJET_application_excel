@@ -122,6 +122,15 @@
                         <li><a class="dropdown-item text-center  fw-bold " href="../addarticle_souslot/article_sous_lot.php">BASE DE DONNÉES ARTICLES </a></li>
                     </ul>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">les données Articles</a>
+                    <ul class="dropdown-menu ">
+                        <li><a class="dropdown-item text-center fs-5 fw-bold " href="../graphic2_sour/HHH.php">Statistiques des sorties</a></li>
+                        <li><a class="dropdown-item text-center fs-5 fw-bold  " href="../graphic/HHH.php">Statistiques des entree</a></li>
+
+                    </ul>
+                </li>
+
             </ul>
         </div>
     </nav>

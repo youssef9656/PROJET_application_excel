@@ -11,7 +11,7 @@
 </head>
 <body>
 <?php
-$pageName= 'Statistiques des entree';
+$pageName= 'Statistiques des sorties';
 
 include '../../includes/header.php';
 
@@ -83,7 +83,7 @@ include '../../includes/header.php';
 </style>
 
 <div class="container mt-2">
-    <h1>Statistiques des entree </h1>
+    <h1>Statistiques des sorties </h1>
 
     <!-- قسم الفلاتر -->
     <div class="row filter-section">
@@ -142,8 +142,8 @@ include '../../includes/header.php';
         </div>
     </div>
 </div>
-
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
+
 
 <script>
     let chart1, chart2;
@@ -160,8 +160,8 @@ include '../../includes/header.php';
             .then(response => response.json())
             .then(data => {
                 const labels = data.map(d => d.date_operation);
-                const entreeOperationData = data.map(d => d.entree_operation);
-                const prixOperationData = data.map(d => d.prix_operation);
+                const sortie_operation = data.map(d => d.sortie_operation);
+                const service_operation = data.map(d => d.service_operation);
 
                 // تحديث الرسم البياني الأول
                 if (chart1) chart1.destroy();
@@ -172,7 +172,7 @@ include '../../includes/header.php';
                         labels: labels,
                         datasets: [{
                             label: 'Entree Operation',
-                            data: entreeOperationData,
+                            data: sortie_operation,
                             borderColor: 'blue',
                             backgroundColor: 'rgba(0, 0, 255, 0.2)'
                         }]
@@ -193,8 +193,8 @@ include '../../includes/header.php';
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'Prix Operation',
-                            data: prixOperationData,
+                            label: 'service de zone',
+                            data: service_operation,
                             borderColor: 'red',
                             backgroundColor: 'rgba(255, 0, 0, 0.2)'
                         }]
@@ -202,7 +202,7 @@ include '../../includes/header.php';
                     options: {
                         scales: {
                             x: { title: { text: 'Date', display: true } },
-                            y: { title: { text: 'Prix Operation', display: true } }
+                            y: { title: { text: 'service de zone', display: true } }
                         }
                     }
                 });

@@ -10,7 +10,7 @@ $sousLot = isset($_GET['sous_lot']) ? $_GET['sous_lot'] : '';
 $data = [];
 
 if ($type === 'sous_lot') {
-    $sql = "SELECT DISTINCT sous_lot_name FROM operation WHERE lot_name = ?  AND entree_operation > 0 ";
+    $sql = "SELECT DISTINCT sous_lot_name FROM operation WHERE lot_name = ?  AND sortie_operation > 0 ";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('s', $lot);
     $stmt->execute();
@@ -19,7 +19,7 @@ if ($type === 'sous_lot') {
         $data[] = ['value' => $row['sous_lot_name'], 'text' => $row['sous_lot_name']];
     }
 } elseif ($type === 'article') {
-    $sql = "SELECT DISTINCT nom_article FROM operation WHERE lot_name = ? AND sous_lot_name = ? AND entree_operation > 0";
+    $sql = "SELECT DISTINCT nom_article FROM operation WHERE lot_name = ? AND sous_lot_name = ? AND sortie_operation > 0";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('ss', $lot, $sousLot);
     $stmt->execute();

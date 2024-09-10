@@ -11,7 +11,7 @@ $article = $_GET['article'] ?? '';
 $fournisseur = $_GET['fournisseur'] ?? '';
 
 // إعداد استعلام أساسي
-$sql = "SELECT * FROM operation WHERE 1=1 AND entree_operation > 0 ";
+$sql = "SELECT * FROM operation WHERE 1=1 AND sortie_operation > 0 ";
 $params = [];
 $types = '';
 
