@@ -3,7 +3,9 @@
 //ini_set('display_errors', 1);
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 // Connexion à la base de données
 include '../../config/connect_db.php';
 
@@ -84,18 +86,19 @@ $queryInsert = "INSERT INTO operation (lot_name, sous_lot_name, nom_article, dat
 
 $stmt = $conn->prepare($queryInsert);
 
-// La chaîne de types correspond aux variables passées
+
 // 'sssddssssss' : 3 chaînes (lot_name, sous_lot_name, nom_article), 2 décimaux (entree_operation, sortie_operation), 2 chaînes (nom_pre_fournisseur, service_operation), 1 décimal (prix_operation), 1 chaîne (unite_operation), 1 chaîne (pj_operation)
 $stmt->bind_param("sssdssssss", $lotName, $sousLotName, $articleName, $entree, $sortie, $fournisseurName, $serviceName, $prix, $unite, $pjOperation);
 
 // Exécution de la requête
 if ($stmt->execute()) {
-    echo "Opération ajoutée avec succès.";
-    include "../eata_stock/issrt.php";
-//    insst_etat_stocks();
+//    echo "Opération ajoutée avec succès 1234567.";
     header("Location: option_Ent_Sor.php");
+    exit();
+
 } else {
     echo "Erreur lors de l'ajout de l'opération : " . $stmt->error;
+//    header("Location: option_Ent_Sor.php");
 }
 
 // Fermer la connexion

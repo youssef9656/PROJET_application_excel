@@ -1,9 +1,9 @@
 
 <?php $pageName = 'operation'; include '../../config/connect_db.php'; include '../../includes/header.php'; ?>
 <?php
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-//error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 // Récupérer les lots pour la première liste déroulante
 $queryLots = "SELECT lot_id, lot_name FROM lots";
 $resultLots = mysqli_query($conn, $queryLots);
@@ -83,7 +83,7 @@ if (!$resultLots) {
                 <form id="ajouterOperationForm" method="POST" action="ajouter_operation.php">
                     <div class="mb-3">
                         <label for="lot" class="form-label">Sélectionner Lot:</label>
-                        <select id="lot" name="lot" class="form-select">
+                        <select id="lot" name="lot" class="form-select" required>
                             <option value="">-- Sélectionner Lot --</option>
                             <?php while ($row = mysqli_fetch_assoc($resultLots)) { ?>
                                 <option value="<?php echo $row['lot_id']; ?>"><?php echo $row['lot_name']; ?></option>
@@ -93,7 +93,7 @@ if (!$resultLots) {
 
                     <div class="mb-3">
                         <label for="sousLot" class="form-label">Sélectionner Sous-lot:</label>
-                        <select id="sousLot" name="sousLot" class="form-select" disabled>
+                        <select id="sousLot" name="sousLot" class="form-select" disabled required>
                             <option value="">-- Sélectionner Sous-lot --</option>
                         </select>
                     </div>
@@ -235,7 +235,6 @@ if (!$resultLots) {
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
 <script src="script.js"></script>
 <script>
-
 
     $('#tab1').load('operation_table.php #tableoperationdiv');
 
