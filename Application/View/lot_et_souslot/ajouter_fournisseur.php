@@ -1,5 +1,5 @@
 <?php
-include '../../config/connect_db.php';
+include '../../config/connect_db.php';  // Ajustez le chemin si nécessaire
 
 // Vérifier si les données du formulaire ont été soumises
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
