@@ -2,14 +2,21 @@
 
 include '../../Config/connect_db.php';
 $pageName = 'Article';
-$querySelect = "SELECT * FROM `sous_lots`";
-$paramsSelect = [];
-$data = selectData($querySelect, $paramsSelect);
 
-$queryProduit = "SELECT DISTINCT sous_lot_name ,sous_lot_id	 FROM sous_lots";
-$sous_lot_name = selectData($queryProduit, []);
+$lot = "SELECT lot_id, lot_name FROM lots";
+$lot_name = selectData($lot, []);
 
+if(isset($_GET["lot_name"])){
+   $lot_name= $_GET["lot_name"];
+    $queryProduit = "SELECT DISTINCT sous_lot_name ,sous_lot_id	 FROM sous_lots WHERE lot_name= $lot_name ";
+    $sous_lot_name = selectData($queryProduit, []);
 
+}else{
+
+    $queryProduit = "SELECT DISTINCT sous_lot_name ,sous_lot_id	 FROM sous_lots";
+    $sous_lot_name = selectData($queryProduit, []);
+
+}
 
 //$sqle1="SELECT * FROM article
 //WHERE id_article IN (
@@ -180,16 +187,27 @@ $sous_lot_name = selectData($queryProduit, []);
         <div class="w-75 m-3 mt-2">
             <div class="filter-inputs mb-3">
                 <div class="form row text-center" style="display: flex;flex-flow: row;justify-content: center " >
-                    <div class="w-25">
+                    <div class="w-25" >
+                        <input  type="text" list='lot' class="form-control keepDatalist w-100" placeholder="nam sous lot"
+                               id="lot_name" onchange="fillot_name()">
+                        <datalist id='lot'>
+                            <option value=""></option>
+                            <?php foreach($lot_name as $p):?>
+                                <option value='<?= $p['lot_name'] ?>'><?= $p['lot_name'] ?></option>
+                            <?php endforeach;?>
+                        </datalist>
+                    </div>
+                    <div class="w-25" id="div_sous_lot_name">
                         <input  type="text" list='nom' class="form-control keepDatalist w-100" placeholder="nam sous lot"
-                               id="sous_lot_name" onchange="filterTable()">
-                        <datalist id='nom'>
+                                id="sous_lot_name" onchange="filterTable()">
+                        <datalist id='nom' >
                             <option value=""></option>
                             <?php foreach($sous_lot_name as $p):?>
                                 <option value='<?= $p['sous_lot_name'] ?>'><?= $p['sous_lot_name'] ?></option>
                             <?php endforeach;?>
                         </datalist>
                     </div>
+
                 </div>
 
                 <div id="table2_souslot">
@@ -207,8 +225,20 @@ $sous_lot_name = selectData($queryProduit, []);
 <script src="../../includes/jquery.sheetjs.js"></script>
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
 <script>
+
     document.addEventListener('DOMContentLoaded', function() {
         const  sous_lot_name = document.getElementById('sous_lot_name');
+        const  lot_name = document.getElementById('lot_name');
+
+        window.fillot_name =()=>{
+            console.log(lot_name.value)
+            var url = 'article_sous_lot.php?lot_name=' + encodeURI(lot_name.value);
+            $('#div_sous_lot_name').load(url + ' #div_sous_lot_name',function (){
+
+
+            });
+
+        }
         window.filterTable = function() {
 
             var url = 'aficheArticleDeSousLou.php?sous_lot_name=' + encodeURI(sous_lot_name.value);

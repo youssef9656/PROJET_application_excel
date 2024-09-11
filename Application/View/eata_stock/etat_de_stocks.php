@@ -10,9 +10,17 @@
     <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
     <!-- Custom CSS -->
     <style>
+        #divbesoin{
+            /*position: absolute;*/
+            /*top: 20%;*/
+            /*z-index: 10 !important;*/
+            /*height: 500px;*/
+
+        }
+
 
         .table-container {
-            max-height: 300px; /* Adjust as needed */
+            max-height: 500px; /* Adjust as needed */
             overflow-y: auto;
             border: 1px solid #dee2e6;
             border-radius: .25rem;
@@ -153,8 +161,8 @@ include '../../includes/header.php';
 </style>
 
 
-<div class="container">
-    <h3 class="mb">Etat des stocks</h3>
+<div class="m-2">
+<!--    <h3 class="mb">Etat des stocks</h3>-->
     <div class="form col-12 mb-3 " style="display: flex;flex-flow: row;gap: 20px">
         <div class="col-2">
             <label for="start_date">Date de début:</label>
@@ -207,23 +215,23 @@ include '../../includes/header.php';
     <table class="table table-bordered table-hover table-primary" style="width: 150px; margin-left:10px; height: 150px ">
         <thead>
         <tr>
-            <th>Valeur Stock final </th>
-            <td id="totale_prix"></td>
+            <th >Valeur Stock final </th>
+            <td id="totale_Stock_final"></td>
 
         </tr>
         <tr>
             <th>Total Depenses Entrées final </th>
-            <td id="totale_prix"></td>
+            <td id="Total_Entrees_final"></td>
 
         </tr>
         <tr>
             <th> Entrées Total Depenses Sorties final </th>
-            <td id="totale_prix"></td>
+            <td id="Total_Sorties_final"></td>
 
         </tr>
-        <tr>
-            <th>Valeur Stock final </th>
-            <td id="totale_prix"></td>
+        <tr >
+            <td style="background-color: #00a357">Total </td>
+            <td id="Total_final" style="background-color: #00a357"></td>
 
         </tr>
         </thead>
@@ -288,7 +296,7 @@ include '../../includes/header.php';
              }
 
          })
-        let meesge = `<div class="alert alert-danger alert-dismissible fade show" role="alert" role="alert">Nous constatons que l'article <a href="#" class="alert-link fs-4"> ${article}</a> est en rupture ou en quantité insuffisante. Il est essentiel de réapprovisionner cet article dans les plus brefs délais afin de garantir la continuité des opérations. Merci de prendre les mesures nécessaires pour assurer la disponibilité de ${article}.  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        let meesge = `<div class="alert alert-danger alert-dismissible fade show" role="alert" role="alert" >Nous constatons que l'article <a href="#" class="alert-link fs-4"> ${article}</a> est en rupture ou en quantité insuffisante. Il est essentiel de réapprovisionner cet article dans les plus brefs délais afin de garantir la continuité des opérations. Merci de prendre les mesures nécessaires pour assurer la disponibilité de ${article}.  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>`
         if(article.length>0){
             document.getElementById("divbesoin").innerHTML=meesge
@@ -300,18 +308,23 @@ include '../../includes/header.php';
     function calcule(){
         var totale_Stock_final = 0
         var Total_Entrees_final = 0
-        var Entrées Total_Sorties_final = 0
+        var Total_Sorties_final = 0
+        let Total_final = 0
+
 
         document.querySelectorAll("#articles_table > tbody > tr").forEach((row)=>{
 
             totale_Stock_final+=parseFloat(row.children[7].innerText)
             Total_Entrees_final	+=parseFloat(row.children[8].innerText)
             Total_Sorties_final+=parseFloat(row.children[9].innerText)
+            Total_final = (totale_Stock_final + Total_Entrees_final - Total_Sorties_final)
 
         })
-document.getElementById("totale_Stock_final").innerText=prix_toutal.toFixed(2)
-document.getElementById("Total_Entrees_final").innerText=totale_Stock.toFixed(2)
-        document.getElementById("Total_Sorties_final").innerText=totale_Stock.toFixed(2)
+document.getElementById("totale_Stock_final").innerText=totale_Stock_final.toFixed(2)
+document.getElementById("Total_Entrees_final").innerText=Total_Entrees_final.toFixed(2)
+ document.getElementById("Total_Sorties_final").innerText=Total_Sorties_final.toFixed(2)
+ document.getElementById("Total_final").innerText=Total_final.toFixed(2)
+
 
 
     }
