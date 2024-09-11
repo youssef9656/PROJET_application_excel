@@ -2,7 +2,7 @@
 
 include '../../Config/connect_db.php';
 
-$lot = $_GET['lot'] ?? '';
+$lot =  isset($_GET['lot']) ? $_GET['lot'] : '';
 
 $query = "SELECT DISTINCT sous_lot_name FROM operation WHERE lot_name = ?  AND sortie_operation > 0";
 $stmt = $conn->prepare($query);

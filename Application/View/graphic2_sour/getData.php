@@ -3,12 +3,13 @@ include '../../Config/connect_db.php'; // تأكد من مسار الاتصال 
 
 header('Content-Type: application/json');
 
-$startDate = $_GET['start_date'] ?? '';
-$endDate = $_GET['end_date'] ?? '';
-$lot = $_GET['lot'] ?? '';
-$sousLot = $_GET['sous_lot'] ?? '';
-$article = $_GET['article'] ?? '';
-$fournisseur = $_GET['fournisseur'] ?? '';
+
+$startDate = isset($_GET['start_date']) ? $_GET['start_date'] : '';
+$endDate = isset($_GET['end_date']) ? $_GET['end_date'] : '';
+$lot = isset($_GET['lot']) ? $_GET['lot'] : '';
+$sousLot = isset($_GET['sous_lot']) ? $_GET['sous_lot'] : '';
+$article = isset($_GET['article']) ? $_GET['article'] : '';
+$fournisseur = isset($_GET['fournisseur']) ? $_GET['fournisseur'] : '';
 
 // إعداد استعلام أساسي
 $sql = "SELECT * FROM operation WHERE 1=1 AND sortie_operation > 0 ";
