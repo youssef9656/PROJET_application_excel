@@ -8,12 +8,14 @@ $lot_name = selectData($lot, []);
 
 if(isset($_GET["lot_name"])){
    $lot_name= $_GET["lot_name"];
-    $queryProduit = "SELECT DISTINCT sous_lot_name ,sous_lot_id	 FROM sous_lots WHERE lot_name= $lot_name ";
+    $queryProduit = "SELECT DISTINCT sous_lot_name, sous_lot_id 
+FROM sous_lots 
+WHERE lot_id = (SELECT lot_id FROM `lots` WHERE lot_name ='$lot_name');";
     $sous_lot_name = selectData($queryProduit, []);
 
 }else{
 
-    $queryProduit = "SELECT DISTINCT sous_lot_name ,sous_lot_id	 FROM sous_lots";
+    $queryProduit = "SELECT DISTINCT sous_lot_name ,sous_lot_id	 FROM sous_lots ";
     $sous_lot_name = selectData($queryProduit, []);
 
 }
@@ -197,7 +199,8 @@ if(isset($_GET["lot_name"])){
                             <?php endforeach;?>
                         </datalist>
                     </div>
-                    <div class="w-25" id="div_sous_lot_name">
+                    <div id="div_sous_lot_name">
+                    <div class="w-25" >
                         <input  type="text" list='nom' class="form-control keepDatalist w-100" placeholder="nam sous lot"
                                 id="sous_lot_name" onchange="filterTable()">
                         <datalist id='nom' >
@@ -207,7 +210,7 @@ if(isset($_GET["lot_name"])){
                             <?php endforeach;?>
                         </datalist>
                     </div>
-
+                    </div>
                 </div>
 
                 <div id="table2_souslot">
@@ -231,7 +234,6 @@ if(isset($_GET["lot_name"])){
         const  lot_name = document.getElementById('lot_name');
 
         window.fillot_name =()=>{
-            console.log(lot_name.value)
             var url = 'article_sous_lot.php?lot_name=' + encodeURI(lot_name.value);
             $('#div_sous_lot_name').load(url + ' #div_sous_lot_name',function (){
 
@@ -240,6 +242,7 @@ if(isset($_GET["lot_name"])){
 
         }
         window.filterTable = function() {
+            const  sous_lot_name = document.getElementById('sous_lot_name');
 
             var url = 'aficheArticleDeSousLou.php?sous_lot_name=' + encodeURI(sous_lot_name.value);
             $('#table2_souslot').load(url + ' #tblarARlot',function (){

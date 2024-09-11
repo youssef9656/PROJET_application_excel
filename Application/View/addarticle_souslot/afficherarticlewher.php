@@ -1,4 +1,4 @@
-<?php
+ <?php
 // تضمين ملف الاتصال بقاعدة البيانات
 include '../../Config/connect_db.php';
 
