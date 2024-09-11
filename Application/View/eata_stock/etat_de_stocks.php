@@ -183,7 +183,7 @@ include '../../includes/header.php';
 <div style="display:flex;flex-flow: row">
     <div class="table-container mt-4" >
         <table id="articles_table" class="table table-Primary table-bordered table-hover  table-group-divider" >
-            <thead class="thead-dark ">
+            <thead class="thead-dark">
             <tr>
                 <th>ID</th>
                 <th>Article</th>
@@ -193,6 +193,8 @@ include '../../includes/header.php';
                 <th>Stock Final</th>
                 <th>Prix Moyen</th>
                 <th>Valeur Stock</th>
+                <th>Total Depenses Entrées</th> <!-- العمود الجديد -->
+                <th>Total Depenses Sorties</th> <!-- العمود الجديد -->
                 <th>Stock Min</th>
                 <th>Besoin</th>
             </tr>
@@ -205,17 +207,27 @@ include '../../includes/header.php';
     <table class="table table-bordered table-hover table-primary" style="width: 150px; margin-left:10px; height: 150px ">
         <thead>
         <tr>
-            <th>Prix Moyen</th>
-            <th>Valeur Stock</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
+            <th>Valeur Stock final </th>
             <td id="totale_prix"></td>
-            <td id="totale_Stock"></td>
 
         </tr>
-        </tbody>
+        <tr>
+            <th>Total Depenses Entrées final </th>
+            <td id="totale_prix"></td>
+
+        </tr>
+        <tr>
+            <th> Entrées Total Depenses Sorties final </th>
+            <td id="totale_prix"></td>
+
+        </tr>
+        <tr>
+            <th>Valeur Stock final </th>
+            <td id="totale_prix"></td>
+
+        </tr>
+        </thead>
+
     </table>
 
 </div>
@@ -231,11 +243,9 @@ include '../../includes/header.php';
         let currentDate = new Date();
         currentDate.setFullYear(currentDate.getFullYear() + 2);
 
-
         const startDate = document.getElementById('start_date').value || '1970-01-01'; // Default start date
         const endDate = document.getElementById('end_date').value || currentDate.toISOString().split('T')[0]; // Default end date
         const statusFilter = document.getElementById('status_filter').value;
-
 
         fetch(`fetch_data.php?start_date=${startDate}&end_date=${endDate}&status_filter=${statusFilter}`)
             .then(response => response.json())
@@ -245,15 +255,21 @@ include '../../includes/header.php';
 
                 data.forEach(row => {
                     const tr = document.createElement('tr');
-                    Object.values(row).forEach(value => {
+
+                    // Add cells in the specified order
+                    const fields = ['ID', 'Article', 'Stock_Initial', 'Total_Entry_Operations', 'Total_Exit_Operations', 'Stock_Final', 'Prix', 'Stock_Value', 'Total_Depenses_Entree', 'Total_Depenses_Sortie', 'Stock_Min', 'Requirement_Status'];
+
+                    fields.forEach(field => {
                         const td = document.createElement('td');
-                        td.textContent = value;
+                        td.textContent = row[field] || ''; // Ensure to handle missing data
                         tr.appendChild(td);
                     });
+
                     tableBody.appendChild(tr);
                 });
-                color()
-                calcule()
+
+                color();  // assuming color is a function defined elsewhere
+                calcule();  // assuming calcule is a function defined elsewhere
 
             })
             .catch(error => console.error('Error fetching data:', error));
@@ -282,16 +298,21 @@ include '../../includes/header.php';
     }
 
     function calcule(){
-        var prix_toutal=0
-        var totale_Stock=0
+        var totale_Stock_final = 0
+        var Total_Entrees_final = 0
+        var Entrées Total_Sorties_final = 0
 
         document.querySelectorAll("#articles_table > tbody > tr").forEach((row)=>{
 
-            prix_toutal+=parseFloat(row.children[6].innerText)
-            totale_Stock+=parseFloat(row.children[7].innerText)
-      })
-document.getElementById("totale_prix").innerText=prix_toutal.toFixed(2)
-document.getElementById("totale_Stock").innerText=totale_Stock.toFixed(2)
+            totale_Stock_final+=parseFloat(row.children[7].innerText)
+            Total_Entrees_final	+=parseFloat(row.children[8].innerText)
+            Total_Sorties_final+=parseFloat(row.children[9].innerText)
+
+        })
+document.getElementById("totale_Stock_final").innerText=prix_toutal.toFixed(2)
+document.getElementById("Total_Entrees_final").innerText=totale_Stock.toFixed(2)
+        document.getElementById("Total_Sorties_final").innerText=totale_Stock.toFixed(2)
+
 
     }
 

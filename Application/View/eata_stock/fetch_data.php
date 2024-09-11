@@ -8,32 +8,55 @@ $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-d'); // Def
 $status_filter = isset($_GET['status_filter']) ? $_GET['status_filter'] : ''; // Get the status filter (besoin or bon)
 
 // Prepare SQL query
-$sql = "
-SELECT 
+$sql = "SELECT 
     a.id_article AS ID,
     a.nom AS Article,
     a.stock_initial AS Stock_Initial,
-    COALESCE(SUM(o.entree_operation), 0) AS Total_Entry_Operations,
-    COALESCE(SUM(o.sortie_operation), 0) AS Total_Exit_Operations,
-    a.stock_initial + COALESCE(SUM(o.entree_operation), 0) - COALESCE(SUM(o.sortie_operation), 0) AS Stock_Final,
-    (
-        SELECT AVG(p.prix_operation)
-        FROM operation p
-        WHERE p.nom_article = a.nom
-        AND p.date_operation BETWEEN '$start_date' AND '$end_date'
-        ORDER BY p.date_operation DESC
-        LIMIT 30
+    ROUND(COALESCE(SUM(o.entree_operation), 0), 2) AS Total_Entry_Operations,
+    ROUND(COALESCE(SUM(o.sortie_operation), 0), 2) AS Total_Exit_Operations,
+    ROUND(a.stock_initial + COALESCE(SUM(o.entree_operation), 0) - COALESCE(SUM(o.sortie_operation), 0), 2) AS Stock_Final,
+    ROUND(
+        (
+            SELECT p.prix_operation
+            FROM operation p
+            WHERE p.nom_article = a.nom
+            AND p.date_operation BETWEEN '$start_date' AND '$end_date'
+            ORDER BY p.date_operation DESC
+            LIMIT 1
+        ), 2
     ) AS Prix,
-    (
-        a.stock_initial + COALESCE(SUM(o.entree_operation), 0) - COALESCE(SUM(o.sortie_operation), 0)
-    ) * (
-        SELECT AVG(p.prix_operation)
-        FROM operation p
-        WHERE p.nom_article = a.nom
-        AND p.date_operation BETWEEN '$start_date' AND '$end_date'
-        ORDER BY p.date_operation DESC
-        LIMIT 30
+    ROUND(
+        (
+            a.stock_initial + COALESCE(SUM(o.entree_operation), 0) - COALESCE(SUM(o.sortie_operation), 0)
+        ) * (
+            SELECT p.prix_operation
+            FROM operation p
+            WHERE p.nom_article = a.nom
+            AND p.date_operation BETWEEN '$start_date' AND '$end_date'
+            ORDER BY p.date_operation DESC
+            LIMIT 1
+        ), 2
     ) AS Stock_Value,
+    ROUND(
+        COALESCE(SUM(o.entree_operation), 0) * (
+            SELECT p.prix_operation
+            FROM operation p
+            WHERE p.nom_article = a.nom
+            AND p.date_operation BETWEEN '$start_date' AND '$end_date'
+            ORDER BY p.date_operation DESC
+            LIMIT 1
+        ), 2
+    ) AS Total_Depenses_Entree,
+    ROUND(
+        COALESCE(SUM(o.sortie_operation), 0) * (
+            SELECT p.prix_operation
+            FROM operation p
+            WHERE p.nom_article = a.nom
+            AND p.date_operation BETWEEN '$start_date' AND '$end_date'
+            ORDER BY p.date_operation DESC
+            LIMIT 1
+        ), 2
+    ) AS Total_Depenses_Sortie,
     a.stock_min AS Stock_Min,
     CASE 
         WHEN a.stock_initial + COALESCE(SUM(o.entree_operation), 0) - COALESCE(SUM(o.sortie_operation), 0) < a.stock_min 

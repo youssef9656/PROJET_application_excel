@@ -1,12 +1,16 @@
 
-<?php $pageName = 'operation'; include '../../config/connect_db.php'; include '../../includes/header.php'; ?>
+<?php $pageName = 'operation';
+include '../../includes/header.php';
+?>
 <?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 // Récupérer les lots pour la première liste déroulante
+include '../../config/connect_db.php';
 $queryLots = "SELECT lot_id, lot_name FROM lots";
 $resultLots = mysqli_query($conn, $queryLots);
+
 
 if (!$resultLots) {
     die('Erreur de requête : ' . mysqli_error($conn));

@@ -4,8 +4,8 @@ function insst_etat_stocks() {
 
     include '../../config/connect_db.php';
 
-    $start_date = '1000-01-01'; // تاريخ البداية
-    $end_date = '9024-12-31'; // تاريخ النهاية
+    $start_date = '1000-01-01'; // Date de début
+    $end_date = '9024-12-31'; // Date de fin
 
     $sql_select = "
     SELECT 
@@ -21,9 +21,8 @@ function insst_etat_stocks() {
             WHERE p.nom_article = a.nom
             AND p.date_operation BETWEEN '$start_date' AND '$end_date'
             ORDER BY p.date_operation DESC
-            
             LIMIT 30
-        ) AS  Prix,
+        ) AS Prix,
         (
             a.stock_initial + COALESCE(SUM(o.entree_operation), 0) - COALESCE(SUM(o.sortie_operation), 0)
         ) * (
@@ -66,7 +65,11 @@ function insst_etat_stocks() {
             $stock_min = $row['Stock_Min'];
             $requirement_status = $row['Requirement_Status'];
 
-            // التحقق مما إذا كانت البيانات موجودة في الجدول الجديد
+            // Calculer les dépenses
+            $total_depenses_entree = $total_entry_operations * $prix;
+            $total_depenses_sortie = $total_exit_operations * $prix;
+
+            // Vérifier si les données existent dans la table
             $sql_check = "SELECT ID FROM etat_de_stocks WHERE ID = ?";
             $stmt = $conn->prepare($sql_check);
             $stmt->bind_param("i", $id);
@@ -74,39 +77,35 @@ function insst_etat_stocks() {
             $stmt->store_result();
 
             if ($stmt->num_rows > 0) {
-                // تحديث البيانات إذا كانت موجودة
+                // Mettre à jour les données si elles existent
                 $sql_update = "TRUNCATE TABLE etat_de_stocks";
                 if ($conn->query($sql_update) === TRUE) {
                     $sql_insert = "
                 INSERT INTO etat_de_stocks (ID, Article, Stock_Initial, Total_Entry_Operations, Total_Exit_Operations, 
-                    Stock_Final, Prix, Stock_Value, Stock_Min, Requirement_Status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    Stock_Final, Prix, Stock_Value, Total_Depenses_Entree, Total_Depenses_Sortie, Stock_Min, Requirement_Status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ";
                     $stmt = $conn->prepare($sql_insert);
-                    $stmt->bind_param("siiiididss", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $stock_min, $requirement_status);
-
+                    $stmt->bind_param("iissiiidddis", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $total_depenses_entree, $total_depenses_sortie, $stock_min, $requirement_status);
                 }
 
             } else {
-                // إدراج البيانات إذا لم تكن موجودة
+                // Insérer les données si elles n'existent pas
                 $sql_insert = "
                 INSERT INTO etat_de_stocks (ID, Article, Stock_Initial, Total_Entry_Operations, Total_Exit_Operations, 
-                    Stock_Final, Prix, Stock_Value, Stock_Min, Requirement_Status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    Stock_Final, Prix, Stock_Value, Total_Depenses_Entree, Total_Depenses_Sortie, Stock_Min, Requirement_Status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ";
                 $stmt = $conn->prepare($sql_insert);
-                $stmt->bind_param("siiiididss", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $stock_min, $requirement_status);
+                $stmt->bind_param("iissiiidddis", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $total_depenses_entree, $total_depenses_sortie, $stock_min, $requirement_status);
             }
 
             $stmt->execute();
         }
     } else {
-        echo "لا توجد بيانات للمعالجة.";
+        echo "Aucune donnée à traiter.";
     }
 
     $conn->close();
-
-
 }
 ?>
-
