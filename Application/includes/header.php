@@ -97,7 +97,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item item-hover">
-                    <a class="nav-link" href="../operations/option_Ent_Sor.php">Journal entrées et sorties</a>
+                    <a class="nav-link" href="../operations_01/option_Ent_Sor.php">Journal entrées et sorties</a>
                 </li>
                 <li class="nav-item item-hover">
                     <a class="nav-link" href="../eata_stock/etat_de_stocks.php">Etat des stocks</a>
