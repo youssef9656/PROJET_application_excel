@@ -110,6 +110,12 @@ if (!$resultLots) {
                     </div>
 
                     <div class="mb-3">
+                        <label for="ref" class="form-label">Réference :</label>
+                        <input type="text" id="ref" name="ref" class="form-control">
+                    </div>
+
+
+                    <div class="mb-3">
                         <label for="entree" class="form-label">Entrée:</label>
                         <input type="number" id="entree" name="entree" class="form-control">
                     </div>
@@ -135,7 +141,7 @@ if (!$resultLots) {
 
                     <div class="mb-3">
                         <label for="prix" class="form-label">Prix:</label>
-                        <input type="number" id="prix" name="prix" class="form-control" step="0.01" min="0" placeholder="Entrez le prix">
+                        <input type="number" id="prix" name="prix" class="form-control" step="0.01" min="0" placeholder="Entrez le prix" disabled >
                     </div>
 
                     <button type="submit" class="btn btn-primary">Ajouter Opération</button>

@@ -21,7 +21,7 @@ setTimeout(() => {
         var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
         for (var i = 0; i < rows.length; i++) {
-            var dateCell = rows[i].getElementsByTagName('td')[2]; // La date est dans la 3e colonne (index 2)
+            var dateCell = rows[i].getElementsByTagName('td')[1]; // La date est dans la 3e colonne (index 2)
             var dateText = dateCell.innerText.trim();
 
             // Convertir la date de la ligne en objet Date
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (xhr.status === 200) {
                 var services = JSON.parse(xhr.responseText);
                 var serviceSelect = document.getElementById('service');
-                serviceSelect.disabled = false;
+                serviceSelect.disabled = true;
                 serviceSelect.innerHTML = '<option value="">-- Sélectionner Service --</option>';
                 services.forEach(function(service) {
                     serviceSelect.innerHTML += '<option value="' + service.id + '">' + service.nom_service + '</option>';
@@ -169,11 +169,12 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('sortie').disabled = true;
             document.getElementById('service').disabled = true;
             document.getElementById('fournisseur').disabled = false;
+            document.getElementById('prix').disabled = false;
         } else {
             // Si le champ "entrée" est vide
             document.getElementById('sortie').disabled = false;
-            document.getElementById('service').disabled = false;
-            document.getElementById('fournisseur').disabled = false;
+            document.getElementById('service').disabled = true;
+            document.getElementById('fournisseur').disabled = true;
         }
     });
 
@@ -183,11 +184,12 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('entree').disabled = true;
             document.getElementById('fournisseur').disabled = true;
             document.getElementById('service').disabled = false;
+            document.getElementById('prix').disabled = true
         } else {
             // Si le champ "sortie" est vide
             document.getElementById('entree').disabled = false;
-            document.getElementById('fournisseur').disabled = false;
-            document.getElementById('service').disabled = false;
+            document.getElementById('fournisseur').disabled = true;
+            document.getElementById('service').disabled = true;
         }
     });
 
