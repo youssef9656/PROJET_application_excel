@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 serviceSelect.disabled = true;
                 serviceSelect.innerHTML = '<option value="">-- Sélectionner Service --</option>';
                 services.forEach(function(service) {
-                    serviceSelect.innerHTML += '<option value="' + service.id + '">' + service.nom_service + '</option>';
+                    serviceSelect.innerHTML += '<option value="' + service.id + '">' + service.service + '</option>';
                 });
             }
         };
@@ -259,7 +259,7 @@ $(document).ready(function() {
                 loadOptions('get_sous_lots.php', '#operationSousLot', sousLotId, 'sous_lot_id', 'sous_lot_name', { lot_id: lotId });
                 loadOptions('get_articles.php', '#operationArticle', articleId, 'id_article', 'nom', { sous_lot_id: sousLotId });
                 loadOptions('get_fournisseurs.php', '#operationFournisseur', fournisseur, 'id_fournisseur', 'nom_fournisseur', { lot_id: lotId });
-                loadOptions('get_services.php', '#operationService', service, 'id', 'nom_service');
+                loadOptions('get_services.php', '#operationService', service, 'id', 'service');
 
                 $('#modifierOperationModal').modal('show');
             });
