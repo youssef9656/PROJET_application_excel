@@ -83,13 +83,16 @@ if (isset($_GET['message'])) {
     }
     .filter-seleects{
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        width: 100%;
         justify-content: space-between;
+        flex-flow: wrap
 
     }
     .filter-seleects div{
-        display: flex;
-        justify-content: space-between;
+        display: flex ;
+        flex-direction: column;
+        /*justify-content: space-between;*/
         margin-top: 20px;
     }
     .table-fournisseur{
@@ -413,6 +416,10 @@ if (isset($_GET['message'])) {
                 </datalist>
             </div>
 
+            <div>
+                <button id="afficher_souslot" class="btn btn-primary">Afficher tous</button>
+            </div>
+
 
 
         </div>
@@ -576,6 +583,9 @@ if (isset($_GET['message'])) {
     document.addEventListener('DOMContentLoaded', function() {
         // Sélectionner tous les boutons de modification
         setTimeout(()=>{
+            document.querySelector('#afficher_souslot').addEventListener('click', ()=>{
+                location.reload()
+            })
             var modifyButtons = document.querySelectorAll('#id1');
 
             modifyButtons.forEach(function(button) {
@@ -597,6 +607,9 @@ if (isset($_GET['message'])) {
                 });
             });
         } , 1000)
+
+        // afficher tous les sous lots button
+
 
         function loadLotOptions(selectedLotId) {
             var lotSelect = document.getElementById('modifierLotSelect');

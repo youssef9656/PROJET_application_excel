@@ -11,9 +11,14 @@ include '../../config/connect_db.php';
 $lotId = $_POST['lot'];
 $sousLotId = $_POST['sousLot'];
 $articleId = $_POST['article'];
-$fournisseurId = $_POST['fournisseur'];
 $serviceId = $_POST['service'];
 $ref = $_POST['ref'];
+
+if(isset($_POST['fournisseur'])){
+    $fournisseurId = $_POST['fournisseur'];
+}else{
+    $fournisseurId = null ;
+}
 
 
 
@@ -90,7 +95,7 @@ if ($fournisseurId) {
 // Obtenir le nom du service
 $serviceName = '';
 if ($serviceId) {
-    $queryService = "SELECT nom_service FROM service_zone WHERE id = ?";
+    $queryService = "SELECT service FROM service_zone WHERE id = ?";
     $stmtService = $conn->prepare($queryService);
     $stmtService->bind_param('i', $serviceId);
     $stmtService->execute();

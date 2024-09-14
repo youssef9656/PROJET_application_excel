@@ -199,135 +199,180 @@ document.addEventListener('DOMContentLoaded', function() {
 // modifier operation codes
 
 
-$(document).ready(function() {
-    // Ouvrir le modal avec les données actuelles de l'opération
-    setTimeout(function () {
+document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(() => {
 
-        $(document).ready(function() {
-            $('#modifierOperationForm').on('submit', function(e) {
-                e.preventDefault(); // Empêcher le rechargement de la page
-
-                var id = $('#operationId').val();
-                if (!id) {
-                    alert('ID de l\'opération est manquant.');
-                    return;
-                }
-
-                var formData = $(this).serialize(); // Sérialiser les données du formulaire
-
-                $.ajax({
-                    type: 'POST',
-                    url: 'modifier_operation.php', // Page PHP qui traite la modification
-                    data: formData,
-                    success: function(response) {
-                        alert('Opération modifiée avec succès');
-                        $('#modifierOperationModal').modal('hide'); // Fermer le modal
-                        location.reload(); // Rafraîchir la page pour voir les changements
-                    },
-                    error: function(xhr, status, error) {
-                        alert('Erreur lors de la modification de l\'opération : ' + error);
-                    }
-                });
-            });
-
-            // Ouvrir le modal avec les données actuelles de l'opération
-            $(document).on('click', '.modify-btn', function() {
-                var id = $(this).data('id');
-                var lotId = $(this).data('lot-id');
-                var sousLotId = $(this).data('sous-lot-id');
-                var articleId = $(this).data('article-id');
-                var date = $(this).closest('tr').find('td:nth-child(3)').text().trim();
-                var entree = $(this).closest('tr').find('td:nth-child(4)').text().trim();
-                var sortie = $(this).closest('tr').find('td:nth-child(5)').text().trim();
-                var fournisseur = $(this).closest('tr').find('td:nth-child(7)').text().trim();
-                var prix = $(this).closest('tr').find('td:nth-child(10)').text().trim();
-                var service = $(this).closest('tr').find('td:nth-child(9)').text().trim();
-
-                // Convertir la date au format requis pour datetime-local
-                var formattedDate = new Date(date).toISOString().slice(0,16); // Format YYYY-MM-DDTHH:MM
-
-                $('#operationId').val(id);
-                $('#operationDate').val(formattedDate);
-                $('#operationEntree').val(entree);
-                $('#operationSortie').val(sortie);
-                $('#operationFournisseur').val(fournisseur);
-                $('#operationPrix').val(prix);
-                $('#operationService').val(service);
-
-                // Charger les options des selects
-                loadOptions('get_lots.php', '#operationLot', lotId, 'lot_id', 'lot_name');
-                loadOptions('get_sous_lots.php', '#operationSousLot', sousLotId, 'sous_lot_id', 'sous_lot_name', { lot_id: lotId });
-                loadOptions('get_articles.php', '#operationArticle', articleId, 'id_article', 'nom', { sous_lot_id: sousLotId });
-                loadOptions('get_fournisseurs.php', '#operationFournisseur', fournisseur, 'id_fournisseur', 'nom_fournisseur', { lot_id: lotId });
-                loadOptions('get_services.php', '#operationService', service, 'id', 'service');
-
-                $('#modifierOperationModal').modal('show');
-            });
-
-            // Fonction pour charger les options dans un select
-            function loadOptions(url, selectId, selectedId, idField, nameField, params = {}) {
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    data: params,
-                    success: function(data) {
-                        try {
-                            var options = JSON.parse(data);
-                            var select = $(selectId);
-                            select.empty(); // Vider les options existantes
-                            select.append('<option value="">Sélectionner</option>'); // Option par défaut
-                            $.each(options, function(index, item) {
-                                var selected = item[idField] == selectedId ? ' selected' : '';
-                                select.append('<option value="' + item[idField] + '"' + selected + '>' + item[nameField] + '</option>');
-                            });
-                        } catch (e) {
-                            console.error('Erreur de parsing JSON :', e);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        alert('Erreur lors du chargement des options : ' + error);
-                    }
-                });
+        document.getElementById('entree_modifier').addEventListener('input', function() {
+            if (this.value) {
+                // Si le champ "entrée" n'est pas vide
+                document.getElementById('sortie_modifier').disabled = true;
+                document.getElementById('service_modifier').disabled = true;
+                document.getElementById('fournisseur_modifier').disabled = false;
+                document.getElementById('prix_modifier').disabled = false;
+            } else {
+                // Si le champ "entrée" est vide
+                document.getElementById('sortie_modifier').disabled = false;
+                document.getElementById('service_modifier').disabled = true;
+                document.getElementById('fournisseur_modifier').disabled = true;
             }
 
-            // Gestion des champs
-            $('#operationEntree').on('input', function() {
-                var entree = $(this).val();
-                $('#operationSortie').prop('disabled', entree.length > 0);
-                $('#operationFournisseur').prop('disabled', entree.length > 0);
-            });
 
-            $('#operationSortie').on('input', function() {
-                var sortie = $(this).val();
-                $('#operationEntree').prop('disabled', sortie.length > 0);
-                $('#operationFournisseur').prop('disabled', sortie.length > 0);
-            });
+            document.getElementById('sortie_modifier').addEventListener('input', function() {
 
-            // Charger les sous-lots lorsque le lot change
-            $('#operationLot').on('change', function() {
-                var lotId = $(this).val();
-                loadOptions('get_sous_lots.php', '#operationSousLot', '', 'sous_lot_id', 'sous_lot_name', { lot_id: lotId });
-                $('#operationArticle').empty().append('<option value="">Sélectionner</option>'); // Réinitialiser les articles
-            });
+                if (this.value) {
+                    console.log(document.getElementById('sortie_modifier'))
+                    // Si le champ "sortie" n'est pas vide
+                    document.getElementById('entree_modifier').disabled = true;
+                    document.getElementById('fournisseur_modifier').disabled = true;
+                    document.getElementById('service_modifier').disabled = false;
+                    document.getElementById('prix_modifier').disabled = true
+                } else {
+                    // Si le champ "sortie" est vide
+                    document.getElementById('entree_modifier').disabled = false;
+                    document.getElementById('fournisseur_modifier').disabled = true;
+                    document.getElementById('service_modifier').disabled = true;
+                }
+            })
 
-            // Charger les articles lorsque le sous-lot change
-            $('#operationSousLot').on('change', function() {
-                var sousLotId = $(this).val();
-                loadOptions('get_articles.php', '#operationArticle', '', 'id_article', 'nom', { sous_lot_id: sousLotId });
+        })
+
+        const modifierButtons = document.querySelectorAll('.modify-btn');
+        const lotModifier = document.getElementById('lot-modifier');
+        const sousLotModifier = document.getElementById('sousLot-modifier');
+        const articleModifier = document.getElementById('article-modifier');
+        const fournisseurModifier = document.getElementById('fournisseur_modifier');
+        const serviceModifier = document.getElementById('service_modifier');
+        const dateOperationModifier = document.getElementById('date_operation');
+        const operationIdInput = document.getElementById('operation-id');
+
+        modifierButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const operationId = this.getAttribute('data-id');
+                const lotName = this.getAttribute('data-lot');
+                const sousLotName = this.getAttribute('data-sous-lot');
+                const articleName = this.getAttribute('data-article');
+
+                // Remplir le modal avec les données existantes
+                operationIdInput.value = operationId;
+
+                // Charge les options du lot
+                fetch('get_lots.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        lotModifier.innerHTML = '<option value="">-- Sélectionner Lot --</option>';
+                        data.forEach(lot => {
+                            const option = document.createElement('option');
+                            option.value = lot.lot_id;
+                            option.textContent = lot.lot_name;
+                            if (lot.lot_name === lotName) {
+                                option.selected = true;
+                            }
+                            lotModifier.appendChild(option);
+                        });
+                        lotModifier.dispatchEvent(new Event('change')); // Déclenche l'événement pour charger les sous-lots
+                    });
+
+                // Charge les options du sous-lot, article, fournisseur, et service en fonction du lot sélectionné
+                lotModifier.addEventListener('change', function () {
+                    const lotId = this.value;
+                    fetch(`get_sous_lots.php?lot_id=${lotId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            sousLotModifier.innerHTML = '<option value="">-- Sélectionner Sous-lot --</option>';
+                            data.forEach(sousLot => {
+                                const option = document.createElement('option');
+                                option.value = sousLot.sous_lot_id;
+                                option.textContent = sousLot.sous_lot_name;
+                                sousLotModifier.appendChild(option);
+                            });
+                            sousLotModifier.disabled = !lotId;
+                            sousLotModifier.dispatchEvent(new Event('change')); // Déclenche l'événement pour charger les articles
+                        });
+                });
+
+                sousLotModifier.addEventListener('change', function () {
+                    const sousLotId = this.value;
+                    fetch(`get_articles.php?sous_lot_id=${sousLotId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            articleModifier.innerHTML = '<option value="">-- Sélectionner Article --</option>';
+                            data.forEach(article => {
+                                const option = document.createElement('option');
+                                option.value = article.id_article;
+                                option.textContent = article.nom;
+                                articleModifier.appendChild(option);
+                            });
+                            articleModifier.disabled = !sousLotId;
+                        });
+                });
+
+                lotModifier.addEventListener('change', function () {
+                    const articleId = this.value;
+
+                    fetch(`get_fournisseurs.php?lot_id=${articleId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            fournisseurModifier.innerHTML = '<option value="">-- Sélectionner Fournisseur --</option>';
+                            data.forEach(fournisseur => {
+                                const option = document.createElement('option');
+                                option.value = fournisseur.id_fournisseur;
+                                option.textContent = fournisseur.nom_fournisseur +" "+ fournisseur.prenom_fournisseur;
+                                fournisseurModifier.appendChild(option);
+                            });
+                            fournisseurModifier.disabled = !articleId;
+                        });
+
+                    fetch(`get_services.php?article_id=${articleId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            serviceModifier.innerHTML = '<option value="">-- Sélectionner Service --</option>';
+                            data.forEach(service => {
+                                const option = document.createElement('option');
+                                option.value = service.id;
+                                option.textContent = service.service;
+                                serviceModifier.appendChild(option);
+                            });
+                            serviceModifier.disabled = !articleId;
+                        });
+                });
+
+                // Pré-remplir les champs restants
+                fetch(`get_operation_details.php?operation_id=${operationId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Remplir les champs du modal avec les détails de l'opération
+                        if (data) {
+                            sousLotModifier.value = data.lot_name;
+                            articleModifier.value = data.nom_article;
+                            fournisseurModifier.value = data.nom_pre_fournisseur;
+                            serviceModifier.value = data.service_operation;
+
+                            // dateOperationModifier.value = data.date_operation;
+                            const formattedDate = data.date_operation.replace(" ", "T").substring(0, 16);
+                            dateOperationModifier.value = formattedDate;
+
+                            // Remplir les champs supplémentaires
+                            document.getElementById('ref-modifier').value = data.ref;
+                            document.getElementById('entree_modifier').value = data.entree;
+                            document.getElementById('sortie_modifier').value = data.sortie;
+                            document.getElementById('prix_modifier').value = data.prix;
+                        }
+                    });
+
+                // Ouvrir le modal
+                const modal = new bootstrap.Modal(document.getElementById('modifierOperationModal'));
+                modal.show();
             });
         });
 
-
-
-
-
-
-
-
-
-    }, 100)
-
-
+    }, 100);
 });
+
+
+
+
+
+
+
 
 

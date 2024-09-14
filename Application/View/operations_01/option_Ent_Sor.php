@@ -157,63 +157,147 @@ if (!$resultLots) {
 <!-- Modal Structure -->
 <!-- Modal -->
 <!-- Modal pour modifier une opération -->
-<div id="modifierOperationModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+<!--<div id="modifierOperationModal" class="modal fade" tabindex="-1" role="dialog">-->
+<!--    <div class="modal-dialog" role="document">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title">Modifier Opération</h5>-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <form id="modifierOperationForm">-->
+<!--                    <input type="hidden" id="operationId" name="operationId" value="">-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="operationDate">Date</label>-->
+<!--                        <input type="datetime-local" id="operationDate" name="date_operation" class="form-control">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="operationLot">Lot</label>-->
+<!--                        <select id="operationLot" name="lot_id" class="form-control"></select>-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="operationSousLot">Sous-lot</label>-->
+<!--                        <select id="operationSousLot" name="sous_lot_id" class="form-control"></select>-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="operationArticle">Article</label>-->
+<!--                        <select id="operationArticle" name="article_id" class="form-control"></select>-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="operationEntree">Entrée</label>-->
+<!--                        <input type="number" step="0.01" id="operationEntree" name="entree_operation" class="form-control">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="operationSortie">Sortie</label>-->
+<!--                        <input type="number" step="0.01" id="operationSortie" name="sortie_operation" class="form-control">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="operationFournisseur">Fournisseur</label>-->
+<!--                        <select id="operationFournisseur" name="fournisseur_id" class="form-control"></select>-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="operationPrix">Prix</label>-->
+<!--                        <input type="number" step="0.01" id="operationPrix" name="prix_operation" class="form-control">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="operationService">Service</label>-->
+<!--                        <select id="operationService" name="service_id" class="form-control"></select>-->
+<!--                    </div>-->
+<!--                    <button type="submit" class="btn btn-primary">Modifier</button>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+
+
+<!-- Modal de Modification d'Opération -->
+<!-- Modal -->
+<!-- Modal Modifier Opération -->
+<!-- Modal modifier operation -->
+<!-- Modal modifier operation -->
+<!-- Modal modifier operation -->
+<!-- Modal modifier operation -->
+<div class="modal fade" id="modifierOperationModal" tabindex="-1" aria-labelledby="modifierOperationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Modifier Opération</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" id="modifierOperationModalLabel">Modifier Opération</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="modifierOperationForm">
-                    <input type="hidden" id="operationId" name="operationId" value="">
-                    <div class="form-group">
-                        <label for="operationDate">Date</label>
-                        <input type="datetime-local" id="operationDate" name="date_operation" class="form-control">
+                <form id="modifierOperationForm" method="POST" action="modifier_operation.php">
+                    <input type="hidden" id="operation-id" name="operation_id"> <!-- ID de l'opération à modifier -->
+                    <div class="mb-3">
+                        <label for="lot-modifier" class="form-label">Sélectionner Lot:</label>
+                        <select id="lot-modifier" name="lot" class="form-select" required>
+                            <option value="">-- Sélectionner Lot --</option>
+                            <!-- Options seront ajoutées dynamiquement -->
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label for="operationLot">Lot</label>
-                        <select id="operationLot" name="lot_id" class="form-control"></select>
+
+                    <div class="mb-3">
+                        <label for="sousLot-modifier" class="form-label">Sélectionner Sous-lot:</label>
+                        <select id="sousLot-modifier" name="sousLot" class="form-select" disabled required>
+                            <option value="">-- Sélectionner Sous-lot --</option>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label for="operationSousLot">Sous-lot</label>
-                        <select id="operationSousLot" name="sous_lot_id" class="form-control"></select>
+
+                    <div class="mb-3">
+                        <label for="article-modifier" class="form-label">Sélectionner Article:</label>
+                        <select id="article-modifier" name="article" class="form-select" disabled required>
+                            <option value="">-- Sélectionner Article --</option>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label for="operationArticle">Article</label>
-                        <select id="operationArticle" name="article_id" class="form-control"></select>
+
+                    <div class="mb-3">
+                        <label for="ref-modifier" class="form-label">Référence:</label>
+                        <input type="text" id="ref-modifier" name="ref" class="form-control">
                     </div>
-                    <div class="form-group">
-                        <label for="operationEntree">Entrée</label>
-                        <input type="number" step="0.01" id="operationEntree" name="entree_operation" class="form-control">
+
+                    <div class="mb-3">
+                        <label for="entree-modifier" class="form-label">Entrée:</label>
+                        <input type="number" id="entree_modifier" name="entree" class="form-control">
                     </div>
-                    <div class="form-group">
-                        <label for="operationSortie">Sortie</label>
-                        <input type="number" step="0.01" id="operationSortie" name="sortie_operation" class="form-control">
+
+                    <div class="mb-3">
+                        <label for="sortie-modifier" class="form-label">Sortie:</label>
+                        <input type="number" id="sortie_modifier" name="sortie" class="form-control">
                     </div>
-                    <div class="form-group">
-                        <label for="operationFournisseur">Fournisseur</label>
-                        <select id="operationFournisseur" name="fournisseur_id" class="form-control"></select>
+
+                    <div class="mb-3">
+                        <label for="fournisseur-modifier" class="form-label">Fournisseur:</label>
+                        <select id="fournisseur_modifier" name="fournisseur" class="form-select" disabled>
+                            <option value="">-- Sélectionner Fournisseur --</option>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label for="operationPrix">Prix</label>
-                        <input type="number" step="0.01" id="operationPrix" name="prix_operation" class="form-control">
+
+                    <div class="mb-3">
+                        <label for="service-modifier" class="form-label">Service:</label>
+                        <select id="service_modifier" name="service" class="form-select" disabled>
+                            <option value="">-- Sélectionner Service --</option>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label for="operationService">Service</label>
-                        <select id="operationService" name="service_id" class="form-control"></select>
+
+                    <div class="mb-3">
+                        <label for="prix-modifier" class="form-label">Prix:</label>
+                        <input type="number" id="prix_modifier" name="prix" class="form-control" step="0.01" min="0" placeholder="Entrez le prix" disabled>
                     </div>
-                    <button type="submit" class="btn btn-primary">Modifier</button>
+
+                    <div class="mb-3">
+                        <label for="date-operation-modifier" class="form-label">Date de l'opération :</label>
+                        <input type="datetime-local" id="date_operation" name="date_operation" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Modifier Opération</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
-
-
 
 
 
