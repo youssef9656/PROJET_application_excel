@@ -109,4 +109,5 @@ $paramsDelete = ["Jane", "jane@example.com"];
 deleteData($conn, $queryDelete, $paramsDelete); */
 
 //$conn->close();
+
 ?>
