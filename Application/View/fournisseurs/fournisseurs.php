@@ -1,4 +1,10 @@
 
+<?php
+include '../../Config/check_session.php';
+checkUserRole('user');
+
+?>
+
 
 <?php include '../../Config/connect_db.php'; $pageName= 'Catalogue du temps'; ?>
 <?php
@@ -123,6 +129,9 @@ $prenom_fournisseur = selectData($queryElement, []);
 </head>
 <body>
 <?php
+
+
+
 $pageName= 'Fournisseurs';
 include '../../includes/header.php';
 ?>

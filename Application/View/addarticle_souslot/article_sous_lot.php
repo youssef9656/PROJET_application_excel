@@ -1,4 +1,6 @@
 <?php
+include '../../Config/check_session.php';
+checkUserRole('user');
 
 include '../../Config/connect_db.php';
 $pageName = 'Article';
@@ -349,6 +351,16 @@ WHERE lot_id = (SELECT lot_id FROM `lots` WHERE lot_name ='$lot_name');";
             xhr.send();
         }
     }
+
+
+
+    //     window.addEventListener("beforeunload", function (e) {
+    //     // Détection de la fermeture ou du changement de page
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open("GET", "logout.php", true); // Fichier PHP pour détruire la session
+    //     xhr.send();
+    // });
+    //
 
 
 

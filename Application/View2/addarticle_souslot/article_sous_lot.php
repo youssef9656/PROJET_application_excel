@@ -1,4 +1,7 @@
 <?php
+include '../../Config/check_session.php';
+checkUserRole('admin');
+
 
 include '../../Config/connect_db.php';
 $pageName = 'Article';

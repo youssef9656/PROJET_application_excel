@@ -1,5 +1,9 @@
 
-<?php $pageName = 'operation';
+<?php
+include '../../Config/check_session.php';
+checkUserRole('user');
+
+$pageName = 'operation';
 include '../../includes/header.php';
 ?>
 <?php
@@ -180,75 +184,6 @@ if (!$resultLots) {
     </div>
 </div>
 
-<!-- Modal de modification d'article -->
-
-
-<!-- Modal Structure -->
-<!-- Modal -->
-<!-- Modal pour modifier une opération -->
-<!--<div id="modifierOperationModal" class="modal fade" tabindex="-1" role="dialog">-->
-<!--    <div class="modal-dialog" role="document">-->
-<!--        <div class="modal-content">-->
-<!--            <div class="modal-header">-->
-<!--                <h5 class="modal-title">Modifier Opération</h5>-->
-<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--                    <span aria-hidden="true">&times;</span>-->
-<!--                </button>-->
-<!--            </div>-->
-<!--            <div class="modal-body">-->
-<!--                <form id="modifierOperationForm">-->
-<!--                    <input type="hidden" id="operationId" name="operationId" value="">-->
-<!--                    <div class="form-group">-->
-<!--                        <label for="operationDate">Date</label>-->
-<!--                        <input type="datetime-local" id="operationDate" name="date_operation" class="form-control">-->
-<!--                    </div>-->
-<!--                    <div class="form-group">-->
-<!--                        <label for="operationLot">Lot</label>-->
-<!--                        <select id="operationLot" name="lot_id" class="form-control"></select>-->
-<!--                    </div>-->
-<!--                    <div class="form-group">-->
-<!--                        <label for="operationSousLot">Sous-lot</label>-->
-<!--                        <select id="operationSousLot" name="sous_lot_id" class="form-control"></select>-->
-<!--                    </div>-->
-<!--                    <div class="form-group">-->
-<!--                        <label for="operationArticle">Article</label>-->
-<!--                        <select id="operationArticle" name="article_id" class="form-control"></select>-->
-<!--                    </div>-->
-<!--                    <div class="form-group">-->
-<!--                        <label for="operationEntree">Entrée</label>-->
-<!--                        <input type="number" step="0.01" id="operationEntree" name="entree_operation" class="form-control">-->
-<!--                    </div>-->
-<!--                    <div class="form-group">-->
-<!--                        <label for="operationSortie">Sortie</label>-->
-<!--                        <input type="number" step="0.01" id="operationSortie" name="sortie_operation" class="form-control">-->
-<!--                    </div>-->
-<!--                    <div class="form-group">-->
-<!--                        <label for="operationFournisseur">Fournisseur</label>-->
-<!--                        <select id="operationFournisseur" name="fournisseur_id" class="form-control"></select>-->
-<!--                    </div>-->
-<!--                    <div class="form-group">-->
-<!--                        <label for="operationPrix">Prix</label>-->
-<!--                        <input type="number" step="0.01" id="operationPrix" name="prix_operation" class="form-control">-->
-<!--                    </div>-->
-<!--                    <div class="form-group">-->
-<!--                        <label for="operationService">Service</label>-->
-<!--                        <select id="operationService" name="service_id" class="form-control"></select>-->
-<!--                    </div>-->
-<!--                    <button type="submit" class="btn btn-primary">Modifier</button>-->
-<!--                </form>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
-
-
-<!-- Modal de Modification d'Opération -->
-<!-- Modal -->
-<!-- Modal Modifier Opération -->
-<!-- Modal modifier operation -->
-<!-- Modal modifier operation -->
-<!-- Modal modifier operation -->
 <!-- Modal modifier operation -->
 <div class="modal fade" id="modifierOperationModal" tabindex="-1" aria-labelledby="modifierOperationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -328,22 +263,6 @@ if (!$resultLots) {
     </div>
 </div>
 
-<!-- Modal de saisie du mot de passe -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -363,6 +282,7 @@ if (!$resultLots) {
 <script>
 
     $('#tab1').load('operation_table.php #tableoperationdiv');
+
 
 
 </script>

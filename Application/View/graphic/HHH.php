@@ -1,4 +1,8 @@
-<?php include '../../Config/connect_db.php'; ?>
+<?php
+include '../../Config/check_session.php';
+checkUserRole('user');
+
+include '../../Config/connect_db.php'; ?>
 
 <!DOCTYPE html>
 <html lang="en">

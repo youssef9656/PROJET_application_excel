@@ -14,6 +14,17 @@
 
     <style>
 
+        .navbar{
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            width: 100%;
+
+        }
+        .div1{
+            width: 100%;
+            height: 100px;
+        }
         .navbar-light {
             background-color: #08808c;
         }
@@ -112,7 +123,12 @@
                 <li class="nav-item item-hover">
                     <a class="nav-link" href="../"></a>
                 </li>
-                <li class="nav-item dropdown">
+
+                <?php
+
+                session_start();
+                if($_SESSION['role'] == "admin"){
+                    echo '<li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">les données Articles</a>
                     <ul class="dropdown-menu ">
                         <li><a class="dropdown-item text-center fs-5 fw-bold " href="../fournisseurs/fournisseurs.php">Fournisseurs</a></li>
@@ -129,8 +145,16 @@
                         <li><a class="dropdown-item text-center fs-5 fw-bold  " href="../graphic/HHH.php">Statistiques des entree</a></li>
 
                     </ul>
+                </li>';
+                }
+
+                ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="../../Config/logout.php">logout</a>
+
                 </li>
 
             </ul>
         </div>
     </nav>
+    <div class="div1"></div>

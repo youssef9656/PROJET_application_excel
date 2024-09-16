@@ -1,4 +1,10 @@
-<?php $pageName = 'lot / sous lot'; include '../../config/connect_db.php'; include '../../includes/header.php'; ?>
+<?php
+include '../../Config/check_session.php';
+checkUserRole('user');
+
+
+
+$pageName = 'lot / sous lot'; include '../../config/connect_db.php'; include '../../includes/header.php'; ?>
 <?php
 if (isset($_GET['message'])) {
     switch ($_GET['message']) {

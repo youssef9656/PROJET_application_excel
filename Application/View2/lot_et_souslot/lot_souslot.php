@@ -1,4 +1,10 @@
-<?php $pageName = 'lot / sous lot'; include '../../config/connect_db.php'; include '../../includes/header.php'; ?>
+<?php
+
+include '../../Config/check_session.php';
+checkUserRole('admin');
+
+
+$pageName = 'lot / sous lot'; include '../../config/connect_db.php'; include '../../includes/header.php'; ?>
 <?php
 if (isset($_GET['message'])) {
     switch ($_GET['message']) {
@@ -271,34 +277,43 @@ if (isset($_GET['message'])) {
 </div>
 
 <!-- Modal pour modifier fournisseur -->
-<div class="modal fade" id="modifierFournisseurModal" tabindex="-1" role="dialog" aria-labelledby="modifierFournisseurModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modifierFournisseurModalLabel">Modifier Fournisseur</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="modifierFournisseurForm">
-                    <div class="form-group">
-                        <label for="fournisseurNom">Nom du Fournisseur</label>
-                        <input type="text" class="form-control" id="fournisseurNom" name="fournisseurNom" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="lotSelect">Lot Associé</label>
-                        <select class="form-control" id="lotSelect" name="lotSelect" required>
-                            <!-- Options chargées via AJAX -->
-                        </select>
-                    </div>
-                    <input type="hidden" id="fournisseurId" name="fournisseurId">
-                    <button type="submit" class="btn btn-primary">Sauvegarder les Modifications</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Modal Modification Fournisseur -->
+<!-- Modal Modification Fournisseur -->
+<!--<div id="modifierFournisseurModal" class="modal fade" tabindex="-1" role="dialog">-->
+<!--    <div class="modal-dialog" role="document">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title">Modifier Fournisseur</h5>-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <form id="modifierFournisseurForm" method="post" action="modifier_fournisseur.php">-->
+<!--                    <input type="hidden" id="fournisseurId" name="fournisseurId">-->
+<!---->
+<!--                    <div class="form-group">-->
+<!--                        <label for="nomFournisseur">Nom du Fournisseur</label>-->
+<!--                        <input type="text" id="nomFournisseur" name="nomFournisseur" class="form-control" list="fournisseurList" required>-->
+<!--                        <datalist id="fournisseurList">-->
+<!--                            <!-- Options seront ajoutées dynamiquement avec jQuery -->
+<!--                        </datalist>-->
+<!--                    </div>-->
+<!---->
+<!--                    <div class="form-group">-->
+<!--                        <label for="lotFournisseur">Nom du Lot</label>-->
+<!--                        <input type="text" id="lotFournisseur" name="lotFournisseur" class="form-control" list="lotList" >-->
+<!--                        <datalist id="lotList">-->
+<!--                            <!-- Options seront ajoutées dynamiquement avec jQuery -->
+<!--                        </datalist>-->
+<!--                    </div>-->
+<!---->
+<!--                    <button type="submit" class="btn btn-primary">Modifier</button>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 
 
 
@@ -788,66 +803,51 @@ if (isset($_GET['message'])) {
 
 //     modifier fournisseur
 
-    $(document).ready(function() {
-        // Lorsque le bouton de modification est cliqué
-        setTimeout(()=>{
+    // setTimeout(function (){
+    //     $(document).ready(function() {
+    //         // Lorsque le bouton de modification est cliqué
+    //         $('.modifierFournisseurBtn').on('click', function() {
+    //             var fournisseurId = $(this).data('id');
+    //             var nomFournisseur = $(this).data('name');
+    //             var lotFournisseur = $(this).data('lot');
+    //
+    //             // Remplir le modal avec les données actuelles
+    //             $('#fournisseurId').val(fournisseurId);
+    //             $('#nomFournisseur').val(nomFournisseur);
+    //             $('#lotFournisseur').val(lotFournisseur);
+    //
+    //             // Afficher le modal
+    //             $('#modifierFournisseurModal').modal('show');
+    //         });
+    //
+    //         // Charger les options dans les datalists
+    //         function loadOptions() {
+    //             $.getJSON('get_fournisseurs.php', function(data) {
+    //                 var fournisseurList = $('#fournisseurList');
+    //                 fournisseurList.empty();
+    //                 $.each(data, function(index, fournisseur) {
+    //                     fournisseurList.append('<option value="' + fournisseur.nom_fournisseur + '">');
+    //                 });
+    //             });
+    //
+    //             $.getJSON('get_lot_f.php', function(data) {
+    //                 var lotList = $('#lotList');
+    //                 lotList.empty();
+    //                 $.each(data, function(index, lot) {
+    //                     lotList.append('<option value="' + lot.lot_name + '">');
+    //                 });
+    //             });
+    //         }
+    //
+    //         // Charger les options au chargement de la page
+    //         loadOptions();
+    //     });
+    //
+    // } , 1100)
 
-            $('.modifierFournisseurBtn').on('click', function() {
-                var fournisseurId = $(this).data('id');
-                var fournisseurNom = $(this).data('name');
-
-                // Remplir les champs du modal
-                $('#fournisseurId').val(fournisseurId);
-                $('#fournisseurNom').val(fournisseurNom);
-
-                // Charger les options de lot via AJAX
-                $.ajax({
-                    url: 'get_lots.php',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(data) {
-                        var options = '';
-                        $.each(data, function(index, lot) {
-                            options += '<option value="' + lot.id + '">' + lot.name + '</option>';
-                        });
-                        $('#lotSelect').html(options);
-                    },
-                    error: function() {
-                        alert('Erreur lors du chargement des lots.');
-                    }
-                });
-
-                // Afficher le modal
-                $('#modifierFournisseurModal').modal('show');
-            });
-
-            // Lorsque le formulaire est soumis
-            $('#modifierFournisseurForm').on('submit', function(e) {
-                e.preventDefault();
-
-                $.ajax({
-                    url: 'modifier_fournisseur.php',
-                    method: 'POST',
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        alert(response); // Afficher le message de succès
-                        $('#modifierFournisseurModal').modal('hide');
-                        // Rechargez la table ou mettez à jour le DOM comme nécessaire
-                    },
-                    error: function() {
-                        alert('Erreur lors de la modification du fournisseur.');
-                    }
-                });
-            });
-
-
-
-
-        } , 100)
-    });
-
-
+    // Fermer le modal quand on clique sur le bouton "close"
 
 </script>
+
 </body>
 </html>

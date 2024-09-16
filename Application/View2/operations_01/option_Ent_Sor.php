@@ -1,4 +1,11 @@
 
+<?php
+
+include '../../Config/check_session.php';
+checkUserRole('admin');
+
+?>
+
 <?php $pageName = 'operation';
 include '../../includes/header.php';
 ?>

@@ -1,4 +1,8 @@
-<?php include '../../Config/connect_db.php'; $pageName= 'Catalogue du temps'; ?>
+<?php
+include '../../Config/check_session.php';
+checkUserRole('admin');
+
+include '../../Config/connect_db.php'; $pageName= 'Catalogue du temps'; ?>
 
 <!DOCTYPE html>
 <html lang="fr">
