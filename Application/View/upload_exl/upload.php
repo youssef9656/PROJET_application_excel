@@ -37,7 +37,7 @@ foreach ($data as $item) {
 
 
     $lot = cleanData($item['lot']);
-    $sous_lot = cleanData($item['s/lot']);
+    $sous_lot = cleanData($item['souslot']);
     $fournisseur = cleanData($item['fournisseur']);
     $article = cleanData($item['articles']);
     $description = cleanData($item['description']);

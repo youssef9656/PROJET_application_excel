@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Excel</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="../../includes/jquery.sheetjs.js"></script>
+
     <style>
 
         .container {
@@ -85,12 +87,31 @@
         }
 
     </style>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 <body>
 <div class="container">
     <h1>Importer un fichier Excel</h1>
+
+    <div id="instructionsContainer">
+        <p><strong>Instructions :</strong></p>
+        <p>Veuillez ne pas modifier l'ordre ou les noms des colonnes dans votre fichier Excel. Le format attendu est :</p>
+        <ul>
+            <li>LOT</li>
+            <li>Sous Lot</li>
+            <li>Fournisseur</li>
+            <li>ARTICLES</li>
+            <li>Description</li>
+            <li>Unité</li>
+            <li>P.U.TTC</li>
+            <li>STOCK INITIAL</li>
+            <li>STOCK MIN</li>
+        </ul>
+        <p>Les colonnes doivent rester dans cet ordre pour éviter les erreurs lors du traitement des données.</p>
+    </div>
+
     <div class="form-group">
         <button class="container-btn-file">
             <svg
@@ -138,8 +159,28 @@
     </div>
     <button id="sendData" class="btn btn-success btn-custom" style="display: none;" onclick="sendData()">Envoyer les données</button>
 </div>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    table, th, td {
+        border: 1px solid black;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+<h2>Liste des Doublons</h2>
+<div id="table-container"></div>
+<script src="../../includes/js/bootstrap.bundle.min.js"></script>
 
 <script>
+
     function capitalizeWords(text) {
         return text.toLowerCase().replace(/\b\w/g, function(char) {
             return char.toUpperCase();
@@ -189,6 +230,30 @@
             return newRow;
         });
     }
+    get_data()
+
+    function get_data(){
+        const url = 'get_data.php?vue_articles_fournisseurs';
+
+        fetch(url)
+
+            .then(response => {
+                // Vérifiez  si la réponse est OK
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Convertir la réponse en JSON
+            })
+            .then(data => {
+                console.log('Données JSON reçues:', data);
+            })
+            .catch(error => {
+                // Gérer les erreurs
+                console.error('There was a problem with the fetch operation:', error);
+                document.getElementById('result').textContent = 'Erreur: ' + error.message;
+            });
+
+    }
 
     function uploadData() {
         var fileInput = document.getElementById('fileInput');
@@ -206,30 +271,70 @@
             var workbook = XLSX.read(data, {type: 'array'});
             var sheetName = workbook.SheetNames[0];
             var worksheet = workbook.Sheets[sheetName];
-            var json = XLSX.utils.sheet_to_json(worksheet);
+            var json = XLSX.utils.sheet_to_json(worksheet, {header:1}); // Read as array of arrays
 
-            console.log('JSON original :', json);
+            if (json.length > 0) {
+                // Define expected column order
+                var expectedColumns = ['lot', 'sous lot', 'fournisseur', 'articles', 'description', 'unité', 'p.u.ttc', 'stock initial', 'stock min'];
 
-            // Convert all text to lower case and capitalize the first letter for display
-            var formattedJson = json.map(row => {
-                let newRow = {};
-                Object.keys(row).forEach(key => {
-                    newRow[key] = capitalizeWords(removeExtraSpaces(String(row[key])));
+                // Get actual columns from the first row and format them
+                var actualColumns = json[0].map(col => removeExtraSpaces(col.toLowerCase()));
+
+                // Check if columns match in order
+                var columnsMatch = expectedColumns.length === actualColumns.length &&
+                    expectedColumns.every((col, index) => col === actualColumns[index]);
+
+                if (!columnsMatch) {
+                    showError('Le fichier Excel contient des colonnes dans un ordre différent de celui attendu. Les colonnes doivent être dans l\'ordre suivant : LOT, Sous Lot, Fournisseur, ARTICLES, Description, Unité, P.U.TTC, STOCK INITIAL, STOCK MIN.');
+                    return;
+                }
+
+                // Proceed with processing if columns match
+                console.log('Colonnes vérifiées avec succès.');
+                var formattedJson = json.slice(1).map(row => {
+                    let newRow = {};
+                    actualColumns.forEach((col, index) => {
+                        newRow[col] = String(row[index]).trim();
+                    });
+                    return newRow;
                 });
-                return newRow;
-            });
 
-            // Display table
-            displayTable(formattedJson);
+                displayTable(formattedJson);
+                const { filteredData, errors } = filterData(formattedJson);
 
-            // Store formatted JSON data for later use
-            window.jsonData = transformDataForSending(json);
+                console.log('Filtered Data:', filteredData);
+                console.log('Errors:', errors);
 
-            // Log JSON data to be sent
-            console.log('Données à envoyer au serveur :', window.jsonData);
+
+
+
+
+                createTable(errors);
+
+
+                window.jsonData = transformDataForSending(formattedJson);
+
+            }
         };
         reader.readAsArrayBuffer(file);
     }
+
+    function showError(message) {
+        document.getElementById('alertContainer').innerText = message;
+        document.getElementById('alertContainer').style.display = 'block';
+    }
+
+    function removeExtraSpaces(text) {
+        return text.trim().replace(/\s+/g, ' ');
+    }
+
+    function showError(message) {
+        document.getElementById('alertContainer').innerText = message;
+        document.getElementById('alertContainer').style.display = 'block';
+    }
+
+
+
 
     function sendData() {
         if (!window.jsonData) {
@@ -254,6 +359,114 @@
                 console.error('Erreur :', error);
             });
     }
+
+
+
+    function createTable(data) {
+        const tableContainer = document.getElementById('table-container');
+        tableContainer.innerHTML = ''; // Effacer le contenu précédent
+
+        if (data.length === 0) {
+            tableContainer.textContent = 'Aucune donnée à afficher.';
+            return;
+        }
+
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const tbody = document.createElement('tbody');
+
+        // Créer les en-têtes de tableau
+        const headers = [
+            "Lot", "Sous Lot", "Fournisseur", "Article", "Description", "Unité", "Prix TTC", "Stock Initial", "Stock Min", "Raison du doublon"
+        ];
+        const headerRow = document.createElement('tr');
+        headers.forEach(header => {
+            const th = document.createElement('th');
+            th.textContent = header;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+
+        // Créer les lignes de tableau
+        data.duplicates.forEach(entry => {
+            const item = entry.item;
+            const row = document.createElement('tr');
+            const cells = [
+                item.lot,
+                item['sous lot'],
+                item.fournisseur,
+                item.articles,
+                item.description,
+                item.unité,
+                item['p.u.ttc'],
+                item['stock initial'],
+                item['stock min'],
+                entry.reason
+            ];
+            cells.forEach(cell => {
+                const td = document.createElement('td');
+                td.textContent = cell; // Utiliser textContent pour éviter le HTML
+                row.appendChild(td);
+            });
+            tbody.appendChild(row);
+        });
+
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        tableContainer.appendChild(table);
+    }
+
+    function filterData(data) {
+        const seen = {
+            articles: new Set(),
+            lotToSousLots: new Map(),
+            sousLotToLotMap: new Map()
+        };
+
+        const errors = {
+            duplicates: [],
+            uniqueSousLots: []
+        };
+
+        data.forEach(item => {
+            const articleKey = item.articles;
+            const lotKey = item.lot;
+            const sousLotKey = item['sous lot'];
+
+            if (seen.articles.has(articleKey)) {
+                errors.duplicates.push({ item, reason: 'Duplicate article name' });
+            }
+            seen.articles.add(articleKey);
+
+            // التحقق من وجود sous lot في lot آخر
+            if (seen.sousLotToLotMap.has(sousLotKey)) {
+                const existingLot = seen.sousLotToLotMap.get(sousLotKey);
+                if (existingLot !== lotKey) {
+                    errors.uniqueSousLots.push({ item, reason: `Sous lot '${sousLotKey}' موجود في lot '${existingLot}'` });
+                }
+            }
+            seen.sousLotToLotMap.set(sousLotKey, lotKey);
+
+
+        });
+
+        return {
+            filteredData: data, // Ici, nous retournons les données originales pour l'exemple
+            errors
+        };
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 </body>
 </html>

@@ -51,9 +51,9 @@ $result3 = mysqli_query($conn, $query3);
 
         echo '<td  style="padding: 0px ; text-align: center; vertical-align: middle;font-weight:bold;font-size: 16px;background-color: #3dd5f3  ">' . htmlspecialchars($row['lot_name']) . '</td>';
         echo '<td style="padding: 0;text-align: center; vertical-align: middle; font-weight: bold" >';
-    while ($row3 = mysqli_fetch_assoc($result3)) {
+    while ($row3 = @mysqli_fetch_assoc($result3)) {
 
-        echo '<p  style="padding:0 ;margin: 0; background-color: gold"  >' . htmlspecialchars($row3['nom_fournisseur']) . '</p><hr style="margin: 0">';
+        echo '<p  style="padding:0 ;margin: 0; background-color: gold"  >' . @htmlspecialchars($row3['nom_fournisseur']) . '</p><hr style="margin: 0">';
 
     }
 
