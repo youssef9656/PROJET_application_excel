@@ -122,23 +122,14 @@ $stmt->bind_param("sssdsssssssss", $lotName, $sousLotName, $articleName, $entree
 
 // Exécution de la requête
 if ($stmt->execute()) {
-    header("Location: option_Ent_Sor.php");
-    exit();
-} else {
-    echo "Erreur lors de l'ajout de l'opération : " . $stmt->error;
-}
-
-$stmt->close();
+    insst_etat_stocks();
+    function insst_etat_stocks() {
 
 
-insst_etat_stocks();
-function insst_etat_stocks() {
+        $start_date = '1000-01-01'; // Date de début
+        $end_date = '9024-12-31'; // Date de fin
 
-
-    $start_date = '1000-01-01'; // Date de début
-    $end_date = '9024-12-31'; // Date de fin
-
-    $sql_select = "
+        $sql_select = "
     SELECT 
         a.id_article AS ID,
         a.nom AS Article,
@@ -181,36 +172,47 @@ function insst_etat_stocks() {
     LIMIT 0, 25
 ";
 
-    $result = $conn->query($sql_select);
+        $result = $conn->query($sql_select);
 
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $id = $row['ID'];
-            $article = $row['Article'];
-            $stock_initial = $row['Stock_Initial'];
-            $total_entry_operations = $row['Total_Entry_Operations'];
-            $total_exit_operations = $row['Total_Exit_Operations'];
-            $stock_final = $row['Stock_Final'];
-            $prix = $row['Prix'];
-            $stock_value = $row['Stock_Value'];
-            $stock_min = $row['Stock_Min'];
-            $requirement_status = $row['Requirement_Status'];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $id = $row['ID'];
+                $article = $row['Article'];
+                $stock_initial = $row['Stock_Initial'];
+                $total_entry_operations = $row['Total_Entry_Operations'];
+                $total_exit_operations = $row['Total_Exit_Operations'];
+                $stock_final = $row['Stock_Final'];
+                $prix = $row['Prix'];
+                $stock_value = $row['Stock_Value'];
+                $stock_min = $row['Stock_Min'];
+                $requirement_status = $row['Requirement_Status'];
 
-            // Calculer les dépenses
-            $total_depenses_entree = $total_entry_operations * $prix;
-            $total_depenses_sortie = $total_exit_operations * $prix;
+                // Calculer les dépenses
+                $total_depenses_entree = $total_entry_operations * $prix;
+                $total_depenses_sortie = $total_exit_operations * $prix;
 
-            // Vérifier si les données existent dans la table
-            $sql_check = "SELECT ID FROM etat_de_stocks WHERE ID = ?";
-            $stmt = $conn->prepare($sql_check);
-            $stmt->bind_param("i", $id);
-            $stmt->execute();
-            $stmt->store_result();
+                // Vérifier si les données existent dans la table
+                $sql_check = "SELECT ID FROM etat_de_stocks WHERE ID = ?";
+                $stmt = $conn->prepare($sql_check);
+                $stmt->bind_param("i", $id);
+                $stmt->execute();
+                $stmt->store_result();
 
-            if ($stmt->num_rows > 0) {
-                // Mettre à jour les données si elles existent
-                $sql_update = "TRUNCATE TABLE etat_de_stocks";
-                if ($conn->query($sql_update) === TRUE) {
+                if ($stmt->num_rows > 0) {
+                    // Mettre à jour les données si elles existent
+                    $sql_update = "TRUNCATE TABLE etat_de_stocks";
+                    if ($conn->query($sql_update) === TRUE) {
+                        $sql_insert = "
+                INSERT INTO etat_de_stocks (ID, Article, Stock_Initial, Total_Entry_Operations, Total_Exit_Operations, 
+                    Stock_Final, Prix, Stock_Value, Total_Depenses_Entree, Total_Depenses_Sortie, Stock_Min, Requirement_Status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ";
+                        $stmt = $conn->prepare($sql_insert);
+                        $stmt->bind_param("iissiiidddis", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $total_depenses_entree, $total_depenses_sortie, $stock_min, $requirement_status);
+                    }
+
+                } else {
+                    // Insérer les données si elles n'existent pas
                     $sql_insert = "
                 INSERT INTO etat_de_stocks (ID, Article, Stock_Initial, Total_Entry_Operations, Total_Exit_Operations, 
                     Stock_Final, Prix, Stock_Value, Total_Depenses_Entree, Total_Depenses_Sortie, Stock_Min, Requirement_Status)
@@ -220,24 +222,23 @@ function insst_etat_stocks() {
                     $stmt->bind_param("iissiiidddis", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $total_depenses_entree, $total_depenses_sortie, $stock_min, $requirement_status);
                 }
 
-            } else {
-                // Insérer les données si elles n'existent pas
-                $sql_insert = "
-                INSERT INTO etat_de_stocks (ID, Article, Stock_Initial, Total_Entry_Operations, Total_Exit_Operations, 
-                    Stock_Final, Prix, Stock_Value, Total_Depenses_Entree, Total_Depenses_Sortie, Stock_Min, Requirement_Status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ";
-                $stmt = $conn->prepare($sql_insert);
-                $stmt->bind_param("iissiiidddis", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $total_depenses_entree, $total_depenses_sortie, $stock_min, $requirement_status);
+                $stmt->execute();
             }
-
-            $stmt->execute();
+        } else {
+            echo "Aucune donnée à traiter.";
         }
-    } else {
-        echo "Aucune donnée à traiter.";
-    }
 
+    }
+    header("Location: option_Ent_Sor.php");
+    exit();
+} else {
+    echo "Erreur lors de l'ajout de l'opération : " . $stmt->error;
 }
+
+$stmt->close();
+
+
+
 
 
 $conn->close();
