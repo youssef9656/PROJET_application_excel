@@ -122,9 +122,6 @@ $stmt->bind_param("sssdsssssssss", $lotName, $sousLotName, $articleName, $entree
 
 // Exécution de la requête
 if ($stmt->execute()) {
-    insst_etat_stocks();
-    function insst_etat_stocks() {
-
 
         $start_date = '1000-01-01'; // Date de début
         $end_date = '9024-12-31'; // Date de fin
@@ -228,7 +225,7 @@ if ($stmt->execute()) {
             echo "Aucune donnée à traiter.";
         }
 
-    }
+
     header("Location: option_Ent_Sor.php");
     exit();
 } else {
