@@ -68,7 +68,6 @@ include "Config/connect_db.php";
 
 </style>
 
-<h1>Welcome</h1>
 
 <div class="main">
 

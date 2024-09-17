@@ -37,7 +37,7 @@ $query3 = "
     JOIN lots l ON lf.lot_id = l.lot_id where l.lot_name =( SELECT  lots.lot_name FROM sous_lots JOIN lots ON sous_lots.lot_id = lots.lot_id where sous_lots.sous_lot_name ='$sous_lot_name') 
     ORDER BY l.lot_name
 ";
-$result3 = mysqli_query($conn, $query3);
+$result3 = @mysqli_query($conn, $query3);
 
 
 ?>
@@ -51,11 +51,20 @@ $result3 = mysqli_query($conn, $query3);
 
         echo '<td  style="padding: 0px ; text-align: center; vertical-align: middle;font-weight:bold;font-size: 16px;background-color: #3dd5f3  ">' . htmlspecialchars($row['lot_name']) . '</td>';
         echo '<td style="padding: 0;text-align: center; vertical-align: middle; font-weight: bold" >';
-    while ($row3 = mysqli_fetch_assoc($result3)) {
+        if($result3){
+            while ($row3 = mysqli_fetch_assoc($result3)) {
+                if($row3){
+                    echo '<p  style="padding:0 ;margin: 0; background-color: gold"  >' . @htmlspecialchars($row3['nom_fournisseur']) . '</p><hr style="margin: 0">';
 
-        echo '<p  style="padding:0 ;margin: 0; background-color: gold"  >' . htmlspecialchars($row3['nom_fournisseur']) . '</p><hr style="margin: 0">';
+                }
 
-    }
+
+            }
+            }else{
+            echo '<p  style="padding:0 ;margin: 0; background-color: gold"  ></p><hr style="margin: 0">';
+
+
+        }
 
         echo '</td></tr>';
         echo '<thead> <th  style="padding: 5px;background-color: #17944b !important;"  colspan="2">' . htmlspecialchars($row['sous_lot_name']) . '</th></thead>';
@@ -63,7 +72,7 @@ $result3 = mysqli_query($conn, $query3);
     ?>
 
     </table>
-    <?php if ($result->num_rows > 0): ?>
+    <?php if (@$result->num_rows > 0): ?>
     <table class="table table-bordered text-center table-hover"  style="font-size: 13px" id="tblarticle">
         <thead>
         <tr>
