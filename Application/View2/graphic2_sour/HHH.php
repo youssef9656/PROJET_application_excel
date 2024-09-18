@@ -136,12 +136,11 @@ include '../../includes/header.php';
         </div>
     </div>
 
-    <!-- المبيانان جنبًا إلى جنب -->
-    <div class="row">
-        <div class="col-md-6">
+    <div class="row mb-5">
+        <div class="col-md-7">
             <canvas id="chart1" width="400" height="200"></canvas>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
             <canvas id="chart2" width="400" height="200"></canvas>
         </div>
     </div>
@@ -163,9 +162,17 @@ include '../../includes/header.php';
         fetch(`getData.php?lot=${lot}&sous_lot=${sousLot}&article=${article}&fournisseur=${fournisseur}&start_date=${startDate}&end_date=${endDate}`)
             .then(response => response.json())
             .then(data => {
+                console.log(data)
+
                 const labels = data.map(d => d.date_operation);
-                const sortie_operation = data.map(d => d.sortie_operation);
-                const service_operation = data.map(d => d.service_operation);
+                const  sortie_operation  = data.map(d => d.sortie_operation);
+                const  service_operation= data.map(d => d.service_operation);
+                const uniqueServices = [...new Set(data.map(d => d.service_operation).filter(service => service))];
+
+                // حساب عدد المقالات لكل service_operation
+                const articleCounts = uniqueServices.map(service => {
+                    return data.filter(d => d.service_operation === service).length;
+                });
 
                 // تحديث الرسم البياني الأول
                 if (chart1) chart1.destroy();
@@ -193,26 +200,104 @@ include '../../includes/header.php';
                 if (chart2) chart2.destroy();
                 const ctx2 = document.getElementById('chart2').getContext('2d');
                 chart2 = new Chart(ctx2, {
-                    type: 'line',
+                    type: 'pie',
                     data: {
-                        labels: labels,
+                        labels: uniqueServices,  // أسماء الخدمات بدون تكرار
                         datasets: [{
-                            label: 'service de zone',
-                            data: service_operation,
-                            borderColor: 'red',
-                            backgroundColor: 'rgba(255, 0, 0, 0.2)'
+                            label: 'Distribution des articles par service',
+                            data: articleCounts,  // عدد المقالات لكل خدمة
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
                         }]
                     },
                     options: {
-                        scales: {
-                            x: { title: { text: 'Date', display: true } },
-                            y: { title: { text: 'service de zone', display: true } }
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Répartition des articles par service'
+                            }
                         }
                     }
                 });
             })
             .catch(error => console.error('Error fetching data:', error));
     }
+    // fetch(`getData.php?lot=${lot}&sous_lot=${sousLot}&article=${article}&fournisseur=${fournisseur}&start_date=${startDate}&end_date=${endDate}`)
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         console.log(data);
+    //
+    //         // استخراج جميع service_operation بدون تكرار
+    //         const uniqueServices = [...new Set(data.map(d => d.service_operation).filter(service => service))];
+    //
+    //         // حساب عدد المقالات لكل service_operation
+    //         const articleCounts = uniqueServices.map(service => {
+    //             return data.filter(d => d.service_operation === service).length;
+    //         });
+    //
+    //         // تحديث الرسم البياني الدائري
+    //         if (chart2) chart2.destroy();
+    //         const ctx2 = document.getElementById('chart2').getContext('2d');
+    //         chart2 = new Chart(ctx2, {
+    //             type: 'pie',
+    //             data: {
+    //                 labels: uniqueServices,  // أسماء الخدمات بدون تكرار
+    //                 datasets: [{
+    //                     label: 'Distribution des articles par service',
+    //                     data: articleCounts,  // عدد المقالات لكل خدمة
+    //                     backgroundColor: [
+    //                         'rgba(255, 99, 132, 0.2)',
+    //                         'rgba(54, 162, 235, 0.2)',
+    //                         'rgba(255, 206, 86, 0.2)',
+    //                         'rgba(75, 192, 192, 0.2)',
+    //                         'rgba(153, 102, 255, 0.2)',
+    //                         'rgba(255, 159, 64, 0.2)'
+    //                     ],
+    //                     borderColor: [
+    //                         'rgba(255, 99, 132, 1)',
+    //                         'rgba(54, 162, 235, 1)',
+    //                         'rgba(255, 206, 86, 1)',
+    //                         'rgba(75, 192, 192, 1)',
+    //                         'rgba(153, 102, 255, 1)',
+    //                         'rgba(255, 159, 64, 1)'
+    //                     ],
+    //                     borderWidth: 1
+    //                 }]
+    //             },
+    //             options: {
+    //                 responsive: true,
+    //                 plugins: {
+    //                     legend: {
+    //                         position: 'top',
+    //                     },
+    //                     title: {
+    //                         display: true,
+    //                         text: 'Répartition des articles par service'
+    //                     }
+    //                 }
+    //             }
+    //         });
+    //     })
+    //     .catch(error => console.error('Erreur lors de la récupération des données:', error));
 
     function updateSousLot() {
         const lot = document.getElementById('lotSelect').value;
@@ -227,7 +312,7 @@ include '../../includes/header.php';
                     option.textContent = sousLot.sous_lot_name;
                     sousLotSelect.appendChild(option);
                 });
-                updateArticle(); // تحديث قائمة المقالات عند تغيير الـ sous-lot
+                updateArticle();
             });
     }
 

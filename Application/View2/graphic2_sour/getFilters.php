@@ -1,7 +1,6 @@
 <?php
 include '../../Config/connect_db.php'; // تأكد من مسار الاتصال بقاعدة البيانات
 
-// جلب القيم الفريدة لكل فلتر
 $filters = [];
 
 $lotQuery = "SELECT DISTINCT lot_name FROM operation WHERE  sortie_operation > 0";

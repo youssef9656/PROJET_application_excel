@@ -12,7 +12,10 @@ include '../../Config/connect_db.php'; $pageName= 'Catalogue du temps'; ?>
     <title>Etat des stocks</title>
     <script src="../../includes/jquery.sheetjs.js"></script>
     <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
-    <!-- Custom CSS -->
+<!--    <script src="libriryPdf/unpkg/jspdf.min.js"></script>-->
+    <script src="libriryPdf/unpkg/jspdf.umd.min.js"></script>
+
+
     <style>
         #divbesoin{
             /*position: absolute;*/
@@ -185,11 +188,16 @@ include '../../includes/header.php';
             </select>
         </div>
         <button onclick="fetchData()" class="btn btn-primary">Rechercher</button>
-        <button class="Btn btn" onclick="printtable()">
+        <button class="Btn btn" id="downloadPdfButton">
             <svg class="svgIcon" viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg"><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"></path></svg>
             <span class="icon2"></span>
             <span class="tooltip">Download</span>
         </button>
+<!--        <button class="Btn btn" onclick="printtable()" id="downloadPdfButton">-->
+<!--            <svg class="svgIcon" viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg"><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"></path></svg>-->
+<!--            <span class="icon2"></span>-->
+<!--            <span class="tooltip">Download</span>-->
+<!--        </button>-->
     </div>
 
 <div style="display:flex;flex-flow: row">
@@ -343,6 +351,8 @@ document.getElementById("Total_Entrees_final").innerText=Total_Entrees_final.toF
     document.addEventListener('DOMContentLoaded', fetchData);
 </script>
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
+<script src="pdf.js"></script>
+
 
 </body>
 </html>
