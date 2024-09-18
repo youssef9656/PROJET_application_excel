@@ -98,6 +98,9 @@
             border-color: #0152ae;
             box-shadow: 0 0 0 0.2rem rgba(1, 82, 174, 0.25);
         }
+        .logout{
+
+        }
     </style>
 </head>
 
@@ -156,7 +159,7 @@
                 ?>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="../../Config/logout.php">logout</a>
+                    <a class=" btn btn-danger" href="../../Config/logout.php">Sign out</a>
 
                 </li>
 
