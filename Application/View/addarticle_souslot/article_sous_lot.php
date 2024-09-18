@@ -1,6 +1,7 @@
 <?php
 include '../../Config/check_session.php';
-checkUserRole('user');
+checkUserRole('admin');
+
 
 include '../../Config/connect_db.php';
 $pageName = 'Article';
@@ -236,7 +237,7 @@ WHERE lot_id = (SELECT lot_id FROM `lots` WHERE lot_name ='$lot_name');";
         const  lot_name = document.getElementById('lot_name');
 
         window.fillot_name =()=>{
-            var url = 'article_sous_lot.php?lot_name=' + encodeURI(lot_name.value);
+            var url = 'article_sous_lot.php?lot_name=' + encodeURIComponent(lot_name.value);
             $('#div_sous_lot_name').load(url + ' #div_sous_lot_name',function (){
 
 
@@ -351,16 +352,6 @@ WHERE lot_id = (SELECT lot_id FROM `lots` WHERE lot_name ='$lot_name');";
             xhr.send();
         }
     }
-
-
-
-    //     window.addEventListener("beforeunload", function (e) {
-    //     // Détection de la fermeture ou du changement de page
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.open("GET", "logout.php", true); // Fichier PHP pour détruire la session
-    //     xhr.send();
-    // });
-    //
 
 
 

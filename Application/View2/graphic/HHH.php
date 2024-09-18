@@ -2,11 +2,7 @@
 include '../../Config/check_session.php';
 checkUserRole('admin');
 
-
 include '../../Config/connect_db.php'; ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">

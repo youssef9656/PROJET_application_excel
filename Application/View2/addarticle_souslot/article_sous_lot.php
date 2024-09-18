@@ -237,7 +237,7 @@ WHERE lot_id = (SELECT lot_id FROM `lots` WHERE lot_name ='$lot_name');";
         const  lot_name = document.getElementById('lot_name');
 
         window.fillot_name =()=>{
-            var url = 'article_sous_lot.php?lot_name=' + encodeURI(lot_name.value);
+            var url = 'article_sous_lot.php?lot_name=' + encodeURIComponent(lot_name.value);
             $('#div_sous_lot_name').load(url + ' #div_sous_lot_name',function (){
 
 

@@ -1,11 +1,11 @@
 
 <?php
+include '../../Config/connect_db.php';
+
 include '../../Config/check_session.php';
+checkUserRole('admin');
 
-?>
 
-
-<?php include '../../Config/connect_db.php';
 ?>
 
 <!DOCTYPE html>
@@ -18,98 +18,103 @@ include '../../Config/check_session.php';
 <!--    <script src="../../includes/jquery.sheetjs.js"></script>-->
     <script src="xlsx.full.min.js"></script>
 
-    <style>
-
-        .container {
-            max-width: 90%;
-            margin: auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .table-container {
-            margin-top: 20px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .table-fixed thead th {
-            position: -webkit-sticky; /* For Safari */
-            position: sticky;
-            top: 0;
-            background-color: #007bff;
-            color: white;
-            z-index: 1;
-        }
-        table {
-            width: 100%;
-        }
-        th, td {
-            text-align: center;
-            padding: 10px;
-        }
-        td {
-            background-color: #e9ecef;
-        }
-        .btn-custom {
-            margin-top: 20px;
-        }
-        .alert {
-            display: none;
-        }
-        /* From Uiverse.io by omar49511 */
-        .container-btn-file {
-            display: flex;
-            position: relative;
-            justify-content: center;
-            align-items: center;
-            background-color: #307750;
-            color: #fff;
-            border-style: none;
-            padding: 1em 2em;
-            border-radius: 0.5em;
-            overflow: hidden;
-            z-index: 1;
-            box-shadow: 4px 8px 10px -3px rgba(0, 0, 0, 0.356);
-            transition: all 250ms;
-        }
-        .container-btn-file input[type="file"] {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-        .container-btn-file > svg {
-            margin-right: 1em;
-        }
-        .container-btn-file::before {
-            content: "";
-            position: absolute;
-            height: 100%;
-            width: 0;
-            border-radius: 0.5em;
-            background-color: #469b61;
-            z-index: -1;
-            transition: all 350ms;
-        }
-        .container-btn-file:hover::before {
-            width: 100%;
-        }
-
-    </style>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
+<div style="color: white ;">
+    <?php
+    $pageName= 'Importer les données';
+
+    include '../../includes/header.php';
+
+
+    ?>
+</div>
+
 <body>
-<?php
 
 
 
-$pageName= 'Fournisseurs';
-include '../../includes/header.php';
-?>
+<style>
+
+    .container {
+        max-width: 90%;
+        margin: auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .table-container {
+        margin-top: 20px;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .table-fixed thead th {
+        position: -webkit-sticky; /* For Safari */
+        position: sticky;
+        top: 0;
+        background-color: #007bff;
+        color: white;
+        z-index: 1;
+    }
+    table {
+        width: 100%;
+    }
+    th, td {
+        text-align: center;
+        padding: 10px;
+    }
+    td {
+        background-color: #e9ecef;
+    }
+    .btn-custom {
+        margin-top: 20px;
+    }
+    .alert {
+        display: none;
+    }
+    /* From Uiverse.io by omar49511 */
+    .container-btn-file {
+        display: flex;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        background-color: #307750;
+        color: #fff;
+        border-style: none;
+        padding: 1em 2em;
+        border-radius: 0.5em;
+        overflow: hidden;
+        z-index: 1;
+        box-shadow: 4px 8px 10px -3px rgba(0, 0, 0, 0.356);
+        transition: all 250ms;
+    }
+    .container-btn-file input[type="file"] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+    .container-btn-file > svg {
+        margin-right: 1em;
+    }
+    .container-btn-file::before {
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: 0;
+        border-radius: 0.5em;
+        background-color: #469b61;
+        z-index: -1;
+        transition: all 350ms;
+    }
+    .container-btn-file:hover::before {
+        width: 100%;
+    }
+
+</style>
 
 <div class="container">
     <h1>Importer un fichier Excel</h1>
@@ -182,12 +187,7 @@ include '../../includes/header.php';
     <button id="sendData" class="btn btn-success btn-custom" style="display: none;" onclick="sendData()">Envoyer les données</button>
 </div>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f7f6;
-        margin: 0;
-        padding: 20px;
-    }
+
 
     h2 {
         text-align: center;

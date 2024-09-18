@@ -19,6 +19,8 @@
             top: 0;
             left: 0;
             width: 100%;
+            color: #e7e8ea;
+
 
         }
         .div1{
@@ -146,7 +148,7 @@
                     </ul>
                 </li>';
 
-                  echo  '   <li class="nav-item"> <a class="nav-link" href="../../View2/upload_exl/pload_exl.php">logout</a>  </li>';
+                  echo  '   <li class="nav-item"> <a class="nav-link" href="../../View2/upload_exl/pload_exl.php">Importer les données</a>  </li>';
 
                 }
 
