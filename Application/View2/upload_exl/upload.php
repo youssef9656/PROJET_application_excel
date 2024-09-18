@@ -64,13 +64,11 @@ foreach ($data as $item) {
         $sous_lot_id = $sous_lot_id_result->fetch_assoc()['sous_lot_id'];
     }
 
-//    // Séparer le nom et prénom du fournisseur
-//    $full_name = explode(" ", $fournisseur);
-//    $first_name = cleanData($full_name[0]);
-//    $last_name = isset($full_name[1]) ? cleanData($full_name[1]) : 'youssef';
-    $first_name =$fournisseur;
-    $last_name=$fournisseur;
-    // Table `fournisseurs`
+    // Séparer le nom et prénom du fournisseur
+    $full_name = explode(" ", $fournisseur);
+    $first_name = cleanData($full_name[0]);
+    $last_name = isset($full_name[1]) ? cleanData($full_name[1]) : '';
+
     $fournisseur_id_result = $conn->query("SELECT id_fournisseur FROM fournisseurs WHERE nom_fournisseur = '" . $conn->real_escape_string($last_name) . "' AND prenom_fournisseur = '" . $conn->real_escape_string($first_name) . "'");
     if ($fournisseur_id_result->num_rows === 0) {
         insertData($conn, 'fournisseurs', ['nom_fournisseur', 'prenom_fournisseur'], [$last_name, $first_name]);
