@@ -20,6 +20,7 @@
             left: 0;
             width: 100%;
             color: #e7e8ea;
+            z-index: 1000;
 
 
         }
@@ -146,9 +147,9 @@
                         <li><a class="dropdown-item text-center fs-5 fw-bold " href="../graphic2_sour/HHH.php">Statistiques des sorties</a></li>
                         <li><a class="dropdown-item text-center fs-5 fw-bold  " href="../graphic/HHH.php">Statistiques des entree</a></li>
                     </ul>
-                </li>';
-
-                  echo  '   <li class="nav-item"> <a class="nav-link" href="../../View2/upload_exl/pload_exl.php">Importer les données</a>  </li>';
+                </li>
+                
+                <li class="nav-item"> <a class="nav-link" href="../../View2/upload_exl/pload_exl.php">Importer les données</a>  </li>';
 
                 }
 
