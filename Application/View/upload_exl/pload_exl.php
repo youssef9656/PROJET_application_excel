@@ -1,3 +1,13 @@
+
+<?php
+include '../../Config/check_session.php';
+
+?>
+
+
+<?php include '../../Config/connect_db.php';
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -5,7 +15,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Excel</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="../../includes/jquery.sheetjs.js"></script>
+<!--    <script src="../../includes/jquery.sheetjs.js"></script>-->
+    <script src="xlsx.full.min.js"></script>
 
     <style>
 
@@ -92,13 +103,21 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 <body>
+<?php
+
+
+
+$pageName= 'Fournisseurs';
+include '../../includes/header.php';
+?>
+
 <div class="container">
     <h1>Importer un fichier Excel</h1>
 
     <div id="instructionsContainer">
         <p><strong>Instructions :</strong></p>
         <p>Veuillez ne pas modifier l'ordre ou les noms des colonnes dans votre fichier Excel. Le format attendu est :</p>
-        <ul>
+        <ul STYLE="display: flex;flex-flow: row;justify-content: space-between">
             <li>LOT</li>
             <li>Sous Lot</li>
             <li>Fournisseur</li>
@@ -112,17 +131,18 @@
         <p>Les colonnes doivent rester dans cet ordre pour éviter les erreurs lors du traitement des données.</p>
     </div>
 
-    <div class="form-group">
-        <button class="container-btn-file">
-            <svg
-                    fill="#fff"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 50 50"
-            >
-                <path
-                        d="M28.8125 .03125L.8125 5.34375C.339844
+    <div class="form-group w-100 text-center">
+        <div style="display:flex;justify-content: center;">
+            <button class="container-btn-file w-">
+                <svg
+                        fill="#fff"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 50 50"
+                >
+                    <path
+                            d="M28.8125 .03125L.8125 5.34375C.339844
     5.433594 0 5.863281 0 6.34375L0 43.65625C0
     44.136719 .339844 44.566406 .8125 44.65625L28.8125
     49.96875C28.875 49.980469 28.9375 50 29 50C29.230469
@@ -140,17 +160,19 @@
     27.03125L14.875 27.03125C14.8125 27.316406 14.664063 27.761719
     14.4375 28.34375L11.1875 34.375L6.1875 34.375L12.15625 25.03125ZM36
     20L44 20L44 22L36 22ZM36 27L44 27L44 29L36 29ZM36 35L44 35L44 37L36 37Z"
-                ></path>
-            </svg>
-            Importer un fichier
-            <!--            <input class="file" name="text" type="file" />-->
-            <input type="file" name="text" id="fileInput" class="form-control-file file" />
+                    ></path>
+                </svg>
+                Importer un fichier
+                <!--            <input class="file" name="text" type="file" />-->
+                <input type="file" name="text" id="fileInput" class="form-control-file file" />
 
-        </button>
+            </button>
+        </div>
+        <button class="btn btn-primary m-3 " onclick="uploadData()">Importer les données</button>
+
 
     </div>
 
-    <button class="btn btn-primary" onclick="uploadData()">Importer les données</button>
 
     <div id="alertContainer" class="alert alert-danger mt-3" role="alert"></div>
 
@@ -160,19 +182,67 @@
     <button id="sendData" class="btn btn-success btn-custom" style="display: none;" onclick="sendData()">Envoyer les données</button>
 </div>
 <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7f6;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        font-size: 24px;
+    }
+
+    #table-container {
+        margin-top: 20px;
+        overflow-x: auto;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        background-color: #fff;
+    }
+
     table {
         width: 100%;
         border-collapse: collapse;
-    }
-    table, th, td {
-        border: 1px solid black;
-    }
-    th, td {
-        padding: 8px;
+        margin: 20px 0;
+        font-size: 16px;
         text-align: left;
+        border-radius: 8px;
+        overflow: hidden;
     }
+
+    th, td {
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+    }
+
     th {
+        background-color: #4CAF50;
+        color: white;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    tr:nth-child(even) {
         background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+
+    td {
+        color: #555;
+    }
+
+    @media (max-width: 768px) {
+        th, td {
+            padding: 10px;
+            font-size: 14px;
+        }
     }
 </style>
 <h2>Liste des Doublons</h2>
