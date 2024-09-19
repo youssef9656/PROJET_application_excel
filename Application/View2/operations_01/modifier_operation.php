@@ -306,6 +306,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 if(article_besoin($articleName , "besoin" , $conn)){
                     echo json_encode(['success' => true]);
+                    header("Location: option_Ent_Sor.php?message=ss");
 
                 }
             }
@@ -314,6 +315,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         header("Location: option_Ent_Sor.php");
+//        header("Location: option_Ent_Sor.php?message=success");
+
         exit();
     } else {
         echo "Erreur lors de l'ajout de l'opération : " . $stmt->error;

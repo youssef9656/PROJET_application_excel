@@ -45,6 +45,28 @@ setTimeout(() => {
 }, 1000)
 
 // ajouter operation
+
+function envoyerRequete2() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "ajouter_operation.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    // Envoi de la requête AJAX
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Récupérer la réponse JSON
+            var response = JSON.parse(xhr.responseText);
+
+            // Optionnel : Ajouter une classe pour styliser le message (success ou error)
+            if (response.status === 'ss') {
+                console.log('1234')
+
+            }
+        }
+    };
+}
+envoyerRequete2()
+
 document.addEventListener('DOMContentLoaded', function() {
     // Gérer le changement de lot pour charger les sous-lots et les fournisseurs
     document.getElementById('lot').addEventListener('change', function() {
@@ -364,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 function envoyerRequete() {
                     var xhr = new XMLHttpRequest();
-                    xhr.open("POST", "modifier_operation.php", true);
+                    xhr.open("GET", "modifier_operation.php", true);
                     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
                     // Envoi de la requête AJAX
@@ -376,13 +398,15 @@ document.addEventListener('DOMContentLoaded', function () {
                             // Optionnel : Ajouter une classe pour styliser le message (success ou error)
                             if (response.status === 'success') {
 
-
+                                console.log('1234')
 
 
                             }
                         }
                     };
                 }
+
+                envoyerRequete()
                 // Ouvrir le modal
                 const modal = new bootstrap.Modal(document.getElementById('modifierOperationModal'));
                 modal.show();

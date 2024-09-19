@@ -120,6 +120,42 @@ $queryInsert = "INSERT INTO operation (lot_name, sous_lot_name, nom_article, dat
 $stmt = $conn->prepare($queryInsert);
 $stmt->bind_param("sssdsssssssss", $lotName, $sousLotName, $articleName, $entree, $sortie, $fournisseurName, $serviceName, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie);
 
+
+function article_besoin($article, $besoin, $conn)
+{
+    // Préparation de la requête avec un paramètre MySQLi (sans les deux-points)
+    $queryBesoin = "SELECT Requirement_Status FROM etat_de_stocks WHERE Article = ?";
+    $stmt = $conn->prepare($queryBesoin);
+
+    // Associe le paramètre (s pour chaîne de caractères)
+    $stmt->bind_param("s", $article);
+
+    // Exécute la requête
+    $stmt->execute();
+
+    // Récupère le résultat
+    $result = $stmt->get_result();
+
+    // Vérifie si le résultat existe et récupère le Requirement_Status
+    if ($result->num_rows > 0) {
+        $status = $result->fetch_assoc()['Requirement_Status'];
+    } else {
+        return false; // Aucun résultat trouvé
+    }
+
+    // Ferme la requête
+    $stmt->close();
+
+    // Compare le status avec le besoin
+    if ($status === $besoin) {
+        return true; // Si le besoin correspond au status, retourne vrai
+    } else {
+        return false; // Sinon retourne faux
+    }
+}
+
+
+
 // Exécution de la requête
 if ($stmt->execute()) {
 
@@ -220,6 +256,15 @@ if ($stmt->execute()) {
                 }
 
                 $stmt->execute();
+
+                if(article_besoin($articleName , "besoin" , $conn)){
+                    echo json_encode(['success' => true]);
+                    header("Location: option_Ent_Sor.php?message=success");
+
+                }else{
+                    header("Location: option_Ent_Sor.php");
+                }
+
             }
         } else {
             echo "Aucune donnée à traiter.";

@@ -32,6 +32,12 @@ if (isset($_GET['message'])) {
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>';
             break;
+        case 'ss':
+            echo '<div class="alert alert-dismissible alert-success">
+                    bbbbbb.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>';
+            break;
 
     }
 }
