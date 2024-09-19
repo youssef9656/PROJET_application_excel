@@ -64,7 +64,9 @@ $result1 = $conn->query($sql);
 <?php endif; ?>
 
 <?php
-// إغلاق الاتصال بقاعدة البيانات
+
+
+
 $conn->close();
 ?>
 </body>

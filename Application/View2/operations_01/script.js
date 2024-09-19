@@ -422,25 +422,3 @@ function ret(){
     location.reload()
 }
 
-function Tla3Lfo9(){
-    let tla3 = document.querySelector('#scrollbtn')
-    if(window.scrollY >= 10){
-        // tla3.style.opacity = 1
-        tla3.style.display = 'block'
-        tla3.style.filter = 'none'
-        console.log(1);
-
-    }else{
-
-        // tla3.style.opacity = 0
-        tla3.style.filter = 'blur(100px)'
-        tla3.style.display = 'none'
-        console.log(2)
-    }
-
-}
-
-
-
-
-// window.onscroll = Tla3Lfo9

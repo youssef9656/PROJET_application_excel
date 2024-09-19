@@ -105,6 +105,10 @@ $result3 = @mysqli_query($conn, $query3);
                     </a>
 
                 </td>
+
+
+
+
             </tr>
         <?php endwhile; ?>
         </tbody>
@@ -115,7 +119,8 @@ $result3 = @mysqli_query($conn, $query3);
 <?php endif; ?>
 
 <?php
-// إغلاق الاتصال بقاعدة البيانات
+
+
 $conn->close();
 ?>
 </body>
