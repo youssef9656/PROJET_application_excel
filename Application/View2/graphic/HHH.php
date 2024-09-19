@@ -10,7 +10,7 @@ include '../../Config/connect_db.php'; ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Graph with Filters</title>
-    <script src="node_modules/chart.js/dist/chart.umd.js"></script>
+    <script src="../../includes/node_modules/chart.js/dist/chart.umd.js"></script>
     <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
 </head>
 <body>

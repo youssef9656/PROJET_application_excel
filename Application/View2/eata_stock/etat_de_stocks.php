@@ -13,7 +13,8 @@ include '../../Config/connect_db.php'; $pageName= 'Catalogue du temps'; ?>
     <script src="../../includes/jquery.sheetjs.js"></script>
     <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
 <!--    <script src="libriryPdf/unpkg/jspdf.min.js"></script>-->
-    <script src="libriryPdf/unpkg/jspdf.umd.min.js"></script>
+    <script src="../../includes/libriryPdf/unpkg/jspdf.umd.min.js"></script>
+    <script src="../../includes/xlsx.full.min.js"></script>
 
 
     <style>
@@ -212,7 +213,7 @@ include '../../includes/header.php';
                 <th>Total Sorties</th>
                 <th>Stock Final</th>
                 <th>Prix Moyen</th>
-                <th>Valeur Stock</th>
+                <th>Valeur Stock Final</th>
                 <th>Total Depenses Entrées</th> <!-- العمود الجديد -->
                 <th>Total Depenses Sorties</th> <!-- العمود الجديد -->
                 <th>Stock Min</th>
@@ -232,12 +233,12 @@ include '../../includes/header.php';
 
         </tr>
         <tr>
-            <th>Total Depenses Entrées final </th>
+            <th>Total Dépenses Entrées final </th>
             <td id="Total_Entrees_final"></td>
 
         </tr>
         <tr>
-            <th> Entrées Total Depenses Sorties final </th>
+            <th>  Total Dépenses Sorties final </th>
             <td id="Total_Sorties_final"></td>
 
         </tr>

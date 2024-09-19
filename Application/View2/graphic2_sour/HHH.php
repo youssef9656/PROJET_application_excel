@@ -10,7 +10,7 @@ include '../../Config/connect_db.php'; ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Graph with Filters</title>
-    <script src="node_modules/chart.js/dist/chart.umd.js"></script>
+    <script src="../../includes/node_modules/chart.js/dist/chart.umd.js"></script>
     <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
 </head>
 <body>
@@ -137,17 +137,16 @@ include '../../includes/header.php';
     </div>
 
     <div class="row mb-12">
-        <div class="col-md-12">
-            <canvas id="chart1" width="500" height="200" ></canvas>
+        <div class="col-md-8">
+            <canvas id="chart1" width="400" height="200" ></canvas>
         </div>
 
-    </div>
-    <div class="row mb-12">
-
-        <div class="col-md-8">
+        <div class="col-md-4">
             <canvas id="chart2" width="400" height="200"></canvas>
         </div>
+
     </div>
+
 </div>
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
 

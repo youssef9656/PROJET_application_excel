@@ -4,9 +4,8 @@ $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "journale";
-$port=3308;
 // Créer la connexion
-$conn = new mysqli($servername, $username, $password, $dbname,$port);
+$conn = new mysqli($servername, $username, $password, $dbname,3308);
 
 // Vérifier la connexion
 if ($conn->connect_error) {
