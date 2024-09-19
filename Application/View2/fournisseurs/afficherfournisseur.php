@@ -76,7 +76,7 @@ $result = $conn->query($querySelect);
     </head>
     <body>
         <h1>Liste des Fournisseurs</h1>
-        <table id="tblfr" class="table table-light  table-bordered table-hover " >
+        <table id="tblfr" class="table table-light  table-bordered table-hover sheetjs" >
             <thead>
                 <tr>
                     <th>ID</th>

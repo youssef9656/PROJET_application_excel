@@ -202,7 +202,7 @@ include '../../includes/header.php';
 
 <div style="display:flex;flex-flow: row">
     <div class="table-container mt-4" >
-        <table id="articles_table" class="table table-Primary table-bordered table-hover  table-group-divider" >
+        <table id="articles_table" class="table table-Primary table-bordered table-hover  table-group-divider sheetjs" >
             <thead class="thead-dark">
             <tr>
                 <th>ID</th>
@@ -224,7 +224,7 @@ include '../../includes/header.php';
         </table>
     </div>
 
-    <table class="table table-bordered table-hover table-primary" style="width: 150px; margin-left:10px; height: 150px ">
+    <table class="table table-bordered table-hover table-primary sheetjs" style="width: 150px; margin-left:10px; height: 150px ">
         <thead>
         <tr>
             <th >Valeur Stock final </th>
