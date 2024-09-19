@@ -345,8 +345,6 @@ document.getElementById("Total_Entrees_final").innerText=Total_Entrees_final.toF
         window.print()
     }
 
-
-
     // Fetch data on page load without any filters (show all data)
     document.addEventListener('DOMContentLoaded', fetchData);
 </script>
