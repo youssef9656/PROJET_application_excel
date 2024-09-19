@@ -111,6 +111,85 @@ include '../../includes/header.php';
         width: 100%;
     }
 
+
+    /* Style pour le conteneur du tableau */
+    #tablecontainerEroor {
+        margin: 20px 0;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    /* Style pour le tableau */
+    #tablecontainerEroor table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: Arial, sans-serif;
+        border: 2px solid #f44336; /* Bordure rouge */
+        background-color: #ffebee; /* Fond légèrement rouge pâle */
+        table-layout: fixed;
+    }
+
+    /* Fixer la largeur des colonnes */
+    #tablecontainerEroor th, #tablecontainerEroor td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #f44336;
+    }
+
+    /* Style pour fixer les en-têtes */
+    #tablecontainerEroor thead {
+        background-color: #f44336; /* Rouge vif pour les en-têtes */
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    /* Style pour le corps du tableau avec défilement */
+    #tablecontainerEroor tbody {
+        display: block;
+        max-height: 300px; /* Hauteur maximale pour le défilement */
+        overflow-y: scroll;
+    }
+
+    #tablecontainerEroor tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    /* Alternance des couleurs pour les lignes du tbody */
+    #tablecontainerEroor tbody tr:nth-child(even) {
+        background-color: #ffcdd2; /* Alternance des lignes */
+    }
+
+    /* Style pour les cellules du tbody */
+    #tablecontainerEroor tbody td {
+        background-color: #ffebee; /* Couleur de fond */
+        color: #333; /* Couleur du texte */
+    }
+
+    /* Survol des lignes du tbody */
+    #tablecontainerEroor tbody tr:hover {
+        background-color: #ef9a9a; /* Survol avec une couleur plus claire */
+    }
+
+    /* Bordure sur le côté droit du tableau pour éviter des chevauchements */
+    #tablecontainerEroor table th, #tablecontainerEroor table td {
+        border-right: 1px solid #f44336;
+    }
+
+    /* Supprimer la barre de défilement horizontale si nécessaire */
+    #tablecontainerEroor tbody::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #tablecontainerEroor tbody::-webkit-scrollbar-thumb {
+        background-color: #f44336;
+        border-radius: 10px;
+    }
+
+
 </style>
 
 <div class="container">
@@ -184,66 +263,99 @@ include '../../includes/header.php';
     <button id="sendData" class="btn btn-success btn-custom" style="display: none;" onclick="sendData()">Envoyer les données</button>
 </div>
 <style>
-
-
-    h2 {
-        text-align: center;
-        color: #333;
-        font-size: 24px;
+    /* Style pour le conteneur du tableau */
+    #tablecontainerEroor {
+        margin: 20px 0;
+        overflow: hidden;
+        width: 100%;
     }
 
-    #table-container {
-        margin-top: 20px;
-        overflow-x: auto;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        background-color: #fff;
-    }
-
-    table {
+    /* Style pour le tableau */
+    #tablecontainerEroor table {
         width: 100%;
         border-collapse: collapse;
-        margin: 20px 0;
-        font-size: 16px;
+        font-family: Arial, sans-serif;
+        border: 2px solid #f44336; /* Bordure rouge */
+        background-color: #ffebee; /* Fond légèrement rouge pâle */
+        table-layout: fixed;
+    }
+
+    /* Fixer la largeur des colonnes */
+    #tablecontainerEroor th, #tablecontainerEroor td {
+        padding: 12px; /* Augmenter l'espace interne */
         text-align: left;
-        border-radius: 8px;
-        overflow: hidden;
+        border-bottom: 1px solid #f44336;
+        font-size: 14px; /* Taille de police plus grande */
     }
 
-    th, td {
-        padding: 12px 15px;
-        border: 1px solid #ddd;
-    }
-
-    th {
-        background-color: #4CAF50;
+    /* Style pour fixer les en-têtes */
+    #tablecontainerEroor thead {
+        background-color: #f44336; /* Rouge vif pour les en-têtes */
         color: white;
-        text-transform: uppercase;
-        font-weight: bold;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: table;
+        width: 100%; /* Assurer que thead prend toute la largeur du tableau */
+        table-layout: fixed;
+        font-size: 16px; /* Police plus grande pour les en-têtes */
     }
 
-    tr:nth-child(even) {
-        background-color: #f2f2f2;
+    /* Défilement du tbody avec la même largeur que thead */
+    #tablecontainerEroor tbody {
+        display: block;
+        max-height: 300px; /* Hauteur maximale pour le défilement */
+        overflow-y: auto; /* Défilement vertical */
+        width: 100%; /* Correspondre à la largeur du thead */
     }
 
-    tr:hover {
-        background-color: #f1f1f1;
-        cursor: pointer;
+    #tablecontainerEroor tbody tr {
+        display: table;
+        width: 100%; /* Largeur identique au tableau */
+        table-layout: fixed; /* Forcer une largeur fixe des colonnes */
     }
 
-    td {
-        color: #555;
+    /* Alternance des couleurs pour les lignes du tbody */
+    #tablecontainerEroor tbody tr:nth-child(even) {
+        background-color: #ffcdd2; /* Alternance des lignes */
     }
 
-    @media (max-width: 768px) {
-        th, td {
-            padding: 10px;
-            font-size: 14px;
-        }
+    /* Style pour les cellules du tbody */
+    #tablecontainerEroor tbody td {
+        background-color: #ffebee; /* Couleur de fond */
+        color: #333; /* Couleur du texte */
     }
+
+    /* Style spécial pour la dernière colonne (Raison du doublon) */
+    #tablecontainerEroor tbody td:last-child {
+        background-color: rgba(21, 22, 169, 0.8); /* Couleur orange pour attirer l'attention */
+        color: white; /* Texte blanc pour contraster */
+        font-weight: bold; /* Texte en gras pour plus d'accent */
+    }
+
+    /* Survol des lignes du tbody */
+    #tablecontainerEroor tbody tr:hover {
+        background-color: #ef9a9a; /* Survol avec une couleur plus claire */
+    }
+
+    /* Bordure sur le côté droit du tableau */
+    #tablecontainerEroor table th, #tablecontainerEroor table td {
+        border-right: 1px solid #f44336;
+    }
+
+    /* Supprimer la barre de défilement horizontale si nécessaire */
+    #tablecontainerEroor tbody::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #tablecontainerEroor tbody::-webkit-scrollbar-thumb {
+        background-color: #f44336;
+        border-radius: 10px;
+    }
+
 </style>
-<h2>Liste des Doublons</h2>
-<div id="table-container"></div>
+<h2 clo>Liste des Doublons</h2>
+<div id="tablecontainerEroor"></div>
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -369,9 +481,8 @@ include '../../includes/header.php';
                 displayTable(formattedJson);
                 const { filteredData, errors } = filterData(formattedJson);
 
-                console.log('Filtered Data:', filteredData);
-                console.log('Errors:', errors);
-
+                // console.log('Filtered Data:', filteredData);
+                // console.log('Errors:', errors);
 
 
 
@@ -429,8 +540,9 @@ include '../../includes/header.php';
 
 
 
+
     function createTable(data) {
-        const tableContainer = document.getElementById('table-container');
+        const tableContainer = document.getElementById('tablecontainerEroor');
         tableContainer.innerHTML = ''; // Effacer le contenu précédent
 
         if (data.length === 0) {
@@ -486,39 +598,56 @@ include '../../includes/header.php';
     function filterData(data) {
         const seen = {
             articles: new Set(),
-            lotToSousLots: new Map(),
-            sousLotToLotMap: new Map()
+            lotToSousLots: new Map(),  // Map pour suivre les sous lots à l'intérieur de chaque lot
+            sousLotToLots: new Map()   // Map pour suivre les sous lots à travers différents lots
         };
 
         const errors = {
-            duplicates: [],
-            uniqueSousLots: []
+            duplicates: []
         };
 
-        data.forEach(item => {
-            const articleKey = item.articles;
-            const lotKey = item.lot;
-            const sousLotKey = item['sous lot'];
+        const filteredData = data.filter((item, index) => {
+            // Transformer les articles, lot et sous lot en minuscules et enlever les espaces
+            const articleKey = item.articles.trim().toLowerCase();
+            const lotKey = item.lot.trim().toLowerCase();
+            const sousLotKey = item['sous lot'].trim().toLowerCase();
 
+            // Vérifier les doublons d'articles
             if (seen.articles.has(articleKey)) {
-                errors.duplicates.push({ item, reason: 'Duplicate article name' });
+                errors.duplicates.push({
+                    item,
+                    reason: `Nom d'article en doublon dans la colonne ${index + 2}`
+                });
+                return false;
             }
             seen.articles.add(articleKey);
 
-            // التحقق من وجود sous lot في lot آخر
-            if (seen.sousLotToLotMap.has(sousLotKey)) {
-                const existingLot = seen.sousLotToLotMap.get(sousLotKey);
+            // Vérifier si le sous lot existe dans un autre lot
+            if (seen.sousLotToLots.has(sousLotKey)) {
+                const existingLot = seen.sousLotToLots.get(sousLotKey);
                 if (existingLot !== lotKey) {
-                    errors.uniqueSousLots.push({ item, reason: `Sous lot '${sousLotKey}' موجود في lot '${existingLot}'` });
+                    errors.duplicates.push({
+                        item,
+                        reason: `Sous lot '${sousLotKey}' existe dans un autre lot : ${existingLot} (colonne ${index + 2})`
+                    });
+                    return false;
                 }
+            } else {
+                seen.sousLotToLots.set(sousLotKey, lotKey);
             }
-            seen.sousLotToLotMap.set(sousLotKey, lotKey);
 
+            // Permettre les sous lots en doublon à l'intérieur du même lot
+            if (!seen.lotToSousLots.has(lotKey)) {
+                seen.lotToSousLots.set(lotKey, new Set());
+            }
+            const sousLotsInLot = seen.lotToSousLots.get(lotKey);
+            sousLotsInLot.add(sousLotKey);
 
+            return true;
         });
 
         return {
-            filteredData: data, // Ici, nous retournons les données originales pour l'exemple
+            filteredData,
             errors
         };
     }

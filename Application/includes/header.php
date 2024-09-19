@@ -147,8 +147,8 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Statistiques</a>
                     <ul class="dropdown-menu ">
+                         <li><a class="dropdown-item text-center fs-5 fw-bold  " href="../graphic/HHH.php">Statistiques des entree</a></li>
                         <li><a class="dropdown-item text-center fs-5 fw-bold " href="../graphic2_sour/HHH.php">Statistiques des sorties</a></li>
-                        <li><a class="dropdown-item text-center fs-5 fw-bold  " href="../graphic/HHH.php">Statistiques des entree</a></li>
                     </ul>
                 </li>
                 

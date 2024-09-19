@@ -136,11 +136,15 @@ include '../../includes/header.php';
         </div>
     </div>
 
-    <div class="row mb-5">
-        <div class="col-md-7">
-            <canvas id="chart1" width="400" height="200"></canvas>
+    <div class="row mb-12">
+        <div class="col-md-12">
+            <canvas id="chart1" width="500" height="200" ></canvas>
         </div>
-        <div class="col-md-5">
+
+    </div>
+    <div class="row mb-12">
+
+        <div class="col-md-8">
             <canvas id="chart2" width="400" height="200"></canvas>
         </div>
     </div>
@@ -162,7 +166,6 @@ include '../../includes/header.php';
         fetch(`getData.php?lot=${lot}&sous_lot=${sousLot}&article=${article}&fournisseur=${fournisseur}&start_date=${startDate}&end_date=${endDate}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data)
 
                 const labels = data.map(d => d.date_operation);
                 const  sortie_operation  = data.map(d => d.sortie_operation);
@@ -175,28 +178,81 @@ include '../../includes/header.php';
                 });
 
                 // تحديث الرسم البياني الأول
-                if (chart1) chart1.destroy();
+// Vérifiez si le graphique existe déjà et détruisez-le pour éviter les erreurs
+// Vérifiez si le graphique existe déjà et détruisez-le pour éviter les erreurs
+                if (chart1) {
+                    chart1.destroy();
+                }
+
+// Récupérez le contexte du canvas pour le graphique
                 const ctx1 = document.getElementById('chart1').getContext('2d');
+
+// Créez un dégradé linéaire pour le fond du graphique
+                const gradient = ctx1.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(0, 0, 255, 0.6)'); // Couleur du début du dégradé
+                gradient.addColorStop(1, 'rgba(0, 0, 255, 0.1)'); // Couleur de fin du dégradé
+
+// Créez un nouveau graphique
                 chart1 = new Chart(ctx1, {
-                    type: 'line',
+                    type: 'line', // Type de graphique
                     data: {
-                        labels: labels,
+                        labels: labels, // Labels pour l'axe X
                         datasets: [{
-                            label: 'Entree Operation',
-                            data: sortie_operation,
-                            borderColor: 'blue',
-                            backgroundColor: 'rgba(0, 0, 255, 0.2)'
+                            label: 'Sortie Operation', // Légende du dataset
+                            data: sortie_operation, // Données pour l'axe Y
+                            borderColor: 'blue', // Couleur de la ligne
+                            backgroundColor: gradient, // Utilisation du dégradé linéaire comme fond
+                            borderWidth: 2, // Largeur de la ligne
+                            pointBackgroundColor: 'blue', // Couleur des points sur la ligne
+                            pointBorderColor: '#fff', // Couleur de la bordure des points
+                            pointBorderWidth: 2, // Largeur de la bordure des points
+                            pointRadius: 5, // Rayon des points
+                            pointHoverRadius: 7, // Rayon des points au survol
+                            tension: 0.4 // Adoucit la courbe de la ligne
                         }]
                     },
                     options: {
+                        responsive: true, // Le graphique s'ajuste automatiquement à la taille de l'écran
+                        plugins: {
+                            legend: {
+                                display: true, // Afficher la légende
+                                position: 'top' // Position de la légende
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        return `Sortie Operation: ${tooltipItem.raw}`;
+                                    },
+                                    title: function(tooltipItem) {
+                                        return `Date: ${tooltipItem[0].label}`;
+                                    }
+                                },
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)', // Couleur de fond de l'infobulle
+                                titleFont: { size: 14 }, // Taille de la police du titre
+                                bodyFont: { size: 12 }, // Taille de la police du corps
+                                displayColors: false // Ne pas afficher les couleurs des éléments dans l'infobulle
+                            }
+                        },
                         scales: {
-                            x: { title: { text: 'Date', display: true } },
-                            y: { title: { text: 'Entree Operation', display: true } }
+                            x: {
+                                title: {
+                                    text: 'Date', // Titre de l'axe X
+                                    display: true
+                                }
+                            },
+                            y: {
+                                title: {
+                                    text: 'Sortie Operation', // Titre de l'axe Y
+                                    display: true
+                                },
+                                beginAtZero: true // Commence l'axe Y à zéro
+                            }
                         }
                     }
                 });
 
-                // تحديث الرسم البياني الثاني
+
+
                 if (chart2) chart2.destroy();
                 const ctx2 = document.getElementById('chart2').getContext('2d');
                 chart2 = new Chart(ctx2, {
@@ -205,14 +261,16 @@ include '../../includes/header.php';
                         labels: uniqueServices,  // أسماء الخدمات بدون تكرار
                         datasets: [{
                             label: 'Distribution des articles par service',
-                            data: articleCounts,  // عدد المقالات لكل خدمة
+                            data: articleCounts,
                             backgroundColor: [
                                 'rgba(255, 99, 132, 0.2)',
                                 'rgba(54, 162, 235, 0.2)',
                                 'rgba(255, 206, 86, 0.2)',
                                 'rgba(75, 192, 192, 0.2)',
                                 'rgba(153, 102, 255, 0.2)',
-                                'rgba(255, 159, 64, 0.2)'
+                                'rgba(255, 159, 64, 0.2)',
+
+
                             ],
                             borderColor: [
                                 'rgba(255, 99, 132, 1)',
@@ -241,63 +299,6 @@ include '../../includes/header.php';
             })
             .catch(error => console.error('Error fetching data:', error));
     }
-    // fetch(`getData.php?lot=${lot}&sous_lot=${sousLot}&article=${article}&fournisseur=${fournisseur}&start_date=${startDate}&end_date=${endDate}`)
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         console.log(data);
-    //
-    //         // استخراج جميع service_operation بدون تكرار
-    //         const uniqueServices = [...new Set(data.map(d => d.service_operation).filter(service => service))];
-    //
-    //         // حساب عدد المقالات لكل service_operation
-    //         const articleCounts = uniqueServices.map(service => {
-    //             return data.filter(d => d.service_operation === service).length;
-    //         });
-    //
-    //         // تحديث الرسم البياني الدائري
-    //         if (chart2) chart2.destroy();
-    //         const ctx2 = document.getElementById('chart2').getContext('2d');
-    //         chart2 = new Chart(ctx2, {
-    //             type: 'pie',
-    //             data: {
-    //                 labels: uniqueServices,  // أسماء الخدمات بدون تكرار
-    //                 datasets: [{
-    //                     label: 'Distribution des articles par service',
-    //                     data: articleCounts,  // عدد المقالات لكل خدمة
-    //                     backgroundColor: [
-    //                         'rgba(255, 99, 132, 0.2)',
-    //                         'rgba(54, 162, 235, 0.2)',
-    //                         'rgba(255, 206, 86, 0.2)',
-    //                         'rgba(75, 192, 192, 0.2)',
-    //                         'rgba(153, 102, 255, 0.2)',
-    //                         'rgba(255, 159, 64, 0.2)'
-    //                     ],
-    //                     borderColor: [
-    //                         'rgba(255, 99, 132, 1)',
-    //                         'rgba(54, 162, 235, 1)',
-    //                         'rgba(255, 206, 86, 1)',
-    //                         'rgba(75, 192, 192, 1)',
-    //                         'rgba(153, 102, 255, 1)',
-    //                         'rgba(255, 159, 64, 1)'
-    //                     ],
-    //                     borderWidth: 1
-    //                 }]
-    //             },
-    //             options: {
-    //                 responsive: true,
-    //                 plugins: {
-    //                     legend: {
-    //                         position: 'top',
-    //                     },
-    //                     title: {
-    //                         display: true,
-    //                         text: 'Répartition des articles par service'
-    //                     }
-    //                 }
-    //             }
-    //         });
-    //     })
-    //     .catch(error => console.error('Erreur lors de la récupération des données:', error));
 
     function updateSousLot() {
         const lot = document.getElementById('lotSelect').value;
