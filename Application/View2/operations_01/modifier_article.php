@@ -10,6 +10,7 @@ $stock_initial = $_POST['stock_initial'];
 $prix = $_POST['prix'];
 $unite = $_POST['unite'];
 
+
 // Mise à jour de l'article
 $query = "UPDATE article SET nom = ?, description = ?, stock_min = ?, stock_initial = ?, prix = ?, unite = ? WHERE id_article = ?";
 $stmt = $conn->prepare($query);

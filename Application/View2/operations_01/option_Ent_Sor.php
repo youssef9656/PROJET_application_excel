@@ -22,6 +22,19 @@ $resultLots = mysqli_query($conn, $queryLots);
 if (!$resultLots) {
     die('Erreur de requête : ' . mysqli_error($conn));
 }
+
+
+if (isset($_GET['message'])) {
+    switch ($_GET['message']) {
+        case 'success':
+            echo '<div class="alert alert-dismissible alert-success">
+                    besoin.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>';
+            break;
+
+    }
+}
 ?>
 
 <!doctype html>
@@ -99,18 +112,32 @@ if (!$resultLots) {
         margin: 10px;
     }
 
+    .tla3{
+        position: fixed;
+        bottom: 80px;
+        right: 30px;
+        z-index: 20;
+        border: 2px solid white;
+        border-radius: 50%;
+        background-color: white;
+
+    }
 
 </style>
 
-
+<a id="scrollbtn" href="#p">
+    <button class="tla3"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z"/>
+        </svg></button>
+</a>
 
 <!--Boutton pour ouvrir le modal ajouter operation-->
-<div class="ajouter-fournisseur-btn">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterOperationModal">
-        Ajouter Opération
-    </button>
-
-</div>
+<!--<div class="ajouter-fournisseur-btn">-->
+<!--    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterOperationModal">-->
+<!--        Ajouter Opération-->
+<!--    </button>-->
+<!---->
+<!--</div>-->
 <!-- Modal ajouter operation -->
 <div class="modal fade" id="ajouterOperationModal" tabindex="-1" aria-labelledby="ajouterOperationModalLabel" aria-hidden="true">
     <div class="modal-dialog">

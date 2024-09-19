@@ -1,5 +1,7 @@
 // filtrer les operations par date
-
+document.addEventListener('DOMContentLoaded', ()=>{
+    document.body.style.filter = "none";
+})
 
 setTimeout(() => {
     document.getElementById('filterBtn').addEventListener('click', function () {
@@ -358,6 +360,29 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     });
 
+
+
+                function envoyerRequete() {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "modifier_operation.php", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                    // Envoi de la requête AJAX
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            // Récupérer la réponse JSON
+                            var response = JSON.parse(xhr.responseText);
+
+                            // Optionnel : Ajouter une classe pour styliser le message (success ou error)
+                            if (response.status === 'success') {
+
+
+
+
+                            }
+                        }
+                    };
+                }
                 // Ouvrir le modal
                 const modal = new bootstrap.Modal(document.getElementById('modifierOperationModal'));
                 modal.show();
@@ -373,9 +398,25 @@ function ret(){
     location.reload()
 }
 
+function Tla3Lfo9(){
+    let tla3 = document.querySelector('#scrollbtn')
+    if(window.scrollY >= 10){
+        // tla3.style.opacity = 1
+        tla3.style.display = 'block'
+        tla3.style.filter = 'none'
+        console.log(1);
+
+    }else{
+
+        // tla3.style.opacity = 0
+        tla3.style.filter = 'blur(100px)'
+        tla3.style.display = 'none'
+        console.log(2)
+    }
+
+}
 
 
 
 
-
-
+// window.onscroll = Tla3Lfo9

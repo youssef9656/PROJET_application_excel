@@ -8,17 +8,60 @@ include '../../config/connect_db.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Récupération des données du formulaire
-    $operationId = isset($_POST['operation_id']) ? intval($_POST['operation_id']) : 0;
-    $lotId = isset($_POST['lot']) ? intval($_POST['lot']) : 0;
-    $sousLotId = isset($_POST['sousLot']) ? intval($_POST['sousLot']) : 0;
-    $articleId = isset($_POST['article']) ? intval($_POST['article']) : 0;
-    $fournisseurId = isset($_POST['fournisseur']) ? intval($_POST['fournisseur']) : 0;
-    $serviceId = isset($_POST['service']) ? intval($_POST['service']) : 0;
-    $ref = isset($_POST['ref']) ? $_POST['ref'] : '';
-    $entree = isset($_POST['entree']) ? floatval($_POST['entree']) : 0.00;
-    $sortie = isset($_POST['sortie']) ? floatval($_POST['sortie']) : 0.00;
-    $prix = isset($_POST['prix']) ? floatval($_POST['prix']) : 0.00;
-    $dateOperation = isset($_POST['date_operation']) ? $_POST['date_operation'] : '';
+    $operationId = 0;
+    if (isset($_POST['operation_id'])) {
+        $operationId = intval($_POST['operation_id']);
+    }
+
+    $lotId = 0;
+    if (isset($_POST['lot'])) {
+        $lotId = intval($_POST['lot']);
+    }
+
+    $sousLotId = 0;
+    if (isset($_POST['sousLot'])) {
+        $sousLotId = intval($_POST['sousLot']);
+    }
+
+    $articleId = 0;
+    if (isset($_POST['article'])) {
+        $articleId = intval($_POST['article']);
+    }
+
+    $fournisseurId = 0;
+    if (isset($_POST['fournisseur'])) {
+        $fournisseurId = intval($_POST['fournisseur']);
+    }
+
+    $serviceId = 0;
+    if (isset($_POST['service'])) {
+        $serviceId = intval($_POST['service']);
+    }
+
+    $ref = '';
+    if (isset($_POST['ref'])) {
+        $ref = $_POST['ref'];
+    }
+
+    $entree = 0.00;
+    if (isset($_POST['entree'])) {
+        $entree = floatval($_POST['entree']);
+    }
+
+    $sortie = 0.00;
+    if (isset($_POST['sortie'])) {
+        $sortie = floatval($_POST['sortie']);
+    }
+
+    $prix = 0.00;
+    if (isset($_POST['prix'])) {
+        $prix = floatval($_POST['prix']);
+    }
+
+    $dateOperation = '';
+    if (isset($_POST['date_operation'])) {
+        $dateOperation = $_POST['date_operation'];
+    }
 
     // Convertir la date et l'heure en format DATETIME
     $formattedDateOperation = date('Y-m-d H:i:s', strtotime($dateOperation));
@@ -125,6 +168,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $conn->prepare($queryInsert);
     $stmt->bind_param("ssssssssssssss", $lotName, $sousLotName, $articleName, $formattedDateOperation, $entree, $sortie, $fournisseurName, $serviceName, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie);
 
+    function article_besoin($article, $besoin, $conn)
+    {
+        // Préparation de la requête avec un paramètre MySQLi (sans les deux-points)
+        $queryBesoin = "SELECT Requirement_Status FROM etat_de_stocks WHERE Article = ?";
+        $stmt = $conn->prepare($queryBesoin);
+
+        // Associe le paramètre (s pour chaîne de caractères)
+        $stmt->bind_param("s", $article);
+
+        // Exécute la requête
+        $stmt->execute();
+
+        // Récupère le résultat
+        $result = $stmt->get_result();
+
+        // Vérifie si le résultat existe et récupère le Requirement_Status
+        if ($result->num_rows > 0) {
+            $status = $result->fetch_assoc()['Requirement_Status'];
+        } else {
+            return false; // Aucun résultat trouvé
+        }
+
+        // Ferme la requête
+        $stmt->close();
+
+        // Compare le status avec le besoin
+        if ($status === $besoin) {
+            return true; // Si le besoin correspond au status, retourne vrai
+        } else {
+            return false; // Sinon retourne faux
+        }
+    }
+
+
+//quelle sont les grandes etapes de ... dcromme
+
     // Exécution de la requête
     if ($stmt->execute()) {
         $start_date = '1000-01-01'; // Date de début
@@ -209,7 +288,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ";
                         $stmt = $conn->prepare($sql_insert);
-                        $stmt->bind_param("iissiiidddis", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $total_depenses_entree, $total_depenses_sortie, $stock_min, $requirement_status);
+                        $stmt->bind_param("isssiiidddis", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $total_depenses_entree, $total_depenses_sortie, $stock_min, $requirement_status);
                     }
 
                 } else {
@@ -220,10 +299,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ";
                     $stmt = $conn->prepare($sql_insert);
-                    $stmt->bind_param("iissiiidddis", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $total_depenses_entree, $total_depenses_sortie, $stock_min, $requirement_status);
+                    $stmt->bind_param("isssiiidddis", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $total_depenses_entree, $total_depenses_sortie, $stock_min, $requirement_status);
                 }
 
                 $stmt->execute();
+
+                if(article_besoin($articleName , "besoin" , $conn)){
+                    echo json_encode(['success' => true]);
+
+                }
             }
         } else {
             echo "Aucune donnée à traiter.";

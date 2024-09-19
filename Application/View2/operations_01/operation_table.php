@@ -29,6 +29,8 @@ if (!$result) {
         }
 
         #tableoperationdiv {
+            position: sticky;
+            top: 0px;
             margin: 20px;
         }
 
@@ -37,6 +39,11 @@ if (!$result) {
             flex-wrap: wrap;
             gap: 15px;
             margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 20;
+            padding-bottom: 20px;
         }
 
         #filters label {
@@ -66,6 +73,8 @@ if (!$result) {
             width: 100%;
             border-collapse: collapse;
             background-color: #ffffff;
+            height: 80vh;
+
         }
 
         .table-operation th,
@@ -77,7 +86,7 @@ if (!$result) {
 
         .table-operation thead {
             position: sticky;
-            top: 0;
+            top: 60px;
             background-color: #007bff;
             color: #ffffff;
         }
@@ -107,7 +116,7 @@ if (!$result) {
 
     <div id="tableoperationdiv">
         <div id="filters">
-            <label for="startDate">Date de début:</label>
+            <label for="startDate" id="p">Date de début:</label>
             <input type="date" id="startDate" name="startDate">
 
             <label for="endDate">Date de fin:</label>
@@ -115,6 +124,10 @@ if (!$result) {
 
             <button id="filterBtn">Filtrer</button>
             <button id="afficher_tous">Afficher tous</button>
+
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterOperationModal">
+                Ajouter Opération
+            </button>
         </div>
 
         <table id="operationTable" class="table table-operation">
@@ -142,13 +155,13 @@ if (!$result) {
                 echo '<tr>';
                 echo '<td>' . htmlspecialchars($row['nom_article']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['date_operation']) . '</td>';
-                echo '<td' . ($row['entree_operation'] == 0 ? ' style="background-color: orange;"' : '') . '>' . htmlspecialchars($row['entree_operation']) . '</td>';
-                echo '<td' . ($row['sortie_operation'] == 0 ? ' style="background-color: yellow;"' : '') . '>' . htmlspecialchars($row['sortie_operation']) . '</td>';
+                echo '<td' . ($row['entree_operation'] == 0 ? ' style="background-color: #00ff44;"' : '') . '>' . htmlspecialchars($row['entree_operation']) . '</td>';
+                echo '<td' . ($row['sortie_operation'] == 0 ? ' style="background-color: #ffbf4b;"' : '') . '>' . htmlspecialchars($row['sortie_operation']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['pj_operation']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['ref']) . '</td>';
-                echo '<td' . ($row['nom_pre_fournisseur'] == null ? ' style="background-color: orange;"' : '') . '>' . htmlspecialchars($row['nom_pre_fournisseur']) . '</td>';
-                echo '<td' . ($row['service_operation'] == null ? ' style="background-color: yellow;"' : '') . '>' . htmlspecialchars($row['service_operation']) . '</td>';
-                echo '<td' . ($row['unite_operation'] == 0 ? ' style="background-color: yellow;"' : '') . '>' . htmlspecialchars($row['unite_operation']) . '</td>';
+                echo '<td' . ($row['nom_pre_fournisseur'] == null ? ' style="background-color: #00ff44;"' : '') . '>' . htmlspecialchars($row['nom_pre_fournisseur']) . '</td>';
+                echo '<td' . ($row['service_operation'] == null ? ' style="background-color: #ffbf4b;"' : '') . '>' . htmlspecialchars($row['service_operation']) . '</td>';
+                echo '<td' . ($row['unite_operation'] == 0 ? ' style="background-color: #ffbf4b;"' : '') . '>' . htmlspecialchars($row['unite_operation']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['depense_entre']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['prix_operation']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['depense_sortie']) . '</td>';
