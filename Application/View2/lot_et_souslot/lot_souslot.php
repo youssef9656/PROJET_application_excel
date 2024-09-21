@@ -53,6 +53,7 @@ if (isset($_GET['message'])) {
     <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
     <script src="../../includes/js/jquery.min.js"></script> <!-- Assurez-vous d'utiliser la version complète -->
     <script src="../../includes/js/bootstrap.bundle.min.js"></script>
+    <script src="../../includes/js/bootstrap123.min.js"></script>
     <title>Document</title>
 </head>
 <body>
@@ -73,7 +74,7 @@ if (isset($_GET['message'])) {
         margin-top: 40px;
         /*overflow: scroll;*/
     }
-    .table1 ,.table2{
+    .table1 ,.table2 , .table3{
         margin-top: 50px;
         width: 100%;
         display: flex;
@@ -276,45 +277,42 @@ if (isset($_GET['message'])) {
     </div>
 </div>
 
-<!-- Modal pour modifier fournisseur -->
-<!-- Modal Modification Fournisseur -->
-<!-- Modal Modification Fournisseur -->
-<!--<div id="modifierFournisseurModal" class="modal fade" tabindex="-1" role="dialog">-->
-<!--    <div class="modal-dialog" role="document">-->
-<!--        <div class="modal-content">-->
-<!--            <div class="modal-header">-->
-<!--                <h5 class="modal-title">Modifier Fournisseur</h5>-->
-<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--                    <span aria-hidden="true">&times;</span>-->
-<!--                </button>-->
-<!--            </div>-->
-<!--            <div class="modal-body">-->
-<!--                <form id="modifierFournisseurForm" method="post" action="modifier_fournisseur.php">-->
-<!--                    <input type="hidden" id="fournisseurId" name="fournisseurId">-->
-<!---->
-<!--                    <div class="form-group">-->
-<!--                        <label for="nomFournisseur">Nom du Fournisseur</label>-->
-<!--                        <input type="text" id="nomFournisseur" name="nomFournisseur" class="form-control" list="fournisseurList" required>-->
-<!--                        <datalist id="fournisseurList">-->
-<!--                            <!-- Options seront ajoutées dynamiquement avec jQuery -->
-<!--                        </datalist>-->
-<!--                    </div>-->
-<!---->
-<!--                    <div class="form-group">-->
-<!--                        <label for="lotFournisseur">Nom du Lot</label>-->
-<!--                        <input type="text" id="lotFournisseur" name="lotFournisseur" class="form-control" list="lotList" >-->
-<!--                        <datalist id="lotList">-->
-<!--                            <!-- Options seront ajoutées dynamiquement avec jQuery -->
-<!--                        </datalist>-->
-<!--                    </div>-->
-<!---->
-<!--                    <button type="submit" class="btn btn-primary">Modifier</button>-->
-<!--                </form>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
 
+<!-- Modal pour ajouter service -->
+
+<div class="modal fade" id="addServiceModal" tabindex="-1" role="dialog" aria-labelledby="addServiceModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addServiceModalLabel">Ajouter un Service</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addServiceForm">
+                    <div class="form-group">
+                        <label for="service">Service:</label>
+                        <input type="text" class="form-control" id="service" name="service" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="zone">Zone:</label>
+                        <input type="text" class="form-control" id="zone" name="zone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ref">Référence:</label>
+                        <input type="text" class="form-control" id="ref" name="ref" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="equip">Équipe:</label>
+                        <input type="text" class="form-control" id="equip" name="equip" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Ajouter</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -443,10 +441,37 @@ if (isset($_GET['message'])) {
 
             <!-- Le tableau de données de sous lots -->
         </div>
+
+
+
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addServiceModal">
+            Ajouter un Service
+        </button>
+
+        <div class="table3">
+
+
+        </div>
     </div>
 
 </div>
 <script>
+
+    $(document).ready(function() {
+
+        $.ajax({
+            url: 'service_table.php',
+            method: 'GET',
+            success: function (response) {
+                $('.table3').html(response);
+            },
+            error: function (xhr, status, error) {
+                console.error('Une erreur s\'est produite:', status, error);
+            }
+        });
+
+    })
+
     $(document).ready(function() {
         // Afficher une alerte si le paramètre d'erreur est présent dans l'URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -845,9 +870,91 @@ if (isset($_GET['message'])) {
     //
     // } , 1100)
 
-    // Fermer le modal quand on clique sur le bouton "close"
+//  services codes :
+
+//     ajouter service
+    $(document).ready(function() {
+        $('#addServiceForm').on('submit', function(event) {
+            event.preventDefault(); // Empêche le rechargement de la page
+
+            // Récupérer les valeurs des champs du formulaire
+            const service = $('#service').val();
+            const zone = $('#zone').val();
+            const ref = $('#ref').val();
+            const equip = $('#equip').val();
+
+            // Effectuer une requête AJAX pour ajouter le service
+            $.ajax({
+                type: 'POST',
+                url: 'ajouter_service.php', // Chemin vers le fichier PHP
+                data: {
+                    service: service,
+                    zone: zone,
+                    ref: ref,
+                    equip: equip
+                },
+                dataType: 'json', // Attente d'une réponse JSON
+                success: function(response) {
+                    if (response.status === 'success') {
+                        alert(response.message); // Message de succès
+                        $('#addServiceModal').modal('hide'); // Fermer le modal
+                        // Optionnel : rafraîchir la page ou mettre à jour le tableau
+                        location.reload(); // Pour recharger la page
+                    } else {
+                        alert('Erreur : ' + response.message); // Message d'erreur
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Erreur lors de l\'ajout du service. Veuillez réessayer.'); // Message d'erreur générique
+                }
+            });
+        });
+    });
+
+//     supprimer service
+    $(document).ready(function() {
+       setTimeout(()=>{
+           $('.deleteServiceBtn').on('click', function(e) {
+               e.preventDefault(); // Empêche la redirection par défaut
+
+               const serviceId = $(this).data('id');
+
+               if (confirm('Êtes-vous sûr de vouloir supprimer ce service ?')) {
+                   $.ajax({
+                       type: 'POST',
+                       url: 'supprimer_service.php',
+                       data: { id: serviceId },
+                       dataType: 'json',
+                       success: function(response) {
+                           if (response.status === 'success') {
+                               alert(response.message);
+                               location.reload(); // Rafraîchir la page pour mettre à jour le tableau
+                           } else {
+                               alert('Erreur : ' + response.message);
+                           }
+                       },
+                       error: function(xhr, status, error) {
+                           alert('Erreur lors de la suppression. Veuillez réessayer.');
+                       }
+                   });
+               }
+           });
+
+       },100)
+    });
+
+
+
+
+
 
 </script>
+
+<!-- jQuery -->
+
+<!-- Bootstrap JS -->
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+
 
 </body>
 </html>
