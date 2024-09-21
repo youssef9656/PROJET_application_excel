@@ -1,6 +1,6 @@
 <?php
 include '../../Config/check_session.php';
-checkUserRole('admin');
+checkUserRole('user');
 
 
 include '../../Config/connect_db.php';

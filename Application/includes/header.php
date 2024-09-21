@@ -130,11 +130,7 @@
                     <a class="nav-link" href="../"></a>
                 </li>
 
-                <?php
-
-
-                if($_SESSION['role'] == "admin"){
-                    echo '<li class="nav-item dropdown">
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">les données Articles</a>
                     <ul class="dropdown-menu ">
                         <li><a class="dropdown-item text-center fs-5 fw-bold " href="../fournisseurs/fournisseurs.php">Fournisseurs</a></li>
@@ -144,6 +140,11 @@
                         <li><a class="dropdown-item text-center  fw-bold " href="../addarticle_souslot/article_sous_lot.php">BASE DE DONNÉES ARTICLES </a></li>
                     </ul>
                 </li>
+                <?php
+
+
+                if($_SESSION['role'] == "admin"){
+                    echo '
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Statistiques</a>
                     <ul class="dropdown-menu ">

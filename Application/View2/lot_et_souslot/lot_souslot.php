@@ -444,7 +444,7 @@ if (isset($_GET['message'])) {
 
 
 
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addServiceModal">
+        <button style="margin-top: 50px" type="button" class="btn btn-primary" data-toggle="modal" data-target="#addServiceModal">
             Ajouter un Service
         </button>
 

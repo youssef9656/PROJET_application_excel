@@ -1,4 +1,9 @@
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include '../../config/connect_db.php';
 
 // Vérifier si l'ID du sous-lot est fourni
@@ -10,7 +15,7 @@ if (isset($_GET['id'])) {
 
     try {
         // Supprimer les produits associés à ce sous-lot dans la table products
-        $delete_products_query = "DELETE FROM products WHERE sous_lot_id = ?";
+        $delete_products_query = "DELETE FROM sous_lot_articles WHERE sous_lot_id = ?";
         $stmt_products = mysqli_prepare($conn, $delete_products_query);
         mysqli_stmt_bind_param($stmt_products, "i", $sous_lot_id);
         mysqli_stmt_execute($stmt_products);

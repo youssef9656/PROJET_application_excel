@@ -1,7 +1,7 @@
 <?php
+
 include '../../Config/check_session.php';
 checkUserRole('user');
-
 
 
 $pageName = 'lot / sous lot'; include '../../config/connect_db.php'; include '../../includes/header.php'; ?>
@@ -53,6 +53,7 @@ if (isset($_GET['message'])) {
     <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
     <script src="../../includes/js/jquery.min.js"></script> <!-- Assurez-vous d'utiliser la version complète -->
     <script src="../../includes/js/bootstrap.bundle.min.js"></script>
+    <script src="../../includes/js/bootstrap123.min.js"></script>
     <title>Document</title>
 </head>
 <body>
@@ -73,7 +74,7 @@ if (isset($_GET['message'])) {
         margin-top: 40px;
         /*overflow: scroll;*/
     }
-    .table1 ,.table2{
+    .table1 ,.table2 , .table3{
         margin-top: 50px;
         width: 100%;
         display: flex;
@@ -276,36 +277,42 @@ if (isset($_GET['message'])) {
     </div>
 </div>
 
-<!-- Modal pour modifier fournisseur -->
-<div class="modal fade" id="modifierFournisseurModal" tabindex="-1" role="dialog" aria-labelledby="modifierFournisseurModalLabel" aria-hidden="true">
+
+<!-- Modal pour ajouter service -->
+
+<div class="modal fade" id="addServiceModal" tabindex="-1" role="dialog" aria-labelledby="addServiceModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modifierFournisseurModalLabel">Modifier Fournisseur</h5>
+                <h5 class="modal-title" id="addServiceModalLabel">Ajouter un Service</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="modifierFournisseurForm">
+                <form id="addServiceForm">
                     <div class="form-group">
-                        <label for="fournisseurNom">Nom du Fournisseur</label>
-                        <input type="text" class="form-control" id="fournisseurNom" name="fournisseurNom" required>
+                        <label for="service">Service:</label>
+                        <input type="text" class="form-control" id="service" name="service" required>
                     </div>
                     <div class="form-group">
-                        <label for="lotSelect">Lot Associé</label>
-                        <select class="form-control" id="lotSelect" name="lotSelect" required>
-                            <!-- Options chargées via AJAX -->
-                        </select>
+                        <label for="zone">Zone:</label>
+                        <input type="text" class="form-control" id="zone" name="zone" required>
                     </div>
-                    <input type="hidden" id="fournisseurId" name="fournisseurId">
-                    <button type="submit" class="btn btn-primary">Sauvegarder les Modifications</button>
+                    <div class="form-group">
+                        <label for="ref">Référence:</label>
+                        <input type="text" class="form-control" id="ref" name="ref" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="equip">Équipe:</label>
+                        <input type="text" class="form-control" id="equip" name="equip" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Ajouter</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
 
 
 
@@ -434,10 +441,37 @@ if (isset($_GET['message'])) {
 
             <!-- Le tableau de données de sous lots -->
         </div>
+
+
+
+        <button style="margin-top: 50px" type="button" class="btn btn-primary" data-toggle="modal" data-target="#addServiceModal">
+            Ajouter un Service
+        </button>
+
+        <div class="table3">
+
+
+        </div>
     </div>
 
 </div>
 <script>
+
+    $(document).ready(function() {
+
+        $.ajax({
+            url: 'service_table.php',
+            method: 'GET',
+            success: function (response) {
+                $('.table3').html(response);
+            },
+            error: function (xhr, status, error) {
+                console.error('Une erreur s\'est produite:', status, error);
+            }
+        });
+
+    })
+
     $(document).ready(function() {
         // Afficher une alerte si le paramètre d'erreur est présent dans l'URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -794,66 +828,133 @@ if (isset($_GET['message'])) {
 
 //     modifier fournisseur
 
+    // setTimeout(function (){
+    //     $(document).ready(function() {
+    //         // Lorsque le bouton de modification est cliqué
+    //         $('.modifierFournisseurBtn').on('click', function() {
+    //             var fournisseurId = $(this).data('id');
+    //             var nomFournisseur = $(this).data('name');
+    //             var lotFournisseur = $(this).data('lot');
+    //
+    //             // Remplir le modal avec les données actuelles
+    //             $('#fournisseurId').val(fournisseurId);
+    //             $('#nomFournisseur').val(nomFournisseur);
+    //             $('#lotFournisseur').val(lotFournisseur);
+    //
+    //             // Afficher le modal
+    //             $('#modifierFournisseurModal').modal('show');
+    //         });
+    //
+    //         // Charger les options dans les datalists
+    //         function loadOptions() {
+    //             $.getJSON('get_fournisseurs.php', function(data) {
+    //                 var fournisseurList = $('#fournisseurList');
+    //                 fournisseurList.empty();
+    //                 $.each(data, function(index, fournisseur) {
+    //                     fournisseurList.append('<option value="' + fournisseur.nom_fournisseur + '">');
+    //                 });
+    //             });
+    //
+    //             $.getJSON('get_lot_f.php', function(data) {
+    //                 var lotList = $('#lotList');
+    //                 lotList.empty();
+    //                 $.each(data, function(index, lot) {
+    //                     lotList.append('<option value="' + lot.lot_name + '">');
+    //                 });
+    //             });
+    //         }
+    //
+    //         // Charger les options au chargement de la page
+    //         loadOptions();
+    //     });
+    //
+    // } , 1100)
+
+//  services codes :
+
+//     ajouter service
     $(document).ready(function() {
-        // Lorsque le bouton de modification est cliqué
-        setTimeout(()=>{
+        $('#addServiceForm').on('submit', function(event) {
+            event.preventDefault(); // Empêche le rechargement de la page
 
-            $('.modifierFournisseurBtn').on('click', function() {
-                var fournisseurId = $(this).data('id');
-                var fournisseurNom = $(this).data('name');
+            // Récupérer les valeurs des champs du formulaire
+            const service = $('#service').val();
+            const zone = $('#zone').val();
+            const ref = $('#ref').val();
+            const equip = $('#equip').val();
 
-                // Remplir les champs du modal
-                $('#fournisseurId').val(fournisseurId);
-                $('#fournisseurNom').val(fournisseurNom);
-
-                // Charger les options de lot via AJAX
-                $.ajax({
-                    url: 'get_lots.php',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(data) {
-                        var options = '';
-                        $.each(data, function(index, lot) {
-                            options += '<option value="' + lot.id + '">' + lot.name + '</option>';
-                        });
-                        $('#lotSelect').html(options);
-                    },
-                    error: function() {
-                        alert('Erreur lors du chargement des lots.');
+            // Effectuer une requête AJAX pour ajouter le service
+            $.ajax({
+                type: 'POST',
+                url: 'ajouter_service.php', // Chemin vers le fichier PHP
+                data: {
+                    service: service,
+                    zone: zone,
+                    ref: ref,
+                    equip: equip
+                },
+                dataType: 'json', // Attente d'une réponse JSON
+                success: function(response) {
+                    if (response.status === 'success') {
+                        alert(response.message); // Message de succès
+                        $('#addServiceModal').modal('hide'); // Fermer le modal
+                        // Optionnel : rafraîchir la page ou mettre à jour le tableau
+                        location.reload(); // Pour recharger la page
+                    } else {
+                        alert('Erreur : ' + response.message); // Message d'erreur
                     }
-                });
-
-                // Afficher le modal
-                $('#modifierFournisseurModal').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    alert('Erreur lors de l\'ajout du service. Veuillez réessayer.'); // Message d'erreur générique
+                }
             });
+        });
+    });
 
-            // Lorsque le formulaire est soumis
-            $('#modifierFournisseurForm').on('submit', function(e) {
-                e.preventDefault();
+//     supprimer service
+    $(document).ready(function() {
+       setTimeout(()=>{
+           $('.deleteServiceBtn').on('click', function(e) {
+               e.preventDefault(); // Empêche la redirection par défaut
 
-                $.ajax({
-                    url: 'modifier_fournisseur.php',
-                    method: 'POST',
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        alert(response); // Afficher le message de succès
-                        $('#modifierFournisseurModal').modal('hide');
-                        // Rechargez la table ou mettez à jour le DOM comme nécessaire
-                    },
-                    error: function() {
-                        alert('Erreur lors de la modification du fournisseur.');
-                    }
-                });
-            });
+               const serviceId = $(this).data('id');
 
+               if (confirm('Êtes-vous sûr de vouloir supprimer ce service ?')) {
+                   $.ajax({
+                       type: 'POST',
+                       url: 'supprimer_service.php',
+                       data: { id: serviceId },
+                       dataType: 'json',
+                       success: function(response) {
+                           if (response.status === 'success') {
+                               alert(response.message);
+                               location.reload(); // Rafraîchir la page pour mettre à jour le tableau
+                           } else {
+                               alert('Erreur : ' + response.message);
+                           }
+                       },
+                       error: function(xhr, status, error) {
+                           alert('Erreur lors de la suppression. Veuillez réessayer.');
+                       }
+                   });
+               }
+           });
 
-
-
-        } , 100)
+       },100)
     });
 
 
 
+
+
+
 </script>
+
+<!-- jQuery -->
+
+<!-- Bootstrap JS -->
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+
+
 </body>
 </html>
