@@ -503,6 +503,7 @@ if (isset($_GET['message'])) {
             $('#lot_id').val(lot_id);
             $('#lot_name').val(lot_name);
 
+
             // Ouvrir la modal
             $('#modifyLotModal').modal('show');
         });
