@@ -162,7 +162,7 @@ include '../../includes/header.php';
         const startDate = document.getElementById('startDate').value;
         const endDate = document.getElementById('endDate').value;
 
-        fetch(`getData.php?lot=${lot}&sous_lot=${sousLot}&article=${article}&fournisseur=${fournisseur}&start_date=${startDate}&end_date=${endDate}`)
+        fetch(`getData.php?lot=${encodeURIComponent(lot)}&sous_lot=${encodeURIComponent(sousLot)}&article=${encodeURIComponent(article)}&fournisseur=${encodeURIComponent(fournisseur)}&start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`)
             .then(response => response.json())
             .then(data => {
 
@@ -262,12 +262,13 @@ include '../../includes/header.php';
                             label: 'Distribution des articles par service',
                             data: articleCounts,
                             backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(153, 102, 255, 0.2)',
-                                'rgba(255, 159, 64, 0.2)',
+                                'rgb(255, 99, 132)',
+                                'rgb(75, 192, 192)',
+                                'rgb(255, 205, 86)',
+                                'rgb(201, 203, 207)',
+                                'rgb(54, 162, 235)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
 
 
                             ],
@@ -301,7 +302,7 @@ include '../../includes/header.php';
 
     function updateSousLot() {
         const lot = document.getElementById('lotSelect').value;
-        fetch(`getSousLot.php?lot=${lot}`)
+        fetch(`getSousLot.php?lot=${encodeURIComponent(lot)}`)
             .then(response => response.json())
             .then(data => {
                 const sousLotSelect = document.getElementById('sousLotSelect');
@@ -318,7 +319,7 @@ include '../../includes/header.php';
 
     function updateArticle() {
         const sousLot = document.getElementById('sousLotSelect').value;
-        fetch(`getArticle.php?sous_lot=${sousLot}`)
+        fetch(`getArticle.php?sous_lot=${encodeURIComponent(sousLot)}`)
             .then(response => response.json())
             .then(data => {
                 const articleSelect = document.getElementById('articleSelect');
@@ -358,7 +359,7 @@ include '../../includes/header.php';
     };
     function updateSousLot() {
         const lot = document.getElementById('lotSelect').value;
-        fetch(`getSousLot.php?lot=${lot}`)
+        fetch(`getSousLot.php?lot=${encodeURIComponent(lot)}`)
             .then(response => response.json())
             .then(data => {
                 const sousLotSelect = document.getElementById('sousLotSelect');
@@ -377,7 +378,7 @@ include '../../includes/header.php';
 
     function updateArticle() {
         const sousLot = document.getElementById('sousLotSelect').value;
-        fetch(`getArticle.php?sous_lot=${sousLot}`)
+        fetch(`getArticle.php?sous_lot=${encodeURIComponent(sousLot)}`)
             .then(response => response.json())
             .then(data => {
                 const articleSelect = document.getElementById('articleSelect');

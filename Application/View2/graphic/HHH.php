@@ -273,7 +273,7 @@ include '../../includes/header.php';
     };
     function updateSousLot() {
         const lot = document.getElementById('lotSelect').value;
-        fetch(`getSousLot.php?lot=${lot}`)
+        fetch(`getSousLot.php?lot=${encodeURIComponent(lot)}`)
             .then(response => response.json())
             .then(data => {
                 const sousLotSelect = document.getElementById('sousLotSelect');
@@ -292,7 +292,7 @@ include '../../includes/header.php';
 
     function updateArticle() {
         const sousLot = document.getElementById('sousLotSelect').value;
-        fetch(`getArticle.php?sous_lot= ${encodeURIComponent(sousLot)}`)
+        fetch(`getArticle.php?sous_lot=${encodeURIComponent(sousLot)}`)
             .then(response => response.json())
             .then(data => {
                 const articleSelect = document.getElementById('articleSelect');

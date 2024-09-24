@@ -14,72 +14,102 @@ include '../../Config/connect_db.php'; ?>
     <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
 </head>
 <?php
-$pageName= 'Statistiques des entree';
-
+$pageName= 'Statistiques des entrée';
 include '../../includes/header.php';
-
 ?>
-<STYLE>
 
-    h1 {
+<style>
+    body {
+        background-color: #f0f4f8;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    h1, h6 {
         text-align: center;
-        color: #2c3e50;
-        margin-bottom: 30px;
-    }
-
-    /* Styles pour Select et Input */
-    select, input[type="date"] {
-        height: 38px; /* Ajuste la hauteur pour les rendre plus petits */
-        padding: 5px; /* Réduit le padding */
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        font-size: 14px; /* Ajuste la taille de la police */
-        background-color: #fff;
-    }
-
-    button {
-        background-color: #3498db;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s ease;
-        display: block;
-        margin: 20px auto;
-    }
-
-    button:hover {
-        background-color: #2980b9;
+        color: #34495e;
+        margin-top: 20px;
     }
 
     .formC {
         display: flex;
-        flex-wrap: wrap; /* Permet aux éléments de s'enrouler sur plusieurs lignes */
-        gap: 15px; /* Espace entre les éléments */
-        width: 100%; /* Largeur maximale du formulaire */
-        margin: 0 auto; /* Centre le formulaire sur la page */
+        flex-wrap: wrap;
+        gap: 20px;
+        width: 90%;
+        margin: 30px auto;
+        padding: 30px;
+        background-color: #fff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
     }
 
     .formC > div {
-        flex: 1; /* Permet à chaque colonne de prendre l'espace disponible */
-        min-width: 200px; /* Largeur minimale pour les colonnes */
+        flex: 1;
+        min-width: 250px;
     }
 
-    .formC label {
-        font-weight: bold; /* Met en gras les étiquettes */
+    select, input[type="date"] {
+        height: 45px;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        font-size: 16px;
+        transition: border-color 0.2s ease;
     }
+
+    select:focus, input[type="date"]:focus {
+        border-color: #3498db;
+        outline: none;
+    }
+
+    button {
+        background-color: #2ecc71;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+        margin-top: 25px;
+    }
+
+    button:hover {
+        background-color: #27ae60;
+    }
+
     #chartdiv {
         width: 100%;
-        height: 500px;
+        height: 600px;
     }
-</STYLE>
+
+    .chart-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+        padding: 0 5%;
+    }
+
+    .chart-container > #div1 {
+        width:60%;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .chart-container > #div2 {
+        width: 40%;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+</style>
 
 <body>
-<h6 class="text-center">Afficher les Graphiques et Statistiques</h6>
-<div class="formC row g-3">
-    <div class="col-sm-4">
+
+<h6>Afficher les Graphiques et Statistiques</h6>
+<div class="formC">
+    <div>
         <label for="lot">Lot:</label>
         <select id="lot" class="form-select" onchange="updateSousLot()">
             <option value="">Sélectionner un lot</option>
@@ -92,47 +122,43 @@ include '../../includes/header.php';
         </select>
     </div>
 
-    <div class="col-sm-4">
+    <div>
         <label for="sous_lot">Sous Lot:</label>
         <select id="sous_lot" class="form-select" onchange="updateFournisseur()">
             <option value="">Sélectionner un sous lot</option>
         </select>
     </div>
 
-    <div class="col-sm-4">
+    <div>
         <label for="fournisseur">Fournisseur:</label>
         <select id="fournisseur" class="form-select">
             <option value="">Sélectionner un fournisseur</option>
         </select>
     </div>
 
-    <div class="col-sm-4">
+    <div>
         <label for="date_from">Date de début:</label>
         <input type="date" id="date_from" class="form-control">
     </div>
 
-    <div class="col-sm-4">
+    <div>
         <label for="date_to">Date de fin:</label>
         <input type="date" id="date_to" class="form-control">
     </div>
 
-    <div class="col-sm-4">
-        <button class="btn btn-primary mt-3" onclick="fetchData()">Afficher Graphiques</button>
+    <div>
+        <button class="btn btn-primary" onclick="fetchData()">Afficher Graphiques</button>
     </div>
 </div>
 
-
-
-
-  <div class="col-12 row p-5 mt-4 container" >
-                <div class="col-6">
-                    <canvas id="entreeChart"></canvas>
-                </div>
-                <div class="col-4">
-                    <canvas id="sortieChart"></canvas>
-                </div>
+<div class="chart-container">
+    <div id="div1">
+        <canvas id="entreeChart"></canvas>
+    </div>
+    <div  id="div2">
+        <canvas id="sortieChart"></canvas>
+    </div>
 </div>
-
 
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -212,8 +238,8 @@ include '../../includes/header.php';
         const ctx2 = document.getElementById('sortieChart').getContext('2d');
         sortieChartInstance = new Chart(ctx2, {
             type: 'polarArea',
-             data : {
-                 labels:nomEntree ,
+            data : {
+                labels:nomEntree ,
                 datasets: [{
                     data: totalEntree,
                     backgroundColor: [
