@@ -3,16 +3,17 @@ include '../../config/connect_db.php';
 
 $lot = $_GET['lot'] ?? '';
 $sous_lot = $_GET['sous_lot'] ?? '';
-$fournisseur = $_GET['fournisseur'] ?? '';
-$service = $_GET['service'] ?? '';
+//$fournisseur = $_GET['fournisseur'] ?? '';
+$service_operation = $_GET['service'] ?? '';
 $date_from = $_GET['date_from'] ?? '';
 $date_to = $_GET['date_to'] ?? '';
 
 $sql = "
     SELECT 
         o.date_operation, 
-        SUM(o.entree_operation * p.prix_operation) AS total_depense_entree, 
-        SUM(o.sortie_operation) AS total_sortie_operations 
+        SUM(o.sortie_operation * p.prix_operation) AS total_sortie_operations, 
+        o.nom_article
+
     FROM operation o
     LEFT JOIN (
         SELECT 
@@ -23,7 +24,7 @@ $sql = "
         GROUP BY nom_article
     ) p 
     ON o.nom_article = p.nom_article AND o.date_operation = p.last_date
-    WHERE  1=1  
+    WHERE  pj_operation='Bon sortie' and 1=1  
 ";
 
 if (!empty($lot)) {
@@ -32,11 +33,9 @@ if (!empty($lot)) {
 if (!empty($sous_lot)) {
     $sql .= " AND o.sous_lot_name = '" . $conn->real_escape_string($sous_lot) . "'";
 }
-if (!empty($fournisseur)) {
-    $sql .= " AND o.nom_pre_fournisseur = '" . $conn->real_escape_string($fournisseur) . "'";
-}
-if (!empty($service)) {
-    $sql .= " AND o.service_name = '" . $conn->real_escape_string($service) . "'";
+
+if (!empty($service_operation)) {
+    $sql .= " AND o.service_operation = '" . $conn->real_escape_string($service_operation) . "'";
 }
 if (!empty($date_from) && !empty($date_to)) {
     $sql .= " AND o.date_operation BETWEEN '" . $conn->real_escape_string($date_from) . "' AND '" . $conn->real_escape_string($date_to) . "'";

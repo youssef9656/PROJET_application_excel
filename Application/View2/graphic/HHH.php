@@ -160,7 +160,7 @@ include '../../includes/header.php';
         const startDate = document.getElementById('startDate').value;
         const endDate = document.getElementById('endDate').value;
 
-        fetch(`getData.php?lot=${lot}&sous_lot=${sousLot}&article=${article}&fournisseur=${fournisseur}&start_date=${startDate}&end_date=${endDate}`)
+        fetch(`getData.php?lot=${encodeURIComponent(lot)}&sous_lot=${encodeURIComponent(sousLot)}&article=${encodeURIComponent(article)}&fournisseur=${encodeURIComponent(fournisseur)}&start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`)
             .then(response => response.json())
             .then(data => {
                 const labels = data.map(d => d.date_operation);
@@ -216,7 +216,7 @@ include '../../includes/header.php';
 
     function updateSousLot() {
         const lot = document.getElementById('lotSelect').value;
-        fetch(`getSousLot.php?lot=${lot}`)
+        fetch(`getSousLot.php?lot=${encodeURIComponent(lot)}`)
             .then(response => response.json())
             .then(data => {
                 const sousLotSelect = document.getElementById('sousLotSelect');
@@ -233,7 +233,7 @@ include '../../includes/header.php';
 
     function updateArticle() {
         const sousLot = document.getElementById('sousLotSelect').value;
-        fetch(`getArticle.php?sous_lot=${sousLot}`)
+        fetch(`getArticle.php?sous_lot=${encodeURIComponent(sousLot)}`)
             .then(response => response.json())
             .then(data => {
                 const articleSelect = document.getElementById('articleSelect');
@@ -292,7 +292,7 @@ include '../../includes/header.php';
 
     function updateArticle() {
         const sousLot = document.getElementById('sousLotSelect').value;
-        fetch(`getArticle.php?sous_lot=${sousLot}`)
+        fetch(`getArticle.php?sous_lot= ${encodeURIComponent(sousLot)}`)
             .then(response => response.json())
             .then(data => {
                 const articleSelect = document.getElementById('articleSelect');

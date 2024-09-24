@@ -11,7 +11,7 @@ $article = isset($_GET['article']) ? $_GET['article'] : '';
 $fournisseur = isset($_GET['fournisseur']) ? $_GET['fournisseur'] : '';
 
 // إعداد استعلام أساسي
-$sql = "SELECT * FROM operation WHERE 1=1 AND entree_operation > 0 ";
+$sql = "SELECT * FROM operation WHERE 1=1 AND pj_operation='Bon entrée' ";
 $params = [];
 $types = '';
 

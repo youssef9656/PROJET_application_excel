@@ -3,7 +3,7 @@ include '../../Config/connect_db.php';
 
 $sousLot =  isset($_GET['sous_lot']) ? $_GET['sous_lot'] : '';;
 
-$query = "SELECT DISTINCT nom_article FROM operation WHERE sous_lot_name = ?  AND entree_operation > 0";
+$query = "SELECT DISTINCT nom_article FROM operation WHERE sous_lot_name = ? AND pj_operation='Bon entrée' ";
 $stmt = $conn->prepare($query);
 $stmt->bind_param('s', $sousLot);
 $stmt->execute();
