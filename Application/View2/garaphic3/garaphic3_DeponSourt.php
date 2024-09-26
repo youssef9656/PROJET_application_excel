@@ -13,7 +13,7 @@ include '../../Config/connect_db.php'; ?>
     <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
 </head>
 <?php
-$pageName= 'Statistiques des entree';
+$pageName= 'Total Depenses Sorties';
 
 include '../../includes/header.php';
 
@@ -197,7 +197,7 @@ include '../../includes/header.php';
             data: {
                 labels: dates,
                 datasets: [{
-                    label: 'Total Sortie',
+                    label: 'Total Depenses Sorties',
                     data: totalSortie,
                     borderColor: 'blue',
                     fill: false

@@ -1,84 +1,141 @@
-
-document.getElementById('downloadPdfButton').addEventListener('click', function() {
+document.getElementById('downloadPdf').addEventListener('click', function () {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({
-        orientation: 'landscape', // Orientation paysage pour plus de largeur
-        unit: 'pt', // Unité de mesure en points
-        format: 'A4'
-    });
+    const doc = new jsPDF('p', 'mm', 'a4');
 
-    // Ajouter le logo (utiliser une URL ou un chemin d'accès à l'image locale)
-    const logoUrl = 'image1.jpg'; // Remplacez par l'URL de votre logo
-    const imgWidth = 50; // Largeur de l'image (ajuster selon les besoins)
-    const imgHeight = 50; // Hauteur de l'image (ajuster selon les besoins)
+    // Charger le logo à partir de l'image téléchargée
+    const logo = new Image();
+    logo.src = 'image1.jpg'; // Assurez-vous que le chemin vers votre image est correct
 
-    // Charger l'image et ajouter un titre
-    const title = "Titre du document"; // Titre à afficher
+    // Charger le logo et la signature avant de créer le PDF
+    logo.onload = function() {
+        const totalPagesExp = "{total_pages_count_string}";
 
-    // Date actuelle
-    const currentDate = new Date().toLocaleDateString(); // Formater la date
+        // Fonction pour ajouter l'en-tête et le pied de page
+        const header = function(data) {
+            // Ajouter le logo
+            doc.addImage(logo, 'JPEG', data.settings.margin.left, 10, 30, 15);
 
-    // Charger l'image (cela peut être une URL ou une base64 image)
-    doc.addImage(logoUrl, 'PNG', 10, 10, imgWidth, imgHeight); // Positionner le logo
-    doc.setFontSize(18);
-    doc.text(title, imgWidth + 20, 30); // Placer le titre à côté du logo
+            // Récupérer le titre du rapport
+            const reportTitle = document.getElementById('reportTitle').textContent || "Titre du Rapport";
+            doc.setFontSize(20);
+            doc.text(reportTitle, data.settings.margin.left + 80, 20);
 
-    // Ajouter la date sous le titre
-    doc.setFontSize(12);
-    doc.text(`Date: ${currentDate}`, imgWidth + 20, 50); // Position de la date sous le titre
+            // Récupérer et formater les dates de début et de fin
+            const startDateInput = document.getElementById('start_date').value;
+            const endDateInput = document.getElementById('end_date').value;
 
-    // Variables pour dessiner le tableau
-    const table = document.getElementById('articles_table');
-    const rows = table.querySelectorAll('tr');
-    let y = 80; // Déplacement en bas du logo, du titre, et de la date
+            const startDate = startDateInput ? formatDate(startDateInput) : "Date de début non spécifiée";
+            const endDate = endDateInput ? formatDate(endDateInput) : "Date de fin non spécifiée";
 
-    // Configuration de la police
-    doc.setFont('helvetica');
-    doc.setFontSize(10);
+            // Afficher les dates sous le format souhaité
+            doc.setFontSize(12);
+            if (startDate === endDate) {
+                doc.text("Date : " + startDate, data.settings.margin.left + 40, 30);
+            } else {
+                doc.text("Date : " + startDate + " -- " + endDate, data.settings.margin.left + 40, 30);
+            }
 
-    // Calculer la largeur des colonnes en fonction du contenu des cellules
-    const columnWidths = [];
-    rows.forEach((row) => {
-        const cells = row.querySelectorAll('td, th');
-        cells.forEach((cell, cellIndex) => {
-            const textWidth = doc.getTextWidth(cell.textContent);
-            columnWidths[cellIndex] = Math.max(columnWidths[cellIndex] || 0, textWidth + 10); // Ajouter un padding
-        });
-    });
+            // Récupérer les valeurs des sélecteurs
+            const lot = document.getElementById('lot').value || "Lot non spécifié";
+            const article = document.getElementById('article').value || "Article non spécifié";
+            const fournisseur = document.getElementById('fournisseur').value || "Fournisseur non spécifié";
+            const sousLot = document.getElementById('sous_lot').value || "Sous Lot non spécifié";
+            const service = document.getElementById('service').value || "Service non spécifié";
 
-    // Dessiner le tableau
-    rows.forEach((row) => {
-        const cells = row.querySelectorAll('td, th');
-        let x = 10;
-        cells.forEach((cell, cellIndex) => {
-            const cellBgColor = window.getComputedStyle(cell).backgroundColor;
-            const colorMatch = cellBgColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-            const color = colorMatch ? [parseInt(colorMatch[1]), parseInt(colorMatch[2]), parseInt(colorMatch[3])] : [255, 255, 255];
+            doc.setFontSize(12);
+            doc.text("Lot : " + lot, data.settings.margin.left + 40, 40);
+            doc.text("Fournisseur : " + fournisseur, data.settings.margin.left + 40, 50);
 
-            doc.setFillColor(...color);
 
-            // Dessiner la cellule
-            const cellWidth = columnWidths[cellIndex];
-            doc.rect(x, y, cellWidth, 20, 'F'); // Dessiner le rectangle pour la cellule
-            doc.setTextColor(0, 0, 0);
-            doc.text(cell.textContent, x + 2, y + 14); // Texte de la cellule
+        };
 
-            x += cellWidth; // Se déplacer à la colonne suivante
-        });
-        y += 20; // Se déplacer à la ligne suivante
-
-        // Ajouter une nouvelle page si le contenu dépasse la hauteur de la page
-        if (y > doc.internal.pageSize.height - 80) { // Laisser de la place pour la signature
-            doc.addPage();
-            y = 20; // Réinitialiser la position en Y après le saut de page
+// Fonction pour formater les dates au format dd/MM/yyyy
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Janvier est 0
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
         }
-    });
 
-    // Ajouter une ligne pour la signature à la fin du document
-    y += 30; // Espacement avant la ligne de signature
-    doc.setFontSize(12);
-    doc.text('Signature:', 10, y); // Texte pour la signature
-    doc.line(80, y, 300, y); // Dessiner la ligne pour la signature
+// Fonction pour formater les dates au format dd/MM/yyyy
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Janvier est 0
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
 
-    doc.save('tableau.pdf');
+        const footer = function(data) {
+            let str = "Page " + data.pageNumber;
+            doc.setFontSize(10);
+            doc.text(str, data.settings.margin.left + 80, doc.internal.pageSize.getHeight() - 10);
+            doc.setFontSize(12);
+            doc.text("Signature :", data.settings.margin.left, doc.internal.pageSize.getHeight() - 20);
+            doc.line(data.settings.margin.left + 20, doc.internal.pageSize.getHeight() - 20, 100, doc.internal.pageSize.getHeight() - 20);
+        };
+
+        // Collecter les données du tableau en excluant le dernier <th> et <td>
+        const table = document.getElementById('articles_table');
+        const headers = [];
+        const headerCells = table.querySelectorAll('thead th');
+
+        // Exclure le dernier en-tête
+        for (let i = 0; i < headerCells.length - 3; i++) {
+            headers.push(headerCells[i].textContent.trim());
+        }
+
+        const data = [];
+        table.querySelectorAll('tbody tr').forEach(tr => {
+            const row = [];
+            const cells = tr.querySelectorAll('td');
+            // Exclure le dernier <td>
+            for (let i = 0; i < cells.length - 1; i++) {
+                const td = cells[i];
+                if (headers[i] === 'Quantité') {
+                    const input = td.querySelector('input');
+                    row.push(input && input.value ? input.value : '.........'); // Si la valeur est vide, mettre "...."
+                } else {
+                    row.push(td.textContent.trim());
+                }
+            }
+            data.push(row);
+        });
+
+        // Utiliser autoTable pour créer le tableau
+        doc.autoTable(
+            {
+            head: [headers],
+            body: data,
+            startY: 55, // Commencer en bas de l'en-tête
+            styles: {
+                cellPadding: 3,
+                fontSize: 10,
+                halign: 'center',
+                valign: 'middle',
+                lineWidth: 0.1,
+                lineColor: [0, 0, 0],
+            },
+            headStyles: {
+                fillColor:  [255, 255, 255],
+                textColor: [52, 58, 64] ,
+                halign: 'center',
+            },
+            didDrawPage: function (data) {
+                header(data);
+                footer(data);
+            },
+            margin: { top: 0 },
+            theme: 'grid',
+            showHead: 'everyPage',
+        });
+
+        // Sauvegarder le fichier
+        doc.save('Bon Commande.pdf');
+    };
+
+    logo.onerror = function() {
+        alert('Échec du chargement du logo');
+    };
 });

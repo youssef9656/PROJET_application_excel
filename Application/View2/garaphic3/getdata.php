@@ -12,7 +12,9 @@ $sql = "
     SELECT 
         o.date_operation, 
         SUM(o.entree_operation * p.prix_operation) AS total_depense_entree,
-        o.nom_article
+        o.nom_article,
+        o.service_operation,
+        o.nom_pre_fournisseur
     FROM operation o
     LEFT JOIN (
         SELECT 

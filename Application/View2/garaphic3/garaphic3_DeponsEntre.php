@@ -14,7 +14,7 @@ include '../../Config/connect_db.php'; ?>
     <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
 </head>
 <?php
-$pageName= 'Statistiques des entrée';
+$pageName= 'Total Depenses entrée';
 include '../../includes/header.php';
 ?>
 
@@ -214,7 +214,8 @@ include '../../includes/header.php';
     function displayCharts(data) {
         const dates = data.map(item => item.date_operation);
         const totalEntree = data.map(item => item.total_depense_entree);
-        const nomEntree = [...new Set(data.map(d => d.nom_article).filter(service => service))];
+        const total_fournisseur = data.map(item => item.total_depense_entree);
+        const nomEntree = [...new Set(data.map(d => d.nom_pre_fournisseur).filter(service => service))];
         if (entreeChartInstance) {
             entreeChartInstance.destroy();
         }
@@ -224,7 +225,7 @@ include '../../includes/header.php';
             data: {
                 labels: dates,
                 datasets: [{
-                    label: 'Total Entrées',
+                    label: 'Total Depenses Entrées',
                     data: totalEntree,
                     borderColor: 'blue',
                     fill: false

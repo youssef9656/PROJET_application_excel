@@ -15,6 +15,8 @@ $pageName= 'Catalogue du temps';
     <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
     <script src="../../includes/libriryPdf/unpkg/jspdf.umd.min.js"></script>
     <script src="../../includes/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
 
     <head>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -33,11 +35,12 @@ $pageName= 'Catalogue du temps';
                 background-color: #ffffff; /* Couleur blanche pour le fond */
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Ombre douce */
                 padding: 20px; /* Espacement intérieur */
-                transition: transform 0.3s ease-in-out; /* Animation douce */
+                padding-top: 0PX;
+                /*transition: transform 0.3s ease-in-out; !* Animation douce *!*/
             }
-            .table-container:hover {
-                transform: scale(1.02); /* Légère augmentation de taille au survol */
-            }
+            /*.table-container:hover {*/
+            /*    transform: scale(1.02); !* Légère augmentation de taille au survol *!*/
+            /*}*/
             .table {
                 font-size: 0.9rem; /* Taille de police réduite pour le contenu de la table */
             }
@@ -62,13 +65,13 @@ $pageName= 'Catalogue du temps';
                 padding: 10px 15px; /* Ajustement de la taille des boutons */
                 border: none;
                 border-radius: 5px;
-                background-color: #28a745; /* Couleur du bouton */
+                background-color: #17a2b8; /* Couleur du bouton (cyan) */
                 color: white;
                 font-size: 0.9rem; /* Taille de police des boutons */
                 transition: background-color 0.3s ease, transform 0.2s ease; /* Animation douce */
             }
             .btn:hover {
-                background-color: #218838; /* Couleur du bouton au survol */
+                background-color: #138496; /* Couleur du bouton au survol */
                 transform: scale(1.05); /* Zoom léger */
             }
             .form label {
@@ -103,17 +106,91 @@ $pageName= 'Catalogue du temps';
                     opacity: 1; /* Fin de l'animation */
                 }
             }
+            /* From Uiverse.io by AbanoubMagdy1 */
+            .wave-group {
+                position: relative;
+            }
+
+            .wave-group .input {
+                font-size: 16px;
+                padding: 10px 10px 10px 5px;
+                display: block;
+                width: 200px;
+                border: none;
+                border-bottom: 1px dashed  #515151;
+                background: transparent;
+            }
+
+            .wave-group .input:focus {
+                outline: none;
+            }
+
+            .wave-group .label {
+                color: #999;
+                font-size: 18px;
+                font-weight: normal;
+                position: absolute;
+                pointer-events: none;
+                left: 5px;
+                top: 10px;
+                display: flex;
+            }
+
+            .wave-group .label-char {
+                transition: 0.2s ease all;
+                transition-delay: calc(var(--index) * .05s);
+            }
+
+            .wave-group .input:focus ~ label .label-char,
+            .wave-group .input:valid ~ label .label-char {
+                transform: translateY(-20px);
+                font-size: 14px;
+                color: #5264AE;
+            }
+
+            .wave-group .bar {
+                position: relative;
+                display: block;
+                width: 200px;
+            }
+
+            .wave-group .bar:before,.wave-group .bar:after {
+                content: '';
+                height: 1px;
+                width: 0;
+                bottom: 1px;
+                position: absolute;
+                background: #5264AE;
+                transition: 0.2s ease all;
+                -moz-transition: 0.2s ease all;
+                -webkit-transition: 0.2s ease all;
+            }
+
+            .wave-group .bar:before {
+                left: 50%;
+            }
+
+            .wave-group .bar:after {
+                right: 50%;
+            }
+
+            .wave-group .input:focus ~ .bar:before,
+            .wave-group .input:focus ~ .bar:after {
+                width: 50%;
+            }
+
+
         </style>
     </head>
 <body>
 <?php
-$pageName = 'État des Stocks';
+$pageName = 'Bon Commande';
 include '../../includes/header.php';
 ?>
 
 <div class="container mt-2">
     <div class="header">
-        <h2><?php echo $pageName; ?></h2>
+        <h2 id="reportTitle"><?php echo $pageName; ?></h2>
     </div>
     <div class="form-row mb-3" style="flex-wrap: wrap; gap: 20px;">
         <div class="col-2">
@@ -168,7 +245,7 @@ include '../../includes/header.php';
             </select>
         </div>
         <div class="col-2">
-            <button onclick="fetchData()" class="btn">Rechercher</button>
+        <button onclick="fetchData()" class="btn btn-info">Rechercher</button>
         </div>
     </div>
 
@@ -180,8 +257,12 @@ include '../../includes/header.php';
                 <th>Article</th>
                 <th>Quantité</th>
                 <th>Unité</th>
-                <th>Requirement Status</th>
                 <th>Observations</th>
+                <th> Stock_Final</th>
+
+                <th>Requirement Status</th>
+
+
                 <th>Action</th>
             </tr>
             </thead>
@@ -190,8 +271,11 @@ include '../../includes/header.php';
             </tbody>
         </table>
     </div>
+    <button id="downloadPdf">Download PDF</button>
+
 </div>
 
+<script src="pdf.js"></script>
 
 <script>
     function updateOrderNumbers() {
@@ -241,7 +325,7 @@ include '../../includes/header.php';
                 const tableBody = document.querySelector('#articles_table tbody');
                 tableBody.innerHTML = ''; // Effacer le contenu précédent de la table
 
-                const fields = ['Article', 'Quantité', 'unite','Requirement_Status','']; // Champs à afficher
+                const fields = ['Article', 'Quantité', 'unite','','Stock_Final','Requirement_Status']; // Champs à afficher
 
                 // Parcourir chaque ligne de données
                 data.forEach((row, index) => {
@@ -259,8 +343,19 @@ include '../../includes/header.php';
                             const input = document.createElement('input'); // Créer un input pour la quantité
                             input.type = 'number'; // Définir le type comme nombre
                             input.value = row[field] || ''; // Remplir avec la valeur correspondante
-                            input.classList.add('form-control'); // Ajouter une classe pour le style
-                            td.appendChild(input); // Ajouter l'input à la cellule
+                            input.classList.add('form-control');// Ajouter une classe pour le style
+                            // td.appendChild(input);// Ajouter l'input à la cellule
+                            td.innerHTML=`
+<div class="wave-group">
+  <input required="" type="number" class="input">
+  <span class="bar"></span>
+  <label class="label">
+    <span class="label-char" style="--index: 0">Qu</span>
+    <span class="label-char" style="--index: 1">an</span>
+    <span class="label-char" style="--index: 2">ti</span>
+    <span class="label-char" style="--index: 3">té</span>
+  </label>
+</div>`
                         } else {
                             td.textContent = row[field] || ''; // Remplir la cellule avec la valeur correspondante
                         }
