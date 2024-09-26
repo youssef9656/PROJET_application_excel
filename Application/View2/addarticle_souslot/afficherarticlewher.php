@@ -1,8 +1,6 @@
- <?php
-// تضمين ملف الاتصال بقاعدة البيانات
+<?php
 include '../../Config/connect_db.php';
 
-// جلب البيانات من جدول المقالات
 $sql = "SELECT * FROM article WHERE id_article NOT IN (SELECT article_id FROM sous_lot_articles);";
 $result = $conn->query($sql);
 
