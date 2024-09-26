@@ -123,7 +123,8 @@ include '../../includes/header.php';
             }
 
             .header {
-                background-color: #007bff; /* Couleur d'arrière-plan de l'en-tête */
+                background-color: transparent; /* Couleur d'arrière-plan de l'en-tête */
+                backdrop-filter: blur(50px);
                 color: white; /* Couleur du texte de l'en-tête */
                 padding: 20px; /* Espacement intérieur */
                 border-radius: .5rem; /* Coins arrondis */
@@ -277,11 +278,15 @@ include '../../includes/header.php';
                 height: 8rem;
             }
 
+            /*body{*/
+            /*    background-image: linear-gradient(20deg , #63e3ba, #e2ffc7, #ffffff, #71ff93);*/
+            /*}*/
+
             body{
-                background-image: linear-gradient(20deg , #63e3ba, #e2ffc7, #ffffff, #71ff93);
+                background-image: url("../../image3.jpg");
+                background-size: cover;
+                background-repeat: no-repeat;
             }
-
-
 
 
         </style>
@@ -297,7 +302,7 @@ include '../../includes/header.php';
     </div>
 
 
-    <div class="filter-wrapper">
+    <div class="filter-wrapper" style="margin-bottom: 50px">
         <div class="input-group1">
             <label for="start_date">Date de début:</label>
             <input type="date" id="start_date" class="input-field">

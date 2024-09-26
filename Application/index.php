@@ -25,7 +25,7 @@ include "Config/connect_db.php";
 <body>
 <style>
     body{
-        background-image: url("image2.jpg");
+        background-image: url("image3.jpg");
         background-size: cover;
         background-repeat: no-repeat;
     }
