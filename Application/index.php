@@ -36,22 +36,62 @@ include "Config/connect_db.php";
         justify-content: center;
         align-items: center;
     }
-    .content{
+    /*.content{*/
+    /*    width: 45%;*/
+    /*    height: 60vh;*/
+    /*    margin-top: 20vh;*/
+    /*    display: flex;*/
+    /*    justify-content: center;*/
+    /*    align-items: center;*/
+    /*    backdrop-filter: blur(260px);*/
+    /*    border: 1px solid white;*/
+    /*    border-radius: 20px;*/
+
+
+    /*}*/
+    .content {
         width: 45%;
         height: 60vh;
         margin-top: 20vh;
         display: flex;
         justify-content: center;
         align-items: center;
+        position: relative; /* Nécessaire pour positionner les pseudo-éléments */
         backdrop-filter: blur(260px);
         border: 1px solid white;
         border-radius: 20px;
-
-
+        overflow: hidden; /* Pour cacher les débordements des pseudo-éléments */
     }
+
+    .content::before,
+    .content::after {
+        content: '';
+        position: absolute; /* Position absolue pour placer les éléments */
+        border-radius: 50%; /* Pour rendre les formes rondes */
+        transition: all 0.5s; /* Pour des animations douces si nécessaire */
+    }
+
+    .content::before {
+        width: 100px; /* Largeur de la forme avant */
+        height: 100px; /* Hauteur de la forme avant */
+        background-color: #60a5fa; /* Couleur de fond de la forme avant (équivalent à before:bg-sky-400) */
+        top: -10px; /* Position à partir du haut */
+        right: -20px; /* Position à partir de la droite */
+        filter: blur(10px); /* Appliquer un flou */
+    }
+
+    .content::after {
+        width: 120px; /* Largeur de la forme après */
+        height: 120px; /* Hauteur de la forme après */
+        background-color: #00bcd4; /* Couleur de fond de la forme après (équivalent à after:bg-cyan-600) */
+        bottom: -20px; /* Position à partir du bas */
+        left: -30px; /* Position à partir de la gauche */
+        filter: blur(15px); /* Appliquer un flou */
+    }
+
     p{
         font-size: 50px;
-        background-image: linear-gradient(-20deg , #252525,#252525, #606060, #000000, #252525,#252525,#000000);
+        background-image: linear-gradient(-20deg , #810d0d, #000000, #8b008e, #000000, #252525,#252525,#000000);
         background-clip: text;
         color: transparent;
         font-weight: 600;
