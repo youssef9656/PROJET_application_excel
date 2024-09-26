@@ -287,7 +287,9 @@ include '../../includes/header.php';
             }
 
 
-
+            body{
+                background-image: linear-gradient(20deg , #63e3ba, #e2ffc7, #ffffff, #71ff93);
+            }
 
         </style>
     </head>

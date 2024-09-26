@@ -10,11 +10,6 @@
     <link rel="stylesheet" href="../../includes/css/bootstrap.css">
 <!--    <script src="../../includes/js/bootstrap.js"></script>-->
 
-    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
-
-
-
-
     <title>Catalogue de Temps</title>
 
     <style>
@@ -124,19 +119,13 @@
                 <li class="nav-item item-hover">
                     <a class="nav-link" href="../eata_stock/etat_de_stocks.php">Etat des stocks</a>
                 </li>
-
-<!--                <li class="nav-item item-hover">-->
-<!--                    <a class="nav-link" href="../bon_reception/bon_reception_entree.php">Bon Réception et commande </a>-->
-<!--                </li>-->
                 <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Bon Réception et commande</a>
-                <ul class="dropdown-menu ">
-                    <li><a class="dropdown-item text-center fs-5 fw-bold " href="../bon_reception_entree/bon_reception_entree.php">Bon Réception des entrées</a></li>
-                    <li><a class="dropdown-item text-center fs-5 fw-bold  " href="../bon_reception_sortie/bon_reception_sortie.php">Bon Réception des sorties</a></li>
-                </ul>
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Bon commandes</a>
+                    <ul class="dropdown-menu ">
+                        <li><a class="dropdown-item text-center fs-5 fw-bold " href="../bon_reception_entree/bon_reception_entree.php">Bon Réception des entrées</a></li>
+                        <li><a class="dropdown-item text-center fs-5 fw-bold  " href="../bon_reception_sortie/bon_reception_sortie.php">Bon Réception des sorties</a></li>
+                    </ul>
                 </li>
-
-
                 <li class="nav-item item-hover">
                     <a class="nav-link" href="../addarticle_souslot/article_sous_lot.php"> </a>
                 </li>
@@ -144,7 +133,7 @@
                     <a class="nav-link" href="../"></a>
                 </li>
 
-
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">les données Articles</a>
                     <ul class="dropdown-menu ">
                         <li><a class="dropdown-item text-center fs-5 fw-bold " href="../fournisseurs/fournisseurs.php">Fournisseurs</a></li>

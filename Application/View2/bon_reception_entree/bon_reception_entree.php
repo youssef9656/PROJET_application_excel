@@ -277,6 +277,10 @@ include '../../includes/header.php';
                 height: 8rem;
             }
 
+            body{
+                background-image: linear-gradient(20deg , #63e3ba, #e2ffc7, #ffffff, #71ff93);
+            }
+
 
 
 
@@ -287,7 +291,7 @@ include '../../includes/header.php';
 
 ?>
 
-<div class="container mt-2">
+<div class="container mt-2 animated-bg">
     <div class="header">
         <h2><?php echo $pageName; ?></h2>
     </div>
