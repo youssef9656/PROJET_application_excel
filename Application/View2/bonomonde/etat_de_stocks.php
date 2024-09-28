@@ -310,6 +310,7 @@ include '../../includes/header.php';
                 <option value="">Sélectionner un fournisseur</option>
                 <!-- options dynamiques -->
             </select>
+
         </div>
         <div class="col-2">
             <label for="sous_lot">Sous Lot:</label>
@@ -329,6 +330,12 @@ include '../../includes/header.php';
         <button onclick="fetchData()" class="btn btn-info">Rechercher</button>
         </div>
         <div class="col-2">
+            <label for="start_date">Datede Livraison:</label>
+            <input type="date" id="date_livraison" class="form-control">
+        </div>
+       </div>
+       <div class="col-2">
+           <div class="col-2">
             <button class="botao" id="downloadPdf">
                 <svg
                         class="mysvg"
@@ -359,12 +366,11 @@ include '../../includes/header.php';
                 </svg>
                 <span class="texto"> PDF</span>
             </button>
-
-        </div>
-    </div>
+           </div>
+       </div>
 
     <div class="table-container">
-        <table id="articles_table" class="table table-bordered table-hover">
+        <table id="articles_table" class="table table-bordered table-hover sheetjs">
             <thead class="thead-dark">
             <tr>
                 <th>Order</th>
@@ -387,7 +393,7 @@ include '../../includes/header.php';
     </div>
 
 </div>
-
+<div id="lesdonneFournisseur" style="width: 100px ;color: rgba(255,255,255,0) "></div>
 <script src="pdf.js"></script>
 
 <script>
