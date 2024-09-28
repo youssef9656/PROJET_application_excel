@@ -100,8 +100,7 @@ $sql .= "
 GROUP BY 
     a.id_article, a.nom, a.stock_initial, a.stock_min
 HAVING 
-    ('$status_filter' = '' OR Requirement_Status = '$status_filter')
-LIMIT 0, 25;";
+    ('$status_filter' = '' OR Requirement_Status = '$status_filter')";
 
 // Exécution de la requête
 $result = $conn->query($sql);

@@ -5,14 +5,14 @@
     // Définir les marges pour éviter le chevauchement
     const margin = {
         top: 60,    // Augmenter la marge supérieure pour l'en-tête
-        bottom: 30, // Augmenter la marge inférieure pour le pied de page
+        bottom: 40, // Augmenter la marge inférieure pour le pied de page
         left: 20,
         right: 20
     };
 
     // Charger le logo
     const logo = new Image();
-    logo.src = 'image1.jpg'; // Assurez-vous que le chemin vers votre image est correct
+    logo.src = '../../includes/logoImage/logo.png'; // Assurez-vous que le chemin vers votre image est correct
 
     // Charger le logo et attendre qu'il soit prêt avant de générer le PDF
     logo.onload = function() {
@@ -28,7 +28,23 @@
         // Fonction pour ajouter l'en-tête
         const header = function(data) {
             // Ajouter le logo
-            doc.addImage(logo, 'JPEG', margin.left, 10, 30, 15);
+            // doc.addImage(logo, 'JPEG', margin.left, 10, 30, 15);
+            // Définir les dimensions et le rayon du bord
+            const imageWidth = 50;
+            const imageHeight = 50;
+            const borderRadius = 5; // Rayon du bord
+
+// Position de l'image
+            const xPos = margin.left -20;
+            const yPos = 0;
+
+// Dessiner un rectangle arrondi comme fond
+            doc.setFillColor(255, 255, 255); // Couleur de remplissage (blanc dans cet exemple)
+            doc.roundedRect(xPos, yPos, imageWidth, imageHeight, borderRadius, borderRadius, 'F');
+
+// Ajouter l'image au-dessus du rectangle arrondi
+            doc.addImage(logo, 'JPEG', xPos, yPos, imageWidth, imageHeight);
+
 
             // Obtenir le titre du rapport
             const reportTitle = document.getElementById('reportTitle').textContent || "Titre du Rapport";
@@ -81,8 +97,8 @@
             doc.setFontSize(10);
             doc.text("Page " + data.pageNumber, margin.left + 80, pageHeight - 10);
             doc.setFontSize(12);
-            doc.text("Signature :", margin.left, pageHeight - 20);
-            doc.line(margin.left + 20, pageHeight - 20, margin.left + 100, pageHeight - 20);
+            doc.text("Signature :", margin.left, pageHeight - 25);
+            doc.line(margin.left + 20, pageHeight - 25, margin.left + 100, pageHeight - 25);
         };
 
         // Collecter les données du tableau en excluant les dernières colonnes si nécessaire
@@ -118,7 +134,7 @@
             body: data,
             startY: margin.top, // Commencer le tableau après la marge supérieure
             styles: {
-                cellPadding: 3,
+                cellPadding: 1,
                 fontSize: 10,
                 halign: 'center',
                 valign: 'middle',

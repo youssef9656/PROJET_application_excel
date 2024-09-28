@@ -22,7 +22,7 @@ $pageName= 'Catalogue du temps';
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <style>
             body {
-                background-color: #eef2f3; /* Couleur de fond douce */
+                background-color: #1bd0ff; /* Couleur de fond douce */
                 font-family: 'Arial', sans-serif;
                 margin: 0;
                 padding: 20px;
@@ -60,52 +60,63 @@ $pageName= 'Catalogue du temps';
                 background-color: #d3e2ff; /* Couleur de survol */
                 transform: translateY(-2px); /* Légère élévation au survol */
             }
-            .btn {
-                margin-top: 10px;
-                padding: 10px 15px; /* Ajustement de la taille des boutons */
-                border: none;
-                border-radius: 5px;
-                background-color: #17a2b8; /* Couleur du bouton (cyan) */
-                color: white;
-                font-size: 0.9rem; /* Taille de police des boutons */
-                transition: background-color 0.3s ease, transform 0.2s ease; /* Animation douce */
+            /* From Uiverse.io by vinodjangid07 */
+            .Btn {
+                width: 50px;
+                height: 50px;
+                border: 2px solid rgb(6, 39, 108);
+                border-radius: 15px;
+                background-color: rgb(59, 99, 224);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                position: relative;
+                transition-duration: 0.3s;
+                box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.11);
             }
-            .btn:hover {
-                background-color: #138496; /* Couleur du bouton au survol */
-                transform: scale(1.05); /* Zoom léger */
+
+            .svgIcon {
+                fill: rgb(70, 70, 70);
             }
-            .form label {
-                font-weight: bold;
-                color: #343a40; /* Couleur des étiquettes */
+
+            .icon2 {
+                width: 18px;
+                height: 5px;
+                border-bottom: 2px solid rgb(70, 70, 70);
+                border-left: 2px solid rgb(70, 70, 70);
+                border-right: 2px solid rgb(70, 70, 70);
             }
-            .form-control {
-                margin-bottom: 10px;
-                border: 1px solid #ced4da; /* Bordure des champs */
-                border-radius: .25rem; /* Coins arrondis */
-                transition: border-color 0.3s; /* Animation de la bordure */
+
+            .Btn:hover {
+                background-color: rgb(51, 51, 51);
+                transition-duration: 0.3s;
             }
-            .form-control:focus {
-                border-color: #007bff; /* Couleur de la bordure lors de la mise au point */
-                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Ombre autour du champ */
+
+            .Btn:hover .icon2 {
+                border-bottom: 2px solid rgb(146, 255, 246);
+                border-left: 2px solid rgb(88, 215, 220);
+                border-right: 2px solid rgb(101, 232, 158);
             }
-            .header {
-                background-color: #007bff; /* Couleur d'arrière-plan de l'en-tête */
-                color: white; /* Couleur du texte de l'en-tête */
-                padding: 20px; /* Espacement intérieur */
-                border-radius: .5rem; /* Coins arrondis */
-                margin-bottom: 20px; /* Espacement en bas de l'en-tête */
-                text-align: center; /* Centrer le texte */
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Ombre douce pour l'en-tête */
-                animation: fadeIn 0.5s ease-in; /* Animation d'apparition */
+
+            .Btn:hover .svgIcon {
+                fill: rgb(255, 255, 255);
+                animation: slide-in-top 1s linear infinite;
             }
-            @keyframes fadeIn {
-                from {
-                    opacity: 0; /* Début de l'animation */
+
+            @keyframes slide-in-top {
+                0% {
+                    transform: translateY(-10px);
+                    opacity: 0;
                 }
-                to {
-                    opacity: 1; /* Fin de l'animation */
+
+                100% {
+                    transform: translateY(0px);
+                    opacity: 1;
                 }
             }
+            /*bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb*/
             /* From Uiverse.io by AbanoubMagdy1 */
             .wave-group {
                 position: relative;
@@ -117,7 +128,7 @@ $pageName= 'Catalogue du temps';
                 display: block;
                 width: 200px;
                 border: none;
-                border-bottom: 1px dashed  #515151;
+                border-bottom: 1px solid #515151;
                 background: transparent;
             }
 
@@ -156,7 +167,7 @@ $pageName= 'Catalogue du temps';
 
             .wave-group .bar:before,.wave-group .bar:after {
                 content: '';
-                height: 1px;
+                height: 2px;
                 width: 0;
                 bottom: 1px;
                 position: absolute;
@@ -179,87 +190,7 @@ $pageName= 'Catalogue du temps';
                 width: 50%;
             }
 
-            /* From Uiverse.io by Tsiangana */
-            .botao {
-                width: 125px;
-                height: 45px;
-                border-radius: 20px;
-                border: none;
-                box-shadow: 1px 1px rgba(107, 221, 215, 0.37);
-                padding: 5px 10px;
-                background-color: rgb(59, 190, 230);
-                color: #fff;
-                font-family: Roboto, sans-serif;
-                font-weight: 505;
-                font-size: 16px;
-                line-height: 1;
-                cursor: pointer;
-                filter: drop-shadow(0 0 10px rgba(59, 190, 230, 0.568));
-                transition: 0.5s linear;
-            }
 
-            .botao .mysvg {
-                display: none;
-            }
-
-            .botao:hover {
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-                transition: 0.5s linear;
-            }
-
-            .botao:hover .texto {
-                display: none;
-            }
-
-            .botao:hover .mysvg {
-                display: inline;
-            }
-
-            .botao:hover::after {
-                content: "";
-                position: absolute;
-                width: 16px;
-                height: 3px;
-                background-color: rgb(59, 190, 230);
-                margin-left: -20px;
-                animation: animate 0.9s linear infinite;
-            }
-
-            .botao:hover::before {
-                content: "";
-                position: absolute;
-                top: -3px;
-                left: -3px;
-                width: 100%;
-                height: 100%;
-                border: 3.5px solid transparent;
-                border-top: 3.5px solid #fff;
-                border-right: 3.5px solid #fff;
-                border-radius: 50%;
-                animation: animateC 2s linear infinite;
-            }
-
-            @keyframes animateC {
-                0% {
-                    transform: rotate(0deg);
-                }
-
-                100% {
-                    transform: rotate(360deg);
-                }
-            }
-
-            @keyframes animate {
-                0% {
-                    transform: translateY(0);
-                }
-
-                100% {
-                    transform: translateY(20px);
-                }
-            }
 
         </style>
     </head>
@@ -336,36 +267,20 @@ include '../../includes/header.php';
        </div>
        <div class="col-2">
            <div class="col-2">
-            <button class="botao" id="downloadPdf">
-                <svg
-                        class="mysvg"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        height="24px"
-                        width="24px"
-                >
-                    <g stroke-width="0" id="SVGRepo_bgCarrier"></g>
-                    <g
-                            stroke-linejoin="round"
-                            stroke-linecap="round"
-                            id="SVGRepo_tracerCarrier"
-                    ></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <g id="Interface / Download">
-                            <path
-                                    stroke-linejoin="round"
-                                    stroke-linecap="round"
-                                    stroke-width="2"
-                                    stroke="#f1f1f1"
-                                    d="M6 21H18M12 3V17M12 17L17 12M12 17L7 12"
-                                    id="Vector"
-                            ></path>
-                        </g>
-                    </g>
-                </svg>
-                <span class="texto"> PDF</span>
-            </button>
+               <button class="Btn" id="downloadPdf">
+                   <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           height="1em"
+                           viewBox="0 0 384 512"
+                           class="svgIcon"
+                   >
+                       <path
+                               d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                       ></path>
+                   </svg>
+                   <span class="icon2"></span>
+               </button>
+
            </div>
        </div>
 
