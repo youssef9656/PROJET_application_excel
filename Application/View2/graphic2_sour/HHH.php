@@ -166,10 +166,11 @@ include '../../includes/header.php';
             .then(response => response.json())
             .then(data => {
 
-                const labels = data.map(d => d.date_operation);
+                const  labels = data.map(d => d.date_operation);
                 const  sortie_operation  = data.map(d => d.sortie_operation);
-                const  service_operation= data.map(d => d.service_operation);
-                const uniqueServices = [...new Set(data.map(d => d.service_operation).filter(service => service))];
+                const  Total_sortie_Operations= data.map(d => d.Total_sortie_Operations);
+                console.log(Total_sortie_Operations)
+                const  uniqueServices = [...new Set(data.map(d => d.service_operation).filter(service => service))];
 
                 // حساب عدد المقالات لكل service_operation
                 const articleCounts = uniqueServices.map(service => {
@@ -273,10 +274,11 @@ include '../../includes/header.php';
 
                             ],
                             borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
+                                'rgb(255, 99, 132)',
+                                'rgb(75, 192, 192)',
+                                'rgb(255, 205, 86)',
+                                'rgb(201, 203, 207)',
+                                'rgb(54, 162, 235)',
                                 'rgba(153, 102, 255, 1)',
                                 'rgba(255, 159, 64, 1)'
                             ],

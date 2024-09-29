@@ -14,7 +14,7 @@ include '../../Config/connect_db.php'; ?>
 <!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
 </head>
 <?php
-$pageName= 'Total Depenses entrée';
+$pageName= 'Statistiques Dépenses Entrées';
 include '../../includes/header.php';
 ?>
 

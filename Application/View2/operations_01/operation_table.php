@@ -130,7 +130,7 @@ if (!$result) {
             </button>
         </div>
 
-        <table id="operationTable" class="table table-operation">
+        <table id="operationTable" class="table table-operation sheetjs">
             <thead>
             <tr>
                 <th>Article</th>

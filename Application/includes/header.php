@@ -122,6 +122,8 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Bon commandes</a>
                     <ul class="dropdown-menu ">
+                        <li><a class="dropdown-item text-center fs-5 fw-bold  " href="../bonomonde/bonCOMOND.php">Bon Commande</a></li>
+
                         <li><a class="dropdown-item text-center fs-5 fw-bold " href="../bon_reception_entree/bon_reception_entree.php">Bon Réception des entrées</a></li>
                         <li><a class="dropdown-item text-center fs-5 fw-bold  " href="../bon_reception_sortie/bon_reception_sortie.php">Bon Réception des sorties</a></li>
                     </ul>
@@ -153,6 +155,9 @@
                     <ul class="dropdown-menu ">
                          <li><a class="dropdown-item text-center fs-5 fw-bold  " href="../graphic/HHH.php">Statistiques des entree</a></li>
                         <li><a class="dropdown-item text-center fs-5 fw-bold " href="../graphic2_sour/HHH.php">Statistiques des sorties</a></li>
+                         <li><a class="dropdown-item text-center fs-5 fw-bold " href="../garaphic3/garaphic3_DeponsEntre.php">Statistiques Dépenses Entrées</a></li>
+                          <li><a class="dropdown-item text-center fs-5 fw-bold " href="../garaphic3/garaphic3_DeponSourt.php">Statistiques Dépenses Sorties</a></li>
+
                     </ul>
                 </li>
                 

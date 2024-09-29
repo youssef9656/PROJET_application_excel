@@ -12,7 +12,26 @@ $article = isset($_GET['article']) ? $_GET['article'] : '';
 $fournisseur = isset($_GET['fournisseur']) ? $_GET['fournisseur'] : '';
 
 // إعداد استعلام أساسي
-$sql = "SELECT * FROM operation WHERE 1=1 AND pj_operation='Bon sortie'";
+//$sql = "SELECT *  FROM operation WHERE 1=1 AND pj_operation='Bon sortie'";
+
+$sql = "SELECT 
+    op.*, 
+    totals.Total_Entry_Operations,
+    totals.Total_sortie_Operations
+FROM 
+    operation op
+JOIN 
+    (SELECT 
+       ROUND(COALESCE(SUM(entree_operation), 0), 2) AS Total_Entry_Operations,
+        ROUND(COALESCE(SUM(sortie_operation), 0), 2) AS Total_sortie_Operations
+    FROM 
+        operation 
+    WHERE 
+        pj_operation='Bon sortie') totals
+
+WHERE  1=1 AND  op.pj_operation='Bon sortie'";
+
+
 $params = [];
 $types = '';
 
