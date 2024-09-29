@@ -19,10 +19,12 @@ $result1 = $conn->query($sql);
 <body>
 <h1>Liste des Articles</h1>
 <div id="tblar">
+<style>
 
+</style>
     <?php if ($result->num_rows > 0): ?>
     <table class="table table-bordered table-hover table-light text-center" id="tble1">
-        <thead>
+        <thead class="sticky-header">
         <tr>
             <th>ID</th>
             <th>Nom</th>
@@ -68,4 +70,5 @@ $result1 = $conn->query($sql);
 $conn->close();
 ?>
 </body>
+
 </html>

@@ -240,7 +240,7 @@ include '../../includes/header.php';
         sortieChartInstance = new Chart(ctx2, {
             type: 'polarArea',
             data : {
-                labels:nomEntree ,
+                labels:totalEntree ,
                 datasets: [{
                     data: totalEntree,
                     backgroundColor: [

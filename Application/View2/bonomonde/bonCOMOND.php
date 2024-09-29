@@ -10,10 +10,16 @@ include '../../Config/connect_db.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Etat des stocks</title>
+
     <script src="../../includes/jquery.sheetjs.js"></script>
+    <link rel="stylesheet" href="../../includes/css/bootstrap.css">
     <script src="../../includes/libriryPdf/unpkg/jspdf.umd.min.js"></script>
-    <script src="../../includes/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script src="../../includes/libriryPdf/jspdf.plugin.autotable.min.js"
+
+    <script src="../../includes/js/jquery.min.js"></script> <!-- Assurez-vous d'utiliser la version complète -->
+    <script src="../../includes/js/bootstrap.bundle.min.js"></script>
+    <script src="../../includes/js/bootstrap123.min.js"></script>
+    <script src="../../includes/jquery.sheetjs.js"></script>
 
     <?php
     $pageName = 'Bon Commande';
@@ -213,7 +219,7 @@ include '../../Config/connect_db.php';
             <div class="col-5  d-flex ">
                 <label class="mt-3 for="start_date">Datede Livraison:</label>
                 <div class=" ms-3 d-flex justify-content-between ">
-                    <input type="date" id="date_livraison" class="form-control mt-2" onchange="fetchData()()">
+                    <input type="date" id="date_livraison" class="form-control mt-2" ">
                     <button class="Btn ms-3 button" id="downloadPdf" >
                         <svg
                                 stroke-linejoin="round"

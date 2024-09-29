@@ -14,6 +14,7 @@ $sql = "
         SUM(o.entree_operation * p.prix_operation) AS total_depense_entree,
         o.nom_article,
         o.service_operation,
+        COUNT(o.nom_pre_fournisseur) as nom_pre_fournisseur ,
         o.nom_pre_fournisseur
     FROM operation o
     LEFT JOIN (

@@ -43,6 +43,8 @@ $result3 = @mysqli_query($conn, $query3);
 ?>
 
 <div id="tblarARlot">
+
+    </style>
     <table  class="table table-bordered text-center m-0"  style="font-size: 10px;height: 100px" >
         <thead><th >lot</th><th>Fournisseur</th></thead>
         <tr>
