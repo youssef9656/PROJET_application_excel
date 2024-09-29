@@ -83,12 +83,6 @@ include '../../includes/header.php';
                 opacity: 1;
             }
 
-
-
-
-
-
-
             .table-container {
                 max-height: 400px; /* Hauteur maximale du conteneur */
                 overflow-y: auto; /* Défilement vertical */

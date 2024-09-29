@@ -13,7 +13,7 @@ include '../../Config/connect_db.php'; ?>
     <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
 </head>
 <?php
-$pageName= 'Total Depenses Sorties';
+$pageName= ' Statistiques Dépenses Sorties';
 
 include '../../includes/header.php';
 
