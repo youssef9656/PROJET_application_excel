@@ -16,8 +16,10 @@ include '../../includes/header.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Etat des stocks</title>
     <script src="../../includes/jquery.sheetjs.js"></script>
-    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
+<!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="../../includes/css/bootstrap.css">
+    <script src="../../includes/libriryPdf/unpkg/jspdf.umd.min.js"></script>
+    <script src="../../includes/libriryPdf/jspdf.plugin.autotable.min.js"></script>
     <script src="../../includes/libriryPdf/unpkg/jspdf.umd.min.js"></script>
     <script src="../../includes/xlsx.full.min.js"></script>
     <script src="../../includes/js/jquery.min.js"></script> <!-- Assurez-vous d'utiliser la version complète -->
@@ -25,7 +27,7 @@ include '../../includes/header.php';
     <script src="../../includes/js/bootstrap123.min.js"></script>
 
     <head>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<!--        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -337,7 +339,7 @@ include '../../includes/header.php';
             <datalist id="articlesDatalist"></datalist>
         </div>
         <div class="input-group1">
-            <label for="service">Servie:</label>
+            <label for="service">Service:</label>
             <input type="text" id="service" class="input-field" list="fournisseursDatalist" placeholder="Sélectionner un fournisseur">
             <datalist id="fournisseursDatalist"></datalist>
         </div>
@@ -364,6 +366,9 @@ include '../../includes/header.php';
         </div>
     </div>
 
+    <button id="downloadPdf" class="btn btn-primary">Télécharger en PDF</button>
+
+    <input type="date" name="dateLivraison" id="dateLivraison">
 
 
 
@@ -524,5 +529,6 @@ include '../../includes/header.php';
 
 
 </script>
+<script src="script.js"></script>
 </body>
 </html>

@@ -13,10 +13,13 @@ include '../../includes/header.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Etat des stocks</title>
     <script src="../../includes/jquery.sheetjs.js"></script>
-    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
+<!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="../../includes/css/bootstrap.css">
     <script src="../../includes/libriryPdf/unpkg/jspdf.umd.min.js"></script>
-    <script src="../../includes/xlsx.full.min.js"></script>
+    <script src="../../includes/libriryPdf/jspdf.plugin.autotable.min.js"
+<!--    <script src="../../includes/html2canvas.min.js"></script>-->
+<!--    <script src="../../includes/libriryPdf/cdnjs/jspdf.min.js"></script>-->
+<!--    <script src="../../includes/xlsx.full.min.js"></script>-->
     <script src="../../includes/js/jquery.min.js"></script> <!-- Assurez-vous d'utiliser la version complète -->
     <script src="../../includes/js/bootstrap.bundle.min.js"></script>
     <script src="../../includes/js/bootstrap123.min.js"></script>
@@ -289,6 +292,9 @@ include '../../includes/header.php';
             }
 
 
+
+
+
         </style>
     </head>
 <body>
@@ -331,14 +337,14 @@ include '../../includes/header.php';
             <input type="text" id="sous_lot" class="input-field" list="sousLotsDatalist" placeholder="Sélectionner un sous lot">
             <datalist id="sousLotsDatalist"></datalist>
         </div>
-        <div class="input-group1">
-            <button onclick="fetchData()" class="button">
-                Rechercher
-                <div class="hoverEffect">
-                    <div></div>
-                </div>
-            </button>
-        </div>
+<!--        <div class="input-group1">-->
+<!--            <button onclick="fetchData()" class="button">-->
+<!--                Rechercher-->
+<!--                <div class="hoverEffect">-->
+<!--                    <div></div>-->
+<!--                </div>-->
+<!--            </button>-->
+<!--        </div>-->
         <div class="input-group1">
             <button onclick="location.reload()" class="button1">
                 Afficher tous
@@ -350,6 +356,9 @@ include '../../includes/header.php';
     </div>
 
 
+    <button id="downloadPdf" class="btn btn-primary">Télécharger en PDF</button>
+
+    <input type="date" name="dateLivraison" id="dateLivraison">
 
 
     <div class="table-container">
@@ -364,15 +373,46 @@ include '../../includes/header.php';
                 <th>Action</th>
             </tr>
             </thead>
-            <tbody>
-            <!-- Ajoutez ici vos données -->
+            <tbody id="tableDepenses">
+            <!-- Mes données sont ici -->
             </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="4">Total:</td>
+                <td id="totalDépense"></td>
+            </tr>
+            </tfoot>
         </table>
     </div>
 </div>
 
 
 <script>
+    document.addEventListener('DOMContentLoaded' , ()=>{
+        let inputs = document.querySelectorAll('input');
+
+        inputs.forEach( input =>{
+            input.addEventListener('change' , ()=>{
+                fetchData()
+                setTimeout(()=>{
+                    calculerSommeTotalDepense()
+                } , 100)
+
+            })
+        })
+
+
+    })
+
+
+
+
+
+
+
+
+
+
     function updateOrderNumbers() {
         const tableRows = document.querySelectorAll('#articles_table tbody tr');
         tableRows.forEach((row, index) => {
@@ -388,6 +428,8 @@ include '../../includes/header.php';
     deleteButton.onclick = () => {
         tr.remove(); // Supprimer la ligne lorsque le bouton est cliqué
         updateOrderNumbers(); // Mettre à jour les numéros d'ordre
+        calculerSommeTotalDepense()
+
     };
 
     function fetchData() {
@@ -420,6 +462,7 @@ include '../../includes/header.php';
 
                 const fields = ['Article', 'Total_Entry_Operations', 'Prix','Total_Depenses_Entree']; // Champs à afficher
 
+                // console.log(data)
                 // Parcourir chaque ligne de données
                 data.forEach((row, index) => {
                     const tr = document.createElement('tr'); // Créer une nouvelle ligne
@@ -457,6 +500,8 @@ include '../../includes/header.php';
                     tr.appendChild(actionTd); // Ajouter la cellule d'action à la ligne
 
                     tableBody.appendChild(tr); // Ajouter la ligne au corps de la table
+                    calculerSommeTotalDepense()
+
                 });
             })
             .catch(error => console.error('Error fetching data:', error)); // Gérer les erreurs
@@ -468,12 +513,14 @@ include '../../includes/header.php';
                 orderTd.textContent = index + 1; // Mettre à jour le numéro d'ordre
             });
         }
+
     }
     document.addEventListener('DOMContentLoaded', fetchData);
 
     document.addEventListener('DOMContentLoaded', () => {
         fetchDropdownData();
         fetchData();
+        calculerSommeTotalDepense()
     });
 
 
@@ -485,12 +532,16 @@ include '../../includes/header.php';
                 populateDatalistOptions('articlesDatalist', data.articles);
                 populateDatalistOptions('fournisseursDatalist', data.fournisseurs);
                 populateDatalistOptions('sousLotsDatalist', data.sous_lots);
+                calculerSommeTotalDepense()
+
                 // populateDatalistOptions('servicesDatalist', data.services);
             })
             .catch(error => console.error('Error fetching dropdown data:', error));
     }
 
     function populateDatalistOptions(datalistId, options) {
+        calculerSommeTotalDepense()
+
         const datalistElement = document.getElementById(datalistId);
         datalistElement.innerHTML = '';  // Efface les options précédentes
 
@@ -499,13 +550,43 @@ include '../../includes/header.php';
             const opt = document.createElement('option');
             opt.value = option;
             datalistElement.appendChild(opt);
+            calculerSommeTotalDepense()
+
         });
     }
 
     // Appel initial pour charger les données
     fetchDropdownData();
+    calculerSommeTotalDepense()
+    function calculerSommeTotalDepense() {
+        let total = 0;
+        const rows = document.querySelectorAll('#tableDepenses tr');
+
+        rows.forEach(row => {
+            // Récupère la valeur dans la colonne "Total Dépense"
+            const depense = parseFloat(row.querySelector('td:nth-child(5)').textContent);
+            // console.log(depense)
+            total += depense;
+
+
+
+
+        });
+
+        // Affiche la somme totale dans le pied du tableau
+        document.getElementById('totalDépense').textContent = total; // Formater en 2 décimales si nécessaire
+    }
+
+    // Appelle cette fonction après avoir chargé ou modifié le tableau
+    document.addEventListener('DOMContentLoaded' , ()=>{
+        setTimeout(()=>{
+            calculerSommeTotalDepense();
+        } , 2000)
+
+    })
 
 
 </script>
+<script src="script.js"></script>
 </body>
 </html>

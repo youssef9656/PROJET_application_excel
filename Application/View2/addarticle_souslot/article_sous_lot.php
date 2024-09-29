@@ -46,7 +46,7 @@ WHERE lot_id = (SELECT lot_id FROM `lots` WHERE lot_name ='$lot_name');";
           content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><?php echo $pageName; ?></title>
-    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
+<!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
     <style>
         /* تحسين شكل الزر + */
         #ajouterBtn {

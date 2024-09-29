@@ -25,7 +25,7 @@ $prenom_fournisseur = selectData($queryElement, []);
           content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><?php echo $pageName; ?></title>
-    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
+<!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
     <style>
         /* تحسين شكل الزر + */
         #ajouterBtn {

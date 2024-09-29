@@ -34,7 +34,7 @@ $prenom_fournisseur = selectData($queryElement, []);
     <script src="../../includes/jquery.sheetjs.js"></script>
 
     <title>Document</title>
-    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
+<!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
     <style>
         #tbl_fournisseur {
             width: 98%;

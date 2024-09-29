@@ -20,7 +20,7 @@ include '../../includes/header.php';
     <title>Upload Excel</title>
 <!--    <script src="../../includes/jquery.sheetjs.js"></script>-->
     <script src="../../includes/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
+<!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
 
 <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>-->
 <!--    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>-->

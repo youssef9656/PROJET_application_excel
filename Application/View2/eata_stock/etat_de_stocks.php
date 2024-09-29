@@ -11,7 +11,7 @@ include '../../Config/connect_db.php'; $pageName= 'Catalogue du temps'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Etat des stocks</title>
     <script src="../../includes/jquery.sheetjs.js"></script>
-    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
+<!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
 <!--    <script src="libriryPdf/unpkg/jspdf.min.js"></script>-->
     <script src="../../includes/libriryPdf/unpkg/jspdf.umd.min.js"></script>
     <script src="../../includes/xlsx.full.min.js"></script>

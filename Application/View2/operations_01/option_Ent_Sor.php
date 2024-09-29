@@ -53,7 +53,7 @@ if (isset($_GET['message'])) {
     <script src="../../includes/jquery.sheetjs.js"></script>
 
     <title>Document</title>
-    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
+<!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
 </head>
 <body>
 
