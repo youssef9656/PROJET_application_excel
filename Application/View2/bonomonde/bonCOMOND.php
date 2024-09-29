@@ -11,14 +11,16 @@ include '../../Config/connect_db.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Etat des stocks</title>
     <script src="../../includes/jquery.sheetjs.js"></script>
-    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
     <script src="../../includes/libriryPdf/unpkg/jspdf.umd.min.js"></script>
     <script src="../../includes/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
 
+    <?php
+    $pageName = 'Bon Commande';
+    include '../../includes/header.php';
+    ?>
 
     <head>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <style>
 
 
@@ -64,7 +66,8 @@ include '../../Config/connect_db.php';
             /*    transform: scale(1.02); !* Légère augmentation de taille au survol *!*/
             /*}*/
             .table {
-                font-size: 0.9rem; /* Taille de police réduite pour le contenu de la table */
+
+                font-size: 3.9rem; /* Taille de police réduite pour le contenu de la table */
             }
             .table thead th {
                 position: sticky;
@@ -201,12 +204,7 @@ include '../../Config/connect_db.php';
 
 
         </style>
-    </head>
 <body>
-<?php
-$pageName = 'Bon Commande';
-include '../../includes/header.php';
-?>
 
 <div class="container ">
     <div class="header">
