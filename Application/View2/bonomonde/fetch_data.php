@@ -45,6 +45,7 @@ $sql = "SELECT
             LIMIT 1
         ), 2
     ) AS Stock_Value,
+
     ROUND(
         COALESCE(SUM(o.entree_operation), 0) * (
             SELECT p.prix_operation

@@ -5,7 +5,7 @@ include '../../Config/connect_db.php';
 include '../../Config/check_session.php';
 checkUserRole('admin');
 
-$pageName = 'Importer les données';
+$pageName = 'Importer Excel';
 
 include '../../includes/header.php';
 

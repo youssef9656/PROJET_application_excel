@@ -20,11 +20,23 @@ include '../../Config/connect_db.php';
     <head>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <style>
-            body {
-                background-color: #1bd0ff; /* Couleur de fond douce */
-                font-family: 'Arial', sans-serif;
-                margin: 0;
-                padding: 20px;
+
+
+            body{
+                background-image: url("../../image3.jpg");
+                background-size: cover;
+                background-repeat: no-repeat;
+            }
+            .header {
+                background-color: transparent; /* Couleur d'arrière-plan de l'en-tête */
+                backdrop-filter: blur(50px);
+                color: white; /* Couleur du texte de l'en-tête */
+                padding: 20px; /* Espacement intérieur */
+                border-radius: .5rem; /* Coins arrondis */
+                margin-bottom: 20px; /* Espacement en bas de l'en-tête */
+                text-align: center; /* Centrer le texte */
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Ombre douce pour l'en-tête */
+                animation: fadeIn 0.5s ease-in; /* Animation d'apparition */
             }
             .table-container {
                 max-height: 400px; /* Hauteur maximale du conteneur */
@@ -36,6 +48,17 @@ include '../../Config/connect_db.php';
                 padding: 20px; /* Espacement intérieur */
                 padding-top: 0PX;
                 /*transition: transform 0.3s ease-in-out; !* Animation douce *!*/
+            }
+            .filter-wrapper {
+                background-color: #ffffff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                display: flex;
+                flex-flow: row wrap;
+                justify-content: space-between;
+                /*max-width: 600px; !* Limite la largeur du conteneur *!*/
+                margin: auto; /* Centre le conteneur */
             }
             /*.table-container:hover {*/
             /*    transform: scale(1.02); !* Légère augmentation de taille au survol *!*/
@@ -59,62 +82,48 @@ include '../../Config/connect_db.php';
                 background-color: #d3e2ff; /* Couleur de survol */
                 transform: translateY(-2px); /* Légère élévation au survol */
             }
-            /* From Uiverse.io by vinodjangid07 */
-            .Btn {
-                width: 50px;
-                height: 50px;
-                border: 2px solid rgb(6, 39, 108);
-                border-radius: 15px;
-                background-color: rgb(59, 99, 224);
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
+
+
+                /* From Uiverse.io by vinodjangid07 */
+            /* From Uiverse.io by Creatlydev */
+            .button {
+                line-height: 1;
+                background-color: transparent;
                 cursor: pointer;
-                position: relative;
-                transition-duration: 0.3s;
-                box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.11);
+                display: flex;
+                align-items: center;
+                gap: 0.35em;
+                padding: 0.75em 1em;
+                padding-right: 1.25em;
+                color: #fff;
+                border: 1px solid transparent;
+                font-weight: 700;
+                border-radius: 2em;
+                font-size: 1rem;
+                box-shadow: 0 0.7em 1.5em -0.5em hsla(249, 62%, 51%, 0.745);
+                transition: transform 0.3s;
+
+                background: linear-gradient(
+                        90deg,
+                        rgba(77, 54, 208, 1) 0%,
+                        rgba(132, 116, 254, 1) 100%
+                );
             }
 
-            .svgIcon {
-                fill: rgb(70, 70, 70);
+            .button__icon {
+                width: 1.5em;
+                height: 1.5em;
             }
 
-            .icon2 {
-                width: 18px;
-                height: 5px;
-                border-bottom: 2px solid rgb(70, 70, 70);
-                border-left: 2px solid rgb(70, 70, 70);
-                border-right: 2px solid rgb(70, 70, 70);
+            .button:hover {
+                border-color: #f4f5f2;
             }
 
-            .Btn:hover {
-                background-color: rgb(51, 51, 51);
-                transition-duration: 0.3s;
+            .button:active {
+                transform: scale(0.98);
+                box-shadow: 0 0.5em 1.5em -0.5em hsla(249, 62%, 51%, 0.745);
             }
 
-            .Btn:hover .icon2 {
-                border-bottom: 2px solid rgb(146, 255, 246);
-                border-left: 2px solid rgb(88, 215, 220);
-                border-right: 2px solid rgb(101, 232, 158);
-            }
-
-            .Btn:hover .svgIcon {
-                fill: rgb(255, 255, 255);
-                animation: slide-in-top 1s linear infinite;
-            }
-
-            @keyframes slide-in-top {
-                0% {
-                    transform: translateY(-10px);
-                    opacity: 0;
-                }
-
-                100% {
-                    transform: translateY(0px);
-                    opacity: 1;
-                }
-            }
             /*bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb*/
             /* From Uiverse.io by AbanoubMagdy1 */
             .wave-group {
@@ -199,22 +208,52 @@ $pageName = 'Bon Commande';
 include '../../includes/header.php';
 ?>
 
-<div class="container mt-2">
+<div class="container ">
     <div class="header">
-        <h2 id="reportTitle"><?php echo $pageName; ?></h2>
+        <div class="d-flex justify-content-between">
+            <h2 id="reportTitle"><?php echo $pageName; ?></h2>
+            <div class="col-5  d-flex ">
+                <label class="mt-3 for="start_date">Datede Livraison:</label>
+                <div class=" ms-3 d-flex justify-content-between ">
+                    <input type="date" id="date_livraison" class="form-control mt-2" onchange="fetchData()()">
+                    <button class="Btn ms-3 button" id="downloadPdf" >
+                        <svg
+                                stroke-linejoin="round"
+                                stroke-linecap="round"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                viewBox="0 0 24 24"
+                                height="40"
+                                width="40"
+                                class="button__icon"
+                                xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
+                            <path d="M7 11l5 5l5 -5"></path>
+                            <path d="M12 4l0 12"></path>
+                        </svg>
+                        <span class="button__text">Download</span>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
     </div>
-    <div class="form-row mb-3" style="flex-wrap: wrap; gap: 20px;">
+    <div class="form-row mb-3 filter-wrapper" style="flex-wrap: wrap; gap: 20px;">
         <div class="col-2">
             <label for="start_date">Date de début:</label>
-            <input type="date" id="start_date" class="form-control">
+            <input type="date" id="start_date" class="form-control" onchange="fetchData()()">
         </div>
         <div class="col-2">
             <label for="end_date">Date de fin:</label>
-            <input type="date" id="end_date" class="form-control">
+            <input type="date" id="end_date" class="form-control" onchange="fetchData()()">
         </div>
         <div class="col-2">
             <label for="status_filter">Filtrer par statut:</label>
-            <select id="status_filter" class="form-control">
+            <select id="status_filter" class="form-control" onchange="fetchData()()">
                 <option value="">Tous</option>
                 <option value="besoin">Besoin</option>
                 <option value="bon">Bon</option>
@@ -222,21 +261,21 @@ include '../../includes/header.php';
         </div>
         <div class="col-2">
             <label for="lot">Lot:</label>
-            <select id="lot" class="form-control">
+            <select id="lot" class="form-control" onchange="fetchData()()">
                 <option value="">Sélectionner un lot</option>
                 <!-- options dynamiques -->
             </select>
         </div>
         <div class="col-2">
             <label for="article">Article:</label>
-            <select id="article" class="form-control">
+            <select id="article" class="form-control" onchange="fetchData()()">
                 <option value="">Sélectionner un article</option>
                 <!-- options dynamiques -->
             </select>
         </div>
         <div class="col-2">
             <label for="fournisseur">Fournisseur:</label>
-            <select id="fournisseur" class="form-control">
+            <select id="fournisseur" class="form-control" onchange="fetchData()()">
                 <option value="">Sélectionner un fournisseur</option>
                 <!-- options dynamiques -->
             </select>
@@ -244,44 +283,23 @@ include '../../includes/header.php';
         </div>
         <div class="col-2">
             <label for="sous_lot">Sous Lot:</label>
-            <select id="sous_lot" class="form-control">
+            <select id="sous_lot" class="form-control" onchange="fetchData()()">
                 <option value="">Sélectionner un sous lot</option>
                 <!-- options dynamiques -->
             </select>
         </div>
         <div class="col-2">
             <label for="service">Service:</label>
-            <select id="service" class="form-control">
+            <select id="service" class="form-control" onchange="fetchData()()">
                 <option value="">Sélectionner un service</option>
                 <!-- options dynamiques -->
             </select>
         </div>
         <div class="col-2 ">
-        <button onclick="fetchData()" class="btn btn-info">Rechercher</button>
-        </div>
-        <div class="col-2">
-            <label for="start_date">Datede Livraison:</label>
-            <input type="date" id="date_livraison" class="form-control">
+        <button onclick=" reloadPge()" class="btn btn-info" id="BtnRechercher">Affiche tout </button>
         </div>
        </div>
-       <div class="col-2">
-           <div class="col-2">
-               <button class="Btn" id="downloadPdf">
-                   <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           height="1em"
-                           viewBox="0 0 384 512"
-                           class="svgIcon"
-                   >
-                       <path
-                               d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
-                       ></path>
-                   </svg>
-                   <span class="icon2"></span>
-               </button>
 
-           </div>
-       </div>
 
     <div class="table-container">
         <table id="articles_table" class="table table-bordered table-hover sheetjs">
@@ -294,13 +312,13 @@ include '../../includes/header.php';
                 <th>Observations</th>
                 <th> Stock_Final</th>
 
-                <th>Requirement Status</th>
+                <th >Requirement Status</th>
 
 
                 <th>Action</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody >
             <!-- Ajoutez ici vos données -->
             </tbody>
         </table>
@@ -311,6 +329,13 @@ include '../../includes/header.php';
 <script src="pdf.js"></script>
 
 <script>
+
+
+    function reloadPge(){
+        location.reload()
+    }
+
+
     function updateOrderNumbers() {
         const tableRows = document.querySelectorAll('#articles_table tbody tr');
         tableRows.forEach((row, index) => {
@@ -392,7 +417,11 @@ include '../../includes/header.php';
                         } else {
                             td.textContent = row[field] || ''; // Remplir la cellule avec la valeur correspondante
                         }
-                        tr.appendChild(td); // Ajouter la cellule à la ligne
+                        if (field === 'Requirement_Status') {
+                            td.innerText == "bon" ?      td.style.cssText = 'text-align: center; background-color: rgba(55, 222, 146, 0.87);': td.style.cssText = 'text-align: center; background-color: rgba(255,0,26,0.85);'
+
+                        }
+                            tr.appendChild(td); // Ajouter la cellule à la ligne
                     });
 
                     // Ajouter le bouton de suppression
@@ -408,7 +437,9 @@ include '../../includes/header.php';
                     tr.appendChild(actionTd); // Ajouter la cellule d'action à la ligne
 
                     tableBody.appendChild(tr); // Ajouter la ligne au corps de la table
+
                 });
+
             })
             .catch(error => console.error('Error fetching data:', error)); // Gérer les erreurs
 
@@ -425,6 +456,7 @@ include '../../includes/header.php';
     document.addEventListener('DOMContentLoaded', () => {
         fetchDropdownData();
         fetchData();
+
     });
 
 

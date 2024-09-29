@@ -188,17 +188,50 @@ include '../../includes/header.php';
                 <option value="bon">Bon</option>
             </select>
         </div>
-        <button onclick="fetchData()" class="btn btn-primary">Rechercher</button>
-        <button class="Btn btn" id="downloadPdfButton">
-            <svg class="svgIcon" viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg"><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"></path></svg>
-            <span class="icon2"></span>
-            <span class="tooltip">Download</span>
-        </button>
+        <div class="col-1">
+            <button onclick="fetchData()" class="btn btn-primary mt-4">Rechercher</button>
+        </div>
+        <div class="col-1">
+            <button class="Btn btn" id="downloadPdfButton">
+                <svg class="svgIcon" viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg"><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"></path></svg>
+                <span class="icon2"></span>
+                <span class="tooltip">Download</span>
+            </button>
+
+        </div>
 <!--        <button class="Btn btn" onclick="printtable()" id="downloadPdfButton">-->
 <!--            <svg class="svgIcon" viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg"><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"></path></svg>-->
 <!--            <span class="icon2"></span>-->
 <!--            <span class="tooltip">Download</span>-->
 <!--        </button>-->
+        <div class="col-2">
+            <table class="table table-bordered table-hover table-primary sheetjs" style="width: 150px; margin-left:10px; height: 150px ">
+                <thead>
+                <tr>
+                    <th >Valeur Stock final </th>
+                    <td id="totale_Stock_final"></td>
+
+                </tr>
+                <tr>
+                    <th>Total Dépenses Entrées final </th>
+                    <td id="Total_Entrees_final"></td>
+
+                </tr>
+                <tr>
+                    <th>  Total Dépenses Sorties final </th>
+                    <td id="Total_Sorties_final"></td>
+
+                </tr>
+                <tr >
+                    <td style="background-color: #00a357">Total </td>
+                    <td id="Total_final" style="background-color: #00a357"></td>
+
+                </tr>
+                </thead>
+
+            </table>
+
+        </div>
     </div>
 
 <div style="display:flex;flex-flow: row">
@@ -225,31 +258,6 @@ include '../../includes/header.php';
         </table>
     </div>
 
-    <table class="table table-bordered table-hover table-primary sheetjs" style="width: 150px; margin-left:10px; height: 150px ">
-        <thead>
-        <tr>
-            <th >Valeur Stock final </th>
-            <td id="totale_Stock_final"></td>
-
-        </tr>
-        <tr>
-            <th>Total Dépenses Entrées final </th>
-            <td id="Total_Entrees_final"></td>
-
-        </tr>
-        <tr>
-            <th>  Total Dépenses Sorties final </th>
-            <td id="Total_Sorties_final"></td>
-
-        </tr>
-        <tr >
-            <td style="background-color: #00a357">Total </td>
-            <td id="Total_final" style="background-color: #00a357"></td>
-
-        </tr>
-        </thead>
-
-    </table>
 
 </div>
 </div>
