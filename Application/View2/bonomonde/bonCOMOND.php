@@ -266,13 +266,7 @@ include '../../includes/header.php';
                 <!-- options dynamiques -->
             </select>
         </div>
-        <div class="col-2">
-            <label for="article">Article:</label>
-            <select id="article" class="form-control" onchange="fetchData()()">
-                <option value="">Sélectionner un article</option>
-                <!-- options dynamiques -->
-            </select>
-        </div>
+
         <div class="col-2">
             <label for="fournisseur">Fournisseur:</label>
             <select id="fournisseur" class="form-control" onchange="fetchData()()">
@@ -295,6 +289,14 @@ include '../../includes/header.php';
                 <!-- options dynamiques -->
             </select>
         </div>
+        <div class="col-2">
+            <label for="article">Article:</label>
+            <select id="article" class="form-control" onchange="fetchData()()">
+                <option value="">Sélectionner un article</option>
+                <!-- options dynamiques -->
+            </select>
+        </div>
+
         <div class="col-2 ">
         <button onclick=" reloadPge()" class="btn btn-info" id="BtnRechercher">Affiche tout </button>
         </div>
