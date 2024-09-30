@@ -105,11 +105,11 @@ include '../../includes/header.php';
     }
 
     /* Ajustement de la taille du canvas */
-    canvas {
-        width: 100% !important;
-        height: auto !important;
-        border-radius: 10px; /* Coins arrondis pour le canvas */
-    }
+    /*canvas {*/
+    /*    width: 100% !important;*/
+    /*    height: auto !important;*/
+    /*    border-radius: 10px; !* Coins arrondis pour le canvas *!*/
+    /*}*/
 
     /* Conteneur global */
     .container {

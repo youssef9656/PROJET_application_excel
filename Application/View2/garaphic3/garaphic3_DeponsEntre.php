@@ -211,11 +211,16 @@ include '../../includes/header.php';
     let entreeChartInstance = null;
     let sortieChartInstance = null;
 
+
     function displayCharts(data) {
+        // Récupérer les dates et les totaux des entrées
         const dates = data.map(item => item.date_operation);
         const totalEntree = data.map(item => item.total_depense_entree);
-        const total_fournisseur = data.map(item => item.total_depense_entree);
+
+        // Récupérer les noms des fournisseurs, sans doublons
         const nomEntree = [...new Set(data.map(d => d.nom_pre_fournisseur).filter(service => service))];
+
+        // Détruire le graphique existant si présent avant de créer un nouveau
         if (entreeChartInstance) {
             entreeChartInstance.destroy();
         }
@@ -225,7 +230,7 @@ include '../../includes/header.php';
             data: {
                 labels: dates,
                 datasets: [{
-                    label: 'Total Depenses Entrées',
+                    label: 'Total Dépenses Entrées',
                     data: totalEntree,
                     borderColor: 'blue',
                     fill: false
@@ -233,14 +238,15 @@ include '../../includes/header.php';
             }
         });
 
+        // Détruire le graphique existant si présent avant de créer un nouveau
         if (sortieChartInstance) {
             sortieChartInstance.destroy();
         }
         const ctx2 = document.getElementById('sortieChart').getContext('2d');
         sortieChartInstance = new Chart(ctx2, {
             type: 'polarArea',
-            data : {
-                labels:totalEntree ,
+            data: {
+                labels: nomEntree,  // Utiliser les noms des fournisseurs comme étiquettes
                 datasets: [{
                     data: totalEntree,
                     backgroundColor: [

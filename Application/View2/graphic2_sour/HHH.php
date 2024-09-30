@@ -168,8 +168,9 @@ include '../../includes/header.php';
 
                 const  labels = data.map(d => d.date_operation);
                 const  sortie_operation  = data.map(d => d.sortie_operation);
-                const  Total_sortie_Operations= data.map(d => d.Total_sortie_Operations);
-                console.log(Total_sortie_Operations)
+                const  service_operation= data.map(d => d.service_operation);
+                const  article= data.map(d => d.service_operation);
+
                 const  uniqueServices = [...new Set(data.map(d => d.service_operation).filter(service => service))];
 
                 // حساب عدد المقالات لكل service_operation
@@ -253,15 +254,46 @@ include '../../includes/header.php';
 
 
 
+
+
+                const aggregatedServices = data.reduce((acc, operation) => {
+                    const service = operation.service_operation;
+                    const sortie = parseFloat(operation.sortie_operation);
+
+                    if (!acc[service]) {
+                        acc[service] = {
+                            totalSortie: 0,
+                            articles: []
+                        };
+
+                    }
+
+                    acc[service].totalSortie += sortie;
+                    acc[service].articles.push(operation.nom_article);
+
+                    return acc;
+                }, {});
+
+                const result = Object.entries(aggregatedServices).map(([service, data]) => ({
+                    service,
+                    totalSortie: data.totalSortie,
+                    articles: [...new Set(data.articles)] // إزالة التكرارات
+                }));
+              var service = result.map((ob)=>ob.service)
+              var totalSortie = result.map((ob)=>ob.totalSortie)
+
+
+
+
                 if (chart2) chart2.destroy();
                 const ctx2 = document.getElementById('chart2').getContext('2d');
                 chart2 = new Chart(ctx2, {
                     type: 'pie',
                     data: {
-                        labels: uniqueServices,  // أسماء الخدمات بدون تكرار
+                        labels: service,  // أسماء الخدمات بدون تكرار
                         datasets: [{
                             label: 'Distribution des articles par service',
-                            data: articleCounts,
+                            data: totalSortie,
                             backgroundColor: [
                                 'rgb(255, 99, 132)',
                                 'rgb(75, 192, 192)',
