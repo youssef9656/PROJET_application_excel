@@ -65,7 +65,7 @@ if (isset($_GET['id'])) {
         o.date_operation BETWEEN '$start_date' AND '$end_date'
     GROUP BY 
         a.id_article, a.nom, a.stock_initial, a.stock_min
-    LIMIT 0, 25
+
 ";
 
             $result = $conn->query($sql_select);

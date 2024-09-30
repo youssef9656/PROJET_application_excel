@@ -20,7 +20,7 @@ include '../../includes/header.php';
     <link rel="stylesheet" href="../../includes/css/bootstrap.css">
     <script src="../../includes/libriryPdf/unpkg/jspdf.umd.min.js"></script>
     <script src="../../includes/libriryPdf/jspdf.plugin.autotable.min.js"></script>
-    <script src="../../includes/libriryPdf/unpkg/jspdf.umd.min.js"></script>
+<!--    <script src="../../includes/libriryPdf/unpkg/jspdf.umd.min.js"></script>-->
     <script src="../../includes/xlsx.full.min.js"></script>
     <script src="../../includes/js/jquery.min.js"></script> <!-- Assurez-vous d'utiliser la version complète -->
     <script src="../../includes/js/bootstrap.bundle.min.js"></script>
@@ -108,6 +108,7 @@ include '../../includes/header.php';
                 background-color: #ffffff; /* Couleur blanche pour le fond */
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Ombre douce */
                 padding: 20px; /* Espacement intérieur */
+                padding-top: 0;
                 transition: transform 0.3s ease-in-out; /* Animation douce */
             }
             /*.table-container:hover {*/
@@ -299,6 +300,48 @@ include '../../includes/header.php';
                 background-repeat: no-repeat;
             }
 
+
+            .button23 {
+                line-height: 1;
+                background-color: transparent;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 0.35em;
+                padding: 0.75em 1em;
+                padding-right: 1.25em;
+                color: #fff;
+                border: 1px solid transparent;
+                font-weight: 700;
+                border-radius: 2.5em;
+                font-size: 1rem;
+                box-shadow: 0 0.7em 1.5em -0.5em hsla(249, 62%, 51%, 0.745);
+                transition: transform 0.3s;
+
+                background: linear-gradient(
+                        90deg,
+                        rgba(77, 54, 208, 1) 0%,
+                        rgba(132, 116, 254, 1) 100%
+                );
+            }
+
+            .button__icon {
+                width: 1.5em;
+                height: 1.5em;
+            }
+
+            .button23:hover {
+                border-color: #f4f5f2;
+            }
+
+            .button23:active {
+                transform: scale(0.98);
+                box-shadow: 0 0.5em 1.5em -0.5em hsla(249, 62%, 51%, 0.745);
+            }
+
+            .label {
+                color: white ;
+            }
         </style>
     </head>
 <body>
@@ -306,7 +349,36 @@ include '../../includes/header.php';
 
 <div class="container mt-2">
     <div class="header">
-        <h2><?php echo $pageName; ?></h2>
+        <div class="d-flex justify-content-between">
+            <h2 id="reportTitle"><?php echo $pageName; ?></h2>
+            <div class="col-5  d-flex ">
+                <label class="mt-3 label" for="start_date">Date de livraison :</label>
+                <div class=" ms-3 d-flex justify-content-between ">
+                    <input type="date" id="dateLivraison" class="form-control mt-2" onchange="fetchData()()">
+                    <button class="Btn ms-3 button23" id="downloadPdf" >
+                        <svg
+                                stroke-linejoin="round"
+                                stroke-linecap="round"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                viewBox="0 0 24 24"
+                                height="40"
+                                width="40"
+                                class="button__icon"
+                                xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
+                            <path d="M7 11l5 5l5 -5"></path>
+                            <path d="M12 4l0 12"></path>
+                        </svg>
+                        <span class="button__text">Download</span>
+                    </button>
+
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -348,14 +420,14 @@ include '../../includes/header.php';
             <input type="text" id="sous_lot" class="input-field" list="sousLotsDatalist" placeholder="Sélectionner un sous lot">
             <datalist id="sousLotsDatalist"></datalist>
         </div>
-        <div class="input-group1">
-            <button onclick="fetchData()" class="button">
-                Rechercher
-                <div class="hoverEffect">
-                    <div></div>
-                </div>
-            </button>
-        </div>
+<!--        <div class="input-group1">-->
+<!--            <button onclick="fetchData()" class="button">-->
+<!--                Rechercher-->
+<!--                <div class="hoverEffect">-->
+<!--                    <div></div>-->
+<!--                </div>-->
+<!--            </button>-->
+<!--        </div>-->
         <div class="input-group1">
             <button onclick="location.reload()" class="button1">
                 Afficher tous
@@ -365,10 +437,10 @@ include '../../includes/header.php';
             </button>
         </div>
     </div>
-
-    <button id="downloadPdf" class="btn btn-primary">Télécharger en PDF</button>
-
-    <input type="date" name="dateLivraison" id="dateLivraison">
+<!---->
+<!--    <button id="downloadPdf" class="btn btn-primary">Télécharger en PDF</button>-->
+<!---->
+<!--    <input type="date" name="dateLivraison" id="dateLivraison">-->
 
 
 
@@ -384,15 +456,43 @@ include '../../includes/header.php';
                 <th>Action</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="tableDepenses">
             <!-- Ajoutez ici vos données -->
             </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="4">Total:</td>
+                <td id="totalDépense"></td>
+            </tr>
+            </tfoot>
         </table>
     </div>
 </div>
 
 
 <script>
+
+
+    document.addEventListener('DOMContentLoaded' , ()=>{
+        let inputs = document.querySelectorAll('input');
+
+        inputs.forEach( input =>{
+            input.addEventListener('change' , ()=>{
+                fetchData()
+                setTimeout(()=>{
+                    calculerSommeTotalDepense()
+                } , 100)
+
+            })
+        })
+
+
+    })
+
+
+
+
+
     function updateOrderNumbers() {
         const tableRows = document.querySelectorAll('#articles_table tbody tr');
         tableRows.forEach((row, index) => {
@@ -474,12 +574,14 @@ include '../../includes/header.php';
                     deleteButton.onclick = () => {
                         tr.remove(); // Supprimer la ligne lorsque le bouton est cliqué
                         updateOrderNumbers(); // Mettre à jour les numéros d'ordre
+                        calculerSommeTotalDepense()
                     };
                     actionTd.appendChild(deleteButton); // Ajouter le bouton à la cellule d'action
                     tr.appendChild(actionTd); // Ajouter la cellule d'action à la ligne
 
                     tableBody.appendChild(tr); // Ajouter la ligne au corps de la table
                 });
+                calculerSommeTotalDepense()
             })
             .catch(error => console.error('Error fetching data:', error)); // Gérer les erreurs
 
@@ -496,6 +598,7 @@ include '../../includes/header.php';
     document.addEventListener('DOMContentLoaded', () => {
         fetchDropdownData();
         fetchData();
+        calculerSommeTotalDepense()
     });
 
 
@@ -508,11 +611,15 @@ include '../../includes/header.php';
                 // populateDatalistOptions('fournisseursDatalist', data.fournisseurs);
                 populateDatalistOptions('sousLotsDatalist', data.sous_lots);
                 populateDatalistOptions('servicesDatalist', data.services);
+                calculerSommeTotalDepense()
+
             })
             .catch(error => console.error('Error fetching dropdown data:', error));
     }
 
     function populateDatalistOptions(datalistId, options) {
+        calculerSommeTotalDepense()
+
         const datalistElement = document.getElementById(datalistId);
         datalistElement.innerHTML = '';  // Efface les options précédentes
 
@@ -521,11 +628,44 @@ include '../../includes/header.php';
             const opt = document.createElement('option');
             opt.value = option;
             datalistElement.appendChild(opt);
+            calculerSommeTotalDepense()
+
         });
     }
 
     // Appel initial pour charger les données
     fetchDropdownData();
+
+    function calculerSommeTotalDepense() {
+        let total = 0;
+        const rows = document.querySelectorAll('#tableDepenses tr');
+
+        rows.forEach(row => {
+            // Récupère la valeur dans la colonne "Total Dépense"
+            const depense = parseFloat(row.querySelector('td:nth-child(5)').textContent);
+            // console.log(depense)
+            total += depense;
+
+
+
+
+        });
+
+        // Affiche la somme totale dans le pied du tableau
+        document.getElementById('totalDépense').textContent = total; // Formater en 2 décimales si nécessaire
+    }
+
+    // Appelle cette fonction après avoir chargé ou modifié le tableau
+    document.addEventListener('DOMContentLoaded' , ()=>{
+        setTimeout(()=>{
+            calculerSommeTotalDepense();
+        } , 200)
+
+    })
+
+
+
+
 
 
 </script>

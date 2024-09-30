@@ -16,7 +16,7 @@ include '../../includes/header.php';
 <!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="../../includes/css/bootstrap.css">
     <script src="../../includes/libriryPdf/unpkg/jspdf.umd.min.js"></script>
-    <script src="../../includes/libriryPdf/jspdf.plugin.autotable.min.js"
+    <script src="../../includes/libriryPdf/jspdf.plugin.autotable.min.js"></script>
 <!--    <script src="../../includes/html2canvas.min.js"></script>-->
 <!--    <script src="../../includes/libriryPdf/cdnjs/jspdf.min.js"></script>-->
 <!--    <script src="../../includes/xlsx.full.min.js"></script>-->
@@ -53,6 +53,10 @@ include '../../includes/header.php';
                 margin-bottom: 5px;
                 font-weight: bold;
                 color: #333;
+            }
+
+            .label {
+                color: white ;
             }
 
             .input-field {
@@ -94,6 +98,7 @@ include '../../includes/header.php';
                 background-color: #ffffff; /* Couleur blanche pour le fond */
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Ombre douce */
                 padding: 20px; /* Espacement intérieur */
+                padding-top: 0;
                 transition: transform 0.3s ease-in-out; /* Animation douce */
             }
             /*.table-container:hover {*/
@@ -287,7 +292,43 @@ include '../../includes/header.php';
 
 
 
+            .button23 {
+                line-height: 1;
+                background-color: transparent;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 0.35em;
+                padding: 0.75em 1em;
+                padding-right: 1.25em;
+                color: #fff;
+                border: 1px solid transparent;
+                font-weight: 700;
+                border-radius: 2.5em;
+                font-size: 1rem;
+                box-shadow: 0 0.7em 1.5em -0.5em hsla(249, 62%, 51%, 0.745);
+                transition: transform 0.3s;
 
+                background: linear-gradient(
+                        90deg,
+                        rgba(77, 54, 208, 1) 0%,
+                        rgba(132, 116, 254, 1) 100%
+                );
+            }
+
+            .button__icon {
+                width: 1.5em;
+                height: 1.5em;
+            }
+
+            .button23:hover {
+                border-color: #f4f5f2;
+            }
+
+            .button23:active {
+                transform: scale(0.98);
+                box-shadow: 0 0.5em 1.5em -0.5em hsla(249, 62%, 51%, 0.745);
+            }
 
         </style>
     </head>
@@ -298,8 +339,38 @@ include '../../includes/header.php';
 
 <div class="container mt-2 animated-bg">
     <div class="header">
-        <h2><?php echo $pageName; ?></h2>
+        <div class="d-flex justify-content-between">
+            <h2 id="reportTitle"><?php echo $pageName; ?></h2>
+            <div class="col-5  d-flex ">
+                <label class="mt-3 label" for="start_date">Date de livraison:</label>
+                <div class=" ms-3 d-flex justify-content-between ">
+                    <input type="date" id="dateLivraison" class="form-control mt-2" onchange="fetchData()()">
+                    <button class="Btn ms-3 button23" id="downloadPdf" >
+                        <svg
+                                stroke-linejoin="round"
+                                stroke-linecap="round"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                viewBox="0 0 24 24"
+                                height="40"
+                                width="40"
+                                class="button__icon"
+                                xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
+                            <path d="M7 11l5 5l5 -5"></path>
+                            <path d="M12 4l0 12"></path>
+                        </svg>
+                        <span class="button__text">Download</span>
+                    </button>
+
+                </div>
+            </div>
+        </div>
     </div>
+
 
 
     <div class="filter-wrapper" style="margin-bottom: 50px">
@@ -350,9 +421,9 @@ include '../../includes/header.php';
     </div>
 
 
-    <button id="downloadPdf" class="btn btn-primary">Télécharger en PDF</button>
-
-    <input type="date" name="dateLivraison" id="dateLivraison">
+<!--    <button id="downloadPdf" class="btn btn-primary">Télécharger en PDF</button>-->
+<!---->
+<!--    <input type="date" name="dateLivraison" id="dateLivraison">-->
 
 
     <div class="table-container">

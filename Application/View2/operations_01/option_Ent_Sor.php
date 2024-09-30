@@ -25,22 +25,34 @@ if (!$resultLots) {
 
 
 if (isset($_GET['message'])) {
+    $nomArticle = isset($_GET['nomArticle']) ? htmlspecialchars($_GET['nomArticle']) : 'l\'article inconnu';
+
     switch ($_GET['message']) {
-        case 'success':
-            echo '<div class="alert alert-dismissible alert-success">
-                    besoin.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>';
-            break;
-        case 'ss':
-            echo '<div class="alert alert-dismissible alert-success">
-                    bbbbbb.
+        case 'ssajouter':
+            echo '<div class="alert alert-dismissible alert-success" role="alert">
+                    Il y a un besoin dans l\'article : ' . $nomArticle . '
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>';
             break;
 
+
+        case 'ss':
+            echo '<div class="alert alert-dismissible alert-success">
+                    Il y\'a un besoin dans l\'article : ' . $nomArticle . '
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>';
+            break;
+
+        default:
+            echo '<div class="alert alert-dismissible alert-warning">
+                    Message non reconnu !
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>';
+            break;
     }
 }
+
+
 ?>
 
 <!doctype html>
@@ -58,6 +70,8 @@ if (isset($_GET['message'])) {
 <body>
 
 <style>
+
+
 
     .ajouter-fournisseur-btn{
         width: 100%;
@@ -299,11 +313,51 @@ if (isset($_GET['message'])) {
 
 
 
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+    Ouvrir le Modal
+</button>
 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Titre du Modal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Contenu du modal ici...</p>
+                <input type="text" class="form-control" placeholder="Entrez quelque chose...">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary">Soumettre</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-
-
-
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Titre du Modal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Contenu du modal ici...</p>
+                <input type="text" class="form-control" placeholder="Entrez quelque chose...">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary">Soumettre</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -324,12 +378,21 @@ if (isset($_GET['message'])) {
 
 
 </body>
+<!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>-->
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+
+<script src="../../includes/js/bootstrap123.min.js"
+
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
+
 <script src="script.js"></script>
 <script>
 
     $('#tab1').load('operation_table.php #tableoperationdiv');
 
+    // $('#myModal').show()
+    // Default Notification
 
 </script>
 </html>

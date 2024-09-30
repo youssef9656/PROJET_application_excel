@@ -202,7 +202,7 @@ if ($stmt->execute()) {
         o.date_operation BETWEEN '$start_date' AND '$end_date'
     GROUP BY 
         a.id_article, a.nom, a.stock_initial, a.stock_min
-    LIMIT 0, 25
+
 ";
 
         $result = $conn->query($sql_select);
@@ -257,13 +257,7 @@ if ($stmt->execute()) {
 
                 $stmt->execute();
 
-                if(article_besoin($articleName , "besoin" , $conn)){
-                    echo json_encode(['success' => true]);
-                    header("Location: option_Ent_Sor.php?message=success");
 
-                }else{
-                    header("Location: option_Ent_Sor.php");
-                }
 
             }
         } else {
@@ -271,7 +265,16 @@ if ($stmt->execute()) {
         }
 
 
-    header("Location: option_Ent_Sor.php");
+
+
+    if(article_besoin($articleName , "besoin" , $conn)){
+        echo json_encode(['success' => true]);
+        header("Location: option_Ent_Sor.php?message=ssajouter&nomArticle=$articleName");
+    }else{
+        header("Location: option_Ent_Sor.php");
+    }
+
+
     exit();
 } else {
     echo "Erreur lors de l'ajout de l'opération : " . $stmt->error;

@@ -8,7 +8,7 @@ document.getElementById("downloadPdf").addEventListener("click", function () {
     let lot = document.getElementById("lot").value;
 
     // Charger l'image depuis le dossier
-    const logoPath = 'image1.jpg'; // Chemin de votre image
+    const logoPath = '../../includes/logoImage/logo.png'; // Chemin de votre image
     fetch(logoPath)
         .then(response => {
             if (!response.ok) {
@@ -31,10 +31,10 @@ document.getElementById("downloadPdf").addEventListener("click", function () {
                     });
                     doc.setFontSize(10);
                     doc.text(`Édité le : ${currentDate}`, doc.internal.pageSize.getWidth() - 60, 15);
-                    doc.setFontSize(12);
-                    doc.text(`Date de livraison: ${dateLivraison}`, doc.internal.pageSize.getWidth() - 80, 35);
-                    doc.text(`Fournisseur: ${fournisseur}`, doc.internal.pageSize.getWidth() - 80, 45);
-                    doc.text(`Lot: ${lot}`, doc.internal.pageSize.getWidth() - 80, 55);
+                    doc.setFontSize(13);
+                    doc.text(`Date de livraison: ${dateLivraison}`, doc.internal.pageSize.getWidth() - 125, 32);
+                    doc.text(`Fournisseur: ${fournisseur}`, doc.internal.pageSize.getWidth() - 125, 42);
+                    doc.text(`Lot: ${lot}`, doc.internal.pageSize.getWidth() - 125, 52);
                 }
 
                 // Fonction pour ajouter le pied de page sur chaque page
