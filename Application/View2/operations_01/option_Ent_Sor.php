@@ -29,18 +29,56 @@ if (isset($_GET['message'])) {
 
     switch ($_GET['message']) {
         case 'ssajouter':
-            echo '<div class="alert alert-dismissible alert-success" role="alert">
-                    Il y a un besoin dans l\'article : ' . $nomArticle . '
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>';
+            echo '
+<div class="modalBesoin" id="myModal">
+    <div class="modaleContent" id="modaleContent">
+
+        <div class="modaleHeader">
+            <div>Alert</div>
+            <button class="close"><svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg></button>
+        </div>
+        <div class="modaleBody">
+            Il y a un besoin dans l\'article : ' . $nomArticle . '
+        </div>
+        <div class="modaleFooter">
+
+        </div>
+
+    </div>
+</div>
+
+
+';
             break;
 
 
         case 'ss':
-            echo '<div class="alert alert-dismissible alert-success">
-                    Il y\'a un besoin dans l\'article : ' . $nomArticle . '
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>';
+            echo '
+<div class="modalBesoin" id="myModal">
+    <div class="modaleContent" id="modaleContent">
+
+        <div class="modaleHeader">
+            <div>Alert</div>
+            <button class="close"><svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg></button>
+        </div>
+        <div class="modaleBody">
+            Il y a un besoin dans l\'article : ' . $nomArticle . '
+        </div>
+        <div class="modaleFooter">
+
+        </div>
+
+    </div>
+</div>
+
+
+';
             break;
 
         default:
@@ -142,6 +180,88 @@ if (isset($_GET['message'])) {
         background-color: white;
 
     }
+    .modalBesoin{
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(149, 149, 149 , 0.9);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 20000;
+        transition: 1s;
+    }
+    .modaleContent{
+        width: 60%;
+        height: 50%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        border:2px solid black;
+        border-radius: 50px;
+        box-shadow: 0px 0px 35px #ffa549;
+        transition: 0.4s;
+    }
+    .modaleHeader{
+        padding-left: 10px;
+        width: 100%;
+        display: flex;
+        margin-bottom: 10px;
+        /*text-align: center;*/
+        /*font-size: 50px;*/
+        /*font-weight: 900;*/
+        /*color: red;*/
+    }
+    .modaleHeader > div{
+        width: 85%;
+        text-align: center;
+        font-size: 50px;
+        font-weight: 900;
+        color: red;
+    }
+    .modaleFooter{
+        width: 90%;
+        text-align: center;
+    }
+    .modaleBody{
+        text-align: center;
+        width: 100%;
+        font-size: 40px;
+        font-weight: 400;
+        margin-bottom: 100px;
+    }
+    .close{
+        width:15%;
+        /*height: 100px;*/
+        text-align: center;
+        background: none;
+        border: none;
+        transition: 0.2s;
+        /*animation: modaleAnimation 2s forwards;*/
+
+
+    }
+    .close:hover{
+        color: red;
+    }
+    @keyframes modaleAnimation{
+        0%{
+            transform: translateX(0);
+        }
+        40%{
+            transform: translateX(190px);
+        }
+        80%{
+            transform: translateX(-10000px);
+        }
+        100%{
+            transform: translateX(-100000px);
+        }
+    }
+
 
 </style>
 
@@ -308,56 +428,41 @@ if (isset($_GET['message'])) {
     </div>
 </div>
 
+
+
 <!-- Modal de saisie du mot de passe -->
 
 
 
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-    Ouvrir le Modal
-</button>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Titre du Modal</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Contenu du modal ici...</p>
-                <input type="text" class="form-control" placeholder="Entrez quelque chose...">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                <button type="button" class="btn btn-primary">Soumettre</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Titre du Modal</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Contenu du modal ici...</p>
-                <input type="text" class="form-control" placeholder="Entrez quelque chose...">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                <button type="button" class="btn btn-primary">Soumettre</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+
+
+
+<!--<div class="modalBesoin" id="myModal">-->
+<!--    <div class="modaleContent" id="modaleContent">-->
+<!---->
+<!--        <div class="modaleHeader">-->
+<!--            <div>Alert</div>-->
+<!--            <button class="close"><svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">-->
+<!--                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>-->
+<!--                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>-->
+<!--                </svg></button>-->
+<!--        </div>-->
+<!--        <div class="modaleBody">-->
+<!--            Il y a un besoin dans l\'article : ' . $nomArticle . '-->
+<!--        </div>-->
+<!--        <div class="modaleFooter">-->
+<!---->
+<!--        </div>-->
+<!---->
+<!--    </div>-->
+<!--</div>-->
+<!---->
+
+
 
 
 
@@ -382,7 +487,7 @@ if (isset($_GET['message'])) {
 <!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>-->
 <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
 
-<script src="../../includes/js/bootstrap123.min.js"
+<script src="../../includes/js/bootstrap123.min.js"></script>
 
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
 
@@ -390,6 +495,26 @@ if (isset($_GET['message'])) {
 <script>
 
     $('#tab1').load('operation_table.php #tableoperationdiv');
+
+
+    document.addEventListener("DOMContentLoaded" , ()=>{
+        let close = document.querySelector(".close");
+        let modale = document.querySelector('#modaleContent');
+        let myModale = document.querySelector("#myModal")
+        close.addEventListener('click' , ()=> {
+            modale.style.animation = "modaleAnimation 2s forwards"
+            setTimeout(() => {
+                myModale.style.opacity = "0"
+            }, 1000)
+            setTimeout(() => {
+                myModale.style.display = "none"
+            }, 3300)
+
+        })
+    })
+
+
+
 
     // $('#myModal').show()
     // Default Notification
