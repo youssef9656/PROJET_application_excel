@@ -168,6 +168,8 @@
 
 
 function getFournisseurDetails() {
+
+
     return new Promise((resolve, reject) => {
         var select = document.getElementById('fournisseur');
         var selectedValue = select.value;

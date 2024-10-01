@@ -31,23 +31,24 @@ if (isset($_GET['message'])) {
         case 'ssajouter':
             echo '
 <div class="modalBesoin" id="myModal">
-    <div class="modaleContent" id="modaleContent">
-
-        <div class="modaleHeader">
-            <div>Alert</div>
-            <button class="close"><svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+    <div id="container11">
+        <div id="error-box">
+            <button class="close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                </svg></button>
+                </svg>
+            </button>
+            <div class="face2">
+                <div class="eye"></div>
+                <div class="eye right"></div>
+                <div class="mouth sad"></div>
+            </div>
+            <div class="shadow move"></div>
+            <div class="message"><h1 class="alert">Alert !</h1><p class="modaleBody">    Il y a un besoin dans l\'article : ' . $nomArticle . '    </div>
         </div>
-        <div class="modaleBody">
-            Il y a un besoin dans l\'article : ' . $nomArticle . '
-        </div>
-        <div class="modaleFooter">
-
-        </div>
-
     </div>
+
 </div>
 
 
@@ -58,25 +59,25 @@ if (isset($_GET['message'])) {
         case 'ss':
             echo '
 <div class="modalBesoin" id="myModal">
-    <div class="modaleContent" id="modaleContent">
-
-        <div class="modaleHeader">
-            <div>Alert</div>
-            <button class="close"><svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+    <div id="container11">
+        <div id="error-box">
+            <button class="close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                </svg></button>
+                </svg>
+            </button>
+            <div class="face2">
+                <div class="eye"></div>
+                <div class="eye right"></div>
+                <div class="mouth sad"></div>
+            </div>
+            <div class="shadow move"></div>
+            <div class="message"><h1 class="alert">Alert !</h1><p class="modaleBody">    Il y a un besoin dans l\'article : ' . $nomArticle . '    </div>
         </div>
-        <div class="modaleBody">
-            Il y a un besoin dans l\'article : ' . $nomArticle . '
-        </div>
-        <div class="modaleFooter">
-
-        </div>
-
     </div>
-</div>
 
+</div>
 
 ';
             break;
@@ -103,6 +104,7 @@ if (isset($_GET['message'])) {
     <script src="../../includes/jquery.sheetjs.js"></script>
 
     <title>Document</title>
+    <link rel="stylesheet" href="lato_styles/lato_style.css">
 <!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
 </head>
 <body>
@@ -234,9 +236,9 @@ if (isset($_GET['message'])) {
         margin-bottom: 100px;
     }
     .close{
-        width:15%;
+        width:100%;
         /*height: 100px;*/
-        text-align: center;
+        text-align: end;
         background: none;
         border: none;
         transition: 0.2s;
@@ -433,9 +435,26 @@ if (isset($_GET['message'])) {
 <!-- Modal de saisie du mot de passe -->
 
 
-
-
-
+<!--<div class="modalBesoin" id="myModal">-->
+<!--    <div id="container11">-->
+<!--        <div id="error-box">-->
+<!--            <button class="close">-->
+<!--                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">-->
+<!--                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>-->
+<!--                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>-->
+<!--                </svg>-->
+<!--            </button>-->
+<!--            <div class="face2">-->
+<!--                <div class="eye"></div>-->
+<!--                <div class="eye right"></div>-->
+<!--                <div class="mouth sad"></div>-->
+<!--            </div>-->
+<!--            <div class="shadow move"></div>-->
+<!--            <div class="message"><h1 class="alert">Alert !</h1><p class="modaleBody">    Il y a un besoin dans l\'article : ' . $nomArticle . '    </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!---->
+<!--</div>-->
 
 
 
@@ -461,12 +480,6 @@ if (isset($_GET['message'])) {
 <!--    </div>-->
 <!--</div>-->
 <!---->
-
-
-
-
-
-
 
 
 
@@ -499,7 +512,7 @@ if (isset($_GET['message'])) {
 
     document.addEventListener("DOMContentLoaded" , ()=>{
         let close = document.querySelector(".close");
-        let modale = document.querySelector('#modaleContent');
+        let modale = document.querySelector('#container11');
         let myModale = document.querySelector("#myModal")
         close.addEventListener('click' , ()=> {
             modale.style.animation = "modaleAnimation 2s forwards"
@@ -512,7 +525,6 @@ if (isset($_GET['message'])) {
 
         })
     })
-
 
 
 

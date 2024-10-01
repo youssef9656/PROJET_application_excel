@@ -1,3 +1,10 @@
+
+//
+// window.onload = function () {
+//     document.body.style.opacity = "1";
+//     document.body.style.filter = "none"
+// }
+
 document.getElementById("downloadPdf").addEventListener("click", function () {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -31,10 +38,13 @@ document.getElementById("downloadPdf").addEventListener("click", function () {
                     });
                     doc.setFontSize(10);
                     doc.text(`Édité le : ${currentDate}`, doc.internal.pageSize.getWidth() - 60, 15);
-                    doc.setFontSize(13);
-                    doc.text(`Date de livraison: ${dateLivraison}`, doc.internal.pageSize.getWidth() - 125, 32);
-                    doc.text(`Fournisseur: ${fournisseur}`, doc.internal.pageSize.getWidth() - 125, 42);
-                    doc.text(`Lot: ${lot}`, doc.internal.pageSize.getWidth() - 125, 52);
+                    doc.setFontSize(10);
+                    doc.text(`Date de livraison: ${dateLivraison}`, doc.internal.pageSize.getWidth() - 150, 32);
+                    const donneFournisour =  document.getElementById("lesdonneFournisseur").textContent
+
+                    // doc.text("Fournisseur     : " + fournisseur +" "+ donneFournisour, margin.left + 40, 40);
+                    doc.text(`Fournisseur: ${fournisseur + donneFournisour}`, doc.internal.pageSize.getWidth() - 150, 42);
+                    doc.text(`Lot: ${lot}`, doc.internal.pageSize.getWidth() - 150, 52);
                 }
 
                 // Fonction pour ajouter le pied de page sur chaque page
@@ -134,3 +144,59 @@ document.getElementById("downloadPdf").addEventListener("click", function () {
             console.error("Erreur lors de l'importation de l'image : ", error);
         });
 });
+
+
+function getFournisseurDetails() {
+    return new Promise((resolve, reject) => {
+        var select = document.getElementById('fournisseur');
+        var selectedValue = select.value;
+        var values = selectedValue.split(' ');
+        var nom = values[0];
+        var prenom = values[1];
+
+        // Crée une nouvelle requête XHR
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'get_fournisseur.php?nom_fournisseur=' + encodeURIComponent(nom) + '&prenom_fournisseur=' + encodeURIComponent(prenom), true);
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Parse the JSON response
+                var json = JSON.parse(xhr.responseText);
+
+                // Prepare the details to be returned
+
+
+                var lesDonne = ( (json.data.adresse !=null ) ? json.data.adresse  : "" ) +((json.data.telephone_portable != null) ? " , " +json.data.telephone_portable  : ""  ) +( (json.data.telephone_fixe !=null) ?  " , " +json.data.telephone_fixe :  "");
+
+                // Resolve the promise with the retrieved data
+                resolve(lesDonne);
+            } else {
+                console.error("Erreur lors de la requête : " + xhr.status);
+                reject("Erreur lors de la requête : " + xhr.status); // Reject the promise with an error message
+            }
+        };
+
+        xhr.onerror = function() {
+            console.error("Une erreur s'est produite lors de l'envoi de la requête.");
+            reject("Une erreur s'est produite lors de l'envoi de la requête."); // Reject the promise with an error message
+        };
+
+        xhr.send();
+    });
+}
+
+
+
+document.getElementById("fournisseur").addEventListener("change",()=>{
+    getFournisseurDetails()
+        .then(function(details) {
+            console.log(details);
+            document.getElementById("lesdonneFournisseur").innerHTML=details
+
+        })
+        .catch(function(error) {
+            // Gère les erreurs
+            // document.getElementById('fournisseur-details').innerHTML = "Erreur : " + error;
+        });
+
+})

@@ -26,7 +26,6 @@ include '../../includes/header.php';
     <head>
         <style>
 
-
             .filter-wrapper {
                 background-color: #ffffff;
                 padding: 20px;
@@ -419,6 +418,7 @@ include '../../includes/header.php';
             </button>
         </div>
     </div>
+    <div id="lesdonneFournisseur" style="width: 100px ; font-size: 0.000001px;  color: rgba(255,255,255,0) "></div>
 
 
 <!--    <button id="downloadPdf" class="btn btn-primary">Télécharger en PDF</button>-->

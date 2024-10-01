@@ -25,16 +25,16 @@ document.getElementById("downloadPdf").addEventListener("click", function () {
                 function addHeader() {
                     doc.addImage(logo, 'JPEG', 10, 10, 30, 30);
                     doc.setFontSize(20);
-                    doc.text("Bon entrée", doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
+                    doc.text("Bon Sortie", doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
                     const currentDate = new Date().toLocaleDateString('fr-FR', {
                         day: '2-digit', month: '2-digit', year: 'numeric'
                     });
                     doc.setFontSize(10);
                     doc.text(`Édité le : ${currentDate}`, doc.internal.pageSize.getWidth() - 60, 15);
                     doc.setFontSize(12);
-                    doc.text(`Date de livraison: ${dateLivraison}`, doc.internal.pageSize.getWidth() - 80, 35);
-                    doc.text(`Fournisseur: ${fournisseur}`, doc.internal.pageSize.getWidth() - 80, 45);
-                    doc.text(`Lot: ${lot}`, doc.internal.pageSize.getWidth() - 80, 55);
+                    doc.text(`Date de livraison: ${dateLivraison}`, doc.internal.pageSize.getWidth() - 125, 32);
+                    doc.text(`Service : ${fournisseur}`, doc.internal.pageSize.getWidth() - 125, 42);
+                    doc.text(`Lot: ${lot}`, doc.internal.pageSize.getWidth() - 125, 52);
                 }
 
                 // Fonction pour ajouter le pied de page sur chaque page
@@ -42,12 +42,12 @@ document.getElementById("downloadPdf").addEventListener("click", function () {
                     doc.setFontSize(12);
                     doc.text("Signature: ____________________", 10, doc.internal.pageSize.getHeight() - 15);
                     doc.autoTable({
-                        head: [['Nom', 'Prenom', 'youssef']],
+                        head: [['Nom', 'youssef']],
                         body: [
-                            ['...................................', '...................................', '...................................'],
-                            ['...................................', '...................................', '...................................'],
-                            ['...................................', '...................................', '...................................'],
-                            ['...................................', '...................................', '...................................']
+                            ['...................................',  '...................................'],
+                            ['...................................',  '...................................'],
+                            ['...................................',  '...................................'],
+                            ['...................................',  '...................................']
                         ],
                         startY: doc.internal.pageSize.getHeight() - 65, // Positionner avant le pied de page
                         theme: 'plain',
@@ -124,7 +124,7 @@ document.getElementById("downloadPdf").addEventListener("click", function () {
                 }
 
                 // Sauvegarder le PDF
-                doc.save("bon_entree.pdf");
+                doc.save("Bon sortie.pdf");
             };
 
             // Lire le Blob comme une URL de données (Base64)
