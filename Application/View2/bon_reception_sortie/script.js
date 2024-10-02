@@ -42,7 +42,7 @@ document.getElementById("downloadPdf").addEventListener("click", function () {
                     doc.setFontSize(12);
                     doc.text("Signature: ____________________", 10, doc.internal.pageSize.getHeight() - 15);
                     doc.autoTable({
-                        head: [['Nom', 'youssef']],
+                        head: [['Chargé de reception', 'Observation']],
                         body: [
                             ['...................................',  '...................................'],
                             ['...................................',  '...................................'],

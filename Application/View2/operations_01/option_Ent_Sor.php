@@ -26,6 +26,17 @@ if (!$resultLots) {
 
 if (isset($_GET['message'])) {
     $nomArticle = isset($_GET['nomArticle']) ? htmlspecialchars($_GET['nomArticle']) : 'l\'article inconnu';
+    if (isset($_GET['nomArticle'])){
+        $nomArticle = htmlspecialchars($_GET['nomArticle']);
+    }else{
+        $nomArticle = 'l\'article inconnu' ;
+    }
+
+    if (isset($_GET['stockFinaleValue'])){
+        $stockFinaleValue = htmlspecialchars($_GET['stockFinaleValue']) ;
+    }else{
+        $stockFinaleValue = 'l\'article inconnu' ;
+    }
 
     switch ($_GET['message']) {
         case 'ssajouter':
@@ -73,7 +84,7 @@ if (isset($_GET['message'])) {
                 <div class="mouth sad"></div>
             </div>
             <div class="shadow move"></div>
-            <div class="message"><h1 class="alert">Alert !</h1><p class="modaleBody">    Il y a un besoin dans l\'article : ' . $nomArticle . '    </div>
+            <div class="message"><h1 class="alert">Alert !</h1><p class="modaleBody">    Il y a un besoin dans l\'article : ' . $nomArticle . '   ' . $stockFinaleValue .'    </div>
         </div>
     </div>
 
@@ -82,11 +93,30 @@ if (isset($_GET['message'])) {
 ';
             break;
 
-        default:
-            echo '<div class="alert alert-dismissible alert-warning">
-                    Message non reconnu !
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>';
+        case 'eppuisement':
+            echo '
+<div class="modalBesoin" id="myModal">
+    <div id="container11">
+        <div id="error-box">
+            <button class="close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+            </button>
+            <div class="face2">
+                <div class="eye"></div>
+                <div class="eye right"></div>
+                <div class="mouth sad"></div>
+            </div>
+            <div class="shadow move"></div>
+            <div class="message"><h1 class="alert">Alert !</h1><p class="modaleBody">  Vous avez dépassé le stock final pour l\'article :  ' . $nomArticle. ' <br> Le stock actuel est :' . $stockFinaleValue . '    </div>
+        </div>
+    </div>
+
+</div>
+
+';
             break;
     }
 }

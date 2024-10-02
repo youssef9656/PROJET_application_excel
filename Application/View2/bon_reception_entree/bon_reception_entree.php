@@ -341,7 +341,7 @@ include '../../includes/header.php';
         <div class="d-flex justify-content-between">
             <h2 id="reportTitle"><?php echo $pageName; ?></h2>
             <div class="col-5  d-flex ">
-                <label class="mt-3 label" for="start_date">Date de livraison:</label>
+                <label class="mt-3 label" for="start_date">Date de reception :</label>
                 <div class=" ms-3 d-flex justify-content-between ">
                     <input type="date" id="dateLivraison" class="form-control mt-2" onchange="fetchData()()">
                     <button class="Btn ms-3 button23" id="downloadPdf" >

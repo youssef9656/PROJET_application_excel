@@ -5,6 +5,10 @@
 //     document.body.style.filter = "none"
 // }
 
+
+// bon entrée pdf page :
+
+
 document.getElementById("downloadPdf").addEventListener("click", function () {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -39,7 +43,7 @@ document.getElementById("downloadPdf").addEventListener("click", function () {
                     doc.setFontSize(10);
                     doc.text(`Édité le : ${currentDate}`, doc.internal.pageSize.getWidth() - 60, 15);
                     doc.setFontSize(10);
-                    doc.text(`Date de livraison: ${dateLivraison}`, doc.internal.pageSize.getWidth() - 150, 32);
+                    doc.text(`Date de reception: ${dateLivraison}`, doc.internal.pageSize.getWidth() - 150, 32);
                     const donneFournisour =  document.getElementById("lesdonneFournisseur").textContent
 
                     // doc.text("Fournisseur     : " + fournisseur +" "+ donneFournisour, margin.left + 40, 40);
@@ -52,7 +56,7 @@ document.getElementById("downloadPdf").addEventListener("click", function () {
                     doc.setFontSize(12);
                     doc.text("Signature: ____________________", 10, doc.internal.pageSize.getHeight() - 15);
                     doc.autoTable({
-                        head: [['Nom', 'Prenom', 'youssef']],
+                        head: [['Chargé de reception', 'l\'enquet formuté', 'observation']],
                         body: [
                             ['...................................', '...................................', '...................................'],
                             ['...................................', '...................................', '...................................'],
