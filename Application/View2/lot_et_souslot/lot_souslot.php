@@ -250,7 +250,7 @@ if (isset($_GET['message'])) {
                             $lotQuery = "SELECT lot_id, lot_name FROM lots";
                             $lotResult = mysqli_query($conn, $lotQuery);
                             while ($lotRow = mysqli_fetch_assoc($lotResult)) {
-                                echo '<option value="' . htmlspecialchars($lotRow['lot_id']) . '">' . htmlspecialchars($lotRow['lot_name']) . '</option>';
+                                echo '<option value="' . htmlspecialchars($lotRow['lot_id']) . '">' . htmlspecialchars($lotRow['lot_name']) .  '</option>';
                             }
                             ?>
                         </select>
@@ -261,10 +261,10 @@ if (isset($_GET['message'])) {
                             <option value="" selected disabled>Choisir un fournisseur</option>
                             <?php
                             // Récupérer les fournisseurs depuis la base de données
-                            $fournisseurQuery = "SELECT id_fournisseur, nom_fournisseur FROM fournisseurs";
+                            $fournisseurQuery = "SELECT id_fournisseur, nom_fournisseur , prenom_fournisseur FROM fournisseurs";
                             $fournisseurResult = mysqli_query($conn, $fournisseurQuery);
                             while ($fournisseurRow = mysqli_fetch_assoc($fournisseurResult)) {
-                                echo '<option value="' . htmlspecialchars($fournisseurRow['id_fournisseur']) . '">' . htmlspecialchars($fournisseurRow['nom_fournisseur']) . '</option>';
+                                echo '<option value="' . htmlspecialchars($fournisseurRow['id_fournisseur']) . '">' . htmlspecialchars($fournisseurRow['nom_fournisseur']) . " ". htmlspecialchars($fournisseurRow['prenom_fournisseur']) . '</option>';
                             }
                             ?>
                         </select>

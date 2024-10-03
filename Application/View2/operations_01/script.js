@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 fournisseurSelect.disabled = false;
                 fournisseurSelect.innerHTML = '<option value="">-- Sélectionner Fournisseur --</option>';
                 fournisseurs.forEach(function(fournisseur) {
-                    fournisseurSelect.innerHTML += '<option value="' + fournisseur.id_fournisseur + '">' + fournisseur.nom_fournisseur + '</option>';
+                    fournisseurSelect.innerHTML += '<option value="' + fournisseur.id_fournisseur + '">' + fournisseur.nom_fournisseur + "  "+ fournisseur.prenom_fournisseur + '</option>';
                 });
             } else {
                 console.error("Erreur de requête AJAX pour les fournisseurs.");

@@ -5,42 +5,75 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 include '../../config/connect_db.php';
-
-function article_besoin($article, $besoin, $conn)
-{
-    // Préparation de la requête avec un paramètre MySQLi (sans les deux-points)
-    $queryBesoin = "SELECT Requirement_Status FROM etat_de_stocks WHERE Article = ?";
-    $stmt = $conn->prepare($queryBesoin);
-
-    // Associe le paramètre (s pour chaîne de caractères)
-    $stmt->bind_param("s", $article);
-
-    // Exécute la requête
-    $stmt->execute();
-
-    // Récupère le résultat
-    $result = $stmt->get_result();
-
-    // Vérifie si le résultat existe et récupère le Requirement_Status
-    if ($result->num_rows > 0) {
-        $status = $result->fetch_assoc()['Requirement_Status'];
+function getNom($conn, $table, $idColonne, $nomColonne, $id) {
+    $query = "SELECT $nomColonne FROM $table WHERE $idColonne = ?";
+    if ($stmt = $conn->prepare($query)) {
+        $stmt->bind_param("i", $id);
+        if ($stmt->execute()) {
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                $data = $result->fetch_assoc();
+                $stmt->close();
+                return $data[$nomColonne];
+            }
+        } else {
+            echo "Erreur lors de l'exécution de la requête : " . $stmt->error;
+            exit();
+        }
+        $stmt->close();
     } else {
-        return false; // Aucun résultat trouvé
+        echo "Erreur lors de la préparation de la requête : " . $conn->error;
+        exit();
     }
+    return '';
+}
 
-    // Ferme la requête
-    $stmt->close();
+// Fonction pour vérifier le stock
+function verifierStock($articleName, $sortie, $conn) {
+    $sqlStockFinal = "SELECT Stock_Final FROM etat_de_stocks WHERE Article = ?";
+    $stmtStock = $conn->prepare($sqlStockFinal);
+    $stmtStock->bind_param("s", $articleName);
+    $stmtStock->execute();
+    $stmtStock->bind_result($stockFinal);
 
-    // Compare le status avec le besoin
-    if ($status === $besoin) {
-        return true; // Si le besoin correspond au status, retourne vrai
+    if ($stmtStock->fetch()) {
+        $stmtStock->close();
+        if ($sortie <= $stockFinal) {
+            return true;
+        } else {
+            echo "Erreur : La sortie de l'opération doit être inférieure ou égale au stock final ($stockFinal).";
+            return false;
+        }
     } else {
-        return false; // Sinon retourne faux
+        echo "Aucun stock trouvé pour l'article $articleName.";
+        return false;
     }
 }
 
+function article_besoin($article, $besoin, $conn)
+{
+    $queryBesoin = "SELECT Requirement_Status FROM etat_de_stocks WHERE Article = ?";
+    $stmt = $conn->prepare($queryBesoin);
+    $stmt->bind_param("s", $article);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $status = $result->fetch_assoc()['Requirement_Status'];
+    } else {
+        return false;
+    }
+    $stmt->close();
+
+    if ($status === $besoin) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Récupération des données du formulaire
     $operationId = isset($_POST['operation_id']) ? intval($_POST['operation_id']) : 0;
     $lotId = isset($_POST['lot']) ? intval($_POST['lot']) : 0;
     $sousLotId = isset($_POST['sousLot']) ? intval($_POST['sousLot']) : 0;
@@ -53,13 +86,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $prix = isset($_POST['prix']) ? floatval($_POST['prix']) : 0.00;
     $dateOperation = isset($_POST['date_operation']) ? $_POST['date_operation'] : '';
 
-    // Convertir la date et l'heure en format DATETIME
     $formattedDateOperation = date('Y-m-d H:i:s', strtotime($dateOperation));
 
     if ($formattedDateOperation === false) {
         echo "La date d'opération est invalide.";
         exit();
     }
+
+    // --- Stock check before modification ---
+    $articleName = getNom($conn, 'article', 'id_article', 'nom', $articleId); // Get article name
+    if (!verifierStock($articleName, $sortie, $conn)) {
+
+        // Stock insuffisant, annuler l'opération et afficher un message d'erreur
+        $sqlStockFinal1 = "SELECT Stock_Final FROM etat_de_stocks WHERE Article = ?";
+        $stmtStock1 = $conn->prepare($sqlStockFinal1);
+        $stmtStock1->bind_param("s", $articleName);
+        $stmtStock1->execute();
+        $stmtStock1->bind_result($stockFinal1);
+        if ($stmtStock1->fetch()) {
+            $stockFinaleValue = $stockFinal1 ;
+        }
+
+        header("Location: option_Ent_Sor.php?message=stock_insuffisant&stockFinaleValue=$stockFinaleValue");
+        exit();
+    }
+    // --- End of stock check ---
+
 
     // Supprimer l'ancienne opération
     if ($operationId > 0) {
@@ -77,31 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Fonction pour récupérer un nom à partir d'une table et d'un ID
-    function getNom($conn, $table, $idColonne, $nomColonne, $id) {
-        $query = "SELECT $nomColonne FROM $table WHERE $idColonne = ?";
-        if ($stmt = $conn->prepare($query)) {
-            $stmt->bind_param("i", $id);
-            if ($stmt->execute()) {
-                $result = $stmt->get_result();
-                if ($result->num_rows > 0) {
-                    $data = $result->fetch_assoc();
-                    $stmt->close();
-                    return $data[$nomColonne];
-                }
-            } else {
-                echo "Erreur lors de l'exécution de la requête : " . $stmt->error;
-                exit();
-            }
-            $stmt->close();
-        } else {
-            echo "Erreur lors de la préparation de la requête : " . $conn->error;
-            exit();
-        }
-        return '';
-    }
 
-    // Obtenir le nom du lot, sous-lot, article, fournisseur et service
     $lotName = getNom($conn, 'lots', 'lot_id', 'lot_name', $lotId);
     $sousLotName = getNom($conn, 'sous_lots', 'sous_lot_id', 'sous_lot_name', $sousLotId);
     $articleName = getNom($conn, 'article', 'id_article', 'nom', $articleId);
@@ -110,7 +138,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         getNom($conn, 'fournisseurs', 'id_fournisseur', 'prenom_fournisseur', $fournisseurId);
     $serviceName = getNom($conn, 'service_zone', 'id', 'service', $serviceId);
 
-    // Obtenir le prix de la dernière opération
     $queryPrix = "SELECT prix_operation FROM operation WHERE nom_article = ? ORDER BY date_operation DESC LIMIT 1";
     if ($stmt = $conn->prepare($queryPrix)) {
         $stmt->bind_param("s", $articleName);
@@ -119,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($result->num_rows > 0) {
                 $prix_sortie = floatval($result->fetch_assoc()['prix_operation']);
             } else {
-                $prix_sortie = 0.00; // Ou une autre valeur par défaut si aucune opération précédente n'est trouvée
+                $prix_sortie = 0.00;
             }
             $stmt->close();
         } else {
@@ -131,12 +158,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-    // Calcul du prix et des dépenses
     $prix = ($entree == 0.00) ? $prix_sortie : $prix;
     $depense_sortie = $prix * $sortie;
     $depense_entre = $entree * $prix;
 
-    // Déterminer la valeur de pj_operation
     $pjOperation = null;
     if (!empty($entree)) {
         $pjOperation = "Bon entrée";
@@ -144,18 +169,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $pjOperation = "Bon sortie";
     }
 
-    // Préparer la requête pour insérer les données dans la table operation
     $queryInsert = "INSERT INTO operation (lot_name, sous_lot_name, nom_article, date_operation, entree_operation, sortie_operation, nom_pre_fournisseur, service_operation, prix_operation, unite_operation, pj_operation, ref, depense_entre, depense_sortie)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     if ($stmt = $conn->prepare($queryInsert)) {
         $stmt->bind_param("ssssssssssssss", $lotName, $sousLotName, $articleName, $formattedDateOperation, $entree, $sortie, $fournisseurName, $serviceName, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie);
-
-        // Exécution de la requête
         if ($stmt->execute()) {
-            $start_date = '1000-01-01'; // Date de début
-            $end_date = '9024-12-31'; // Date de fin
-
+            // --- Update etat_de_stocks ---
+            $start_date = '1000-01-01';
+            $end_date = '9024-12-31';
             $sql_select = "
                 SELECT 
                     a.id_article AS ID,
@@ -215,11 +237,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $stock_min = $row['Stock_Min'];
                     $requirement_status = $row['Requirement_Status'];
 
-                    // Calculer les dépenses
                     $total_depenses_entree = $total_entry_operations * $prix;
                     $total_depenses_sortie = $total_exit_operations * $prix;
 
-                    // Vérifier si les données existent dans la table
                     $sql_check = "SELECT ID FROM etat_de_stocks WHERE ID = ?";
                     if ($stmtCheck = $conn->prepare($sql_check)) {
                         $stmtCheck->bind_param("i", $id);
@@ -227,7 +247,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $stmtCheck->store_result();
 
                         if ($stmtCheck->num_rows > 0) {
-                            // Mettre à jour les données si elles existent
                             $sql_update = "UPDATE etat_de_stocks SET 
                                             Article=?, Stock_Initial=?, Total_Entry_Operations=?, Total_Exit_Operations=?, 
                                             Stock_Final=?, Prix=?, Stock_Value=?, Total_Depenses_Entree=?, 
@@ -242,7 +261,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 echo "Erreur lors de la préparation de la mise à jour d'etat_de_stocks : " . $conn->error;
                             }
                         } else {
-                            // Insérer les données si elles n'existent pas
                             $sql_insert = "
                                 INSERT INTO etat_de_stocks (ID, Article, Stock_Initial, Total_Entry_Operations, Total_Exit_Operations, 
                                     Stock_Final, Prix, Stock_Value, Total_Depenses_Entree, Total_Depenses_Sortie, Stock_Min, Requirement_Status)
@@ -266,6 +284,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 echo "Aucune donnée à traiter.";
             }
+            // --- End of update etat_de_stocks ---
 
             // Redirection avec message de succès
             if (article_besoin($articleName, "besoin", $conn)) {
@@ -283,7 +302,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "Erreur lors de la préparation de l'insertion de l'opération : " . $conn->error;
     }
 
-    // Fermer la connexion
     $conn->close();
 }
 ?>

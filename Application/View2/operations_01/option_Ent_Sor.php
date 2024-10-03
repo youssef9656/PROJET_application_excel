@@ -23,7 +23,6 @@ if (!$resultLots) {
     die('Erreur de requête : ' . mysqli_error($conn));
 }
 
-
 if (isset($_GET['message'])) {
     $nomArticle = isset($_GET['nomArticle']) ? htmlspecialchars($_GET['nomArticle']) : 'l\'article inconnu';
     if (isset($_GET['nomArticle'])){
