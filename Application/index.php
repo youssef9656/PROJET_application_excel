@@ -35,6 +35,7 @@ include "Config/connect_db.php";
         display: flex;
         justify-content: center;
         align-items: center;
+
     }
     /*.content{*/
     /*    width: 45%;*/

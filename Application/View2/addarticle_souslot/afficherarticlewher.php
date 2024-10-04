@@ -28,6 +28,7 @@ $result1 = $conn->query($sql);
         <tr>
             <th>ID</th>
             <th>Nom</th>
+
             <th>Description</th>
             <th>Stock Min</th>
             <th>Stock Initial</th>
