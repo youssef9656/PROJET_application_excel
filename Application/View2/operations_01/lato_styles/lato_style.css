@@ -82,7 +82,16 @@ button, .dot {
     border-radius: 20px;
     box-shadow: 5px 5px 20px rgba(var(--gray), 0.1);
 }
+.success-box{
+    position: absolute;
+    width: 70%;
+    height: 100%;
+    right: 12%;
+    border-radius: 20px;
+    box-shadow: 5px 5px 20px rgba(var(--gray), 0.1);
+    background: linear-gradient(to bottom left, #d7ffa0 40%, #46ff46 100%);
 
+}
 .dot {
     width: 18px;
     height: 18px;

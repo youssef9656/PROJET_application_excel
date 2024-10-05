@@ -4,6 +4,52 @@ document.addEventListener('DOMContentLoaded', ()=>{
 })
 
 setTimeout(() => {
+
+
+    // reclamation code :
+    // Get the modal and form elements
+    var reclamationModal = document.getElementById('reclamationModal');
+    var reclamationForm = document.getElementById('reclamationForm');
+    var operationIdInput = document.getElementById('operationId');
+
+    // Add an event listener to the modal to capture the operation ID
+    reclamationModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // Button that triggered the modal
+        var operationId = button.getAttribute('data-operation-id'); // Extract info from data-* attributes
+        operationIdInput.value = operationId; // Update the hidden input field
+    });
+
+    // Add an event listener to the form to handle the submission
+    reclamationForm.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        var operationId = operationIdInput.value;
+        var reclamationText = document.getElementById('reclamationText').value;
+
+        // Send an AJAX request to save the reclamation
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "enregistrer_reclamation.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function() {
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                var response = JSON.parse(this.responseText);
+                if (response.success)
+                {
+                    // Rediriger l'utilisateur vers la page avec le message de succès
+                    window.location.href = "option_Ent_Sor.php?message=" + encodeURIComponent(response.message);
+                } else {
+                    // Afficher un message d'erreur à l'utilisateur (par exemple, avec une alerte)
+                    alert(response.message);
+                }
+                reclamationModal.hide(); // Close the modal
+            }
+        };
+
+        xhr.send("operationId=" + operationId + "&reclamationText=" + reclamationText);
+    });
+
+
     document.getElementById('filterBtn').addEventListener('click', function () {
         // Récupérer les valeurs des inputs
         var startDate = document.getElementById('startDate').value;
@@ -274,6 +320,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 const lotName = this.getAttribute('data-lot');
                 const sousLotName = this.getAttribute('data-sous-lot');
                 const articleName = this.getAttribute('data-article');
+                const sortie_value = this.getAttribute('data-sortie');
+
+
+                document.getElementById('sortie_value').value = sortie_value
 
                 // Remplir le modal avec les données existantes
                 operationIdInput.value = operationId;
@@ -421,4 +471,58 @@ function ret(){
     // $('#modifierOperationModal').hide()
     location.reload()
 }
+
+// functions article filter
+
+
+    function populateDatalist() {
+        const datalist = document.getElementById('article_list');
+        const rows = document.querySelectorAll('#operationTable tbody tr');
+        const articles = new Set(); // Utilisation de Set pour éviter les doublons
+
+        rows.forEach(row => {
+            const article = row.querySelector('td').textContent.trim(); // Extraire le contenu de la première cellule
+            articles.add(article); // Ajouter l'article au Set
+        });
+
+        // Vider la datalist avant de la remplir
+        datalist.innerHTML = '';
+
+        // Ajouter les articles à la datalist
+        articles.forEach(article => {
+            const option = document.createElement('option');
+            option.value = article;
+            datalist.appendChild(option);
+        });
+    }
+
+
+
+    // Appeler la fonction pour remplir la datalist après le chargement du DOM
+    document.addEventListener('DOMContentLoaded',()=>{
+        setTimeout(()=>{
+            populateDatalist()
+        },1000)
+    });
+function filterArticle(){
+    populateDatalist(); // Appelle la fonction pour mettre à jour le datalist, si nécessaire
+    const filter = document.getElementById('article_filter').value.toLowerCase(); // Convertir en minuscule pour une comparaison insensible à la casse
+    const rows = document.querySelectorAll('#tbodyTableOperation tr');
+
+    rows.forEach(row => {
+        const article = row.querySelector('td').textContent.toLowerCase(); // Convertir en minuscule pour correspondre au filtre
+        if (article.includes(filter)) {
+            console.log(1);
+            console.log(row);
+            row.style.display = ''; // Affiche la ligne (valeur par défaut pour les éléments de tableau)
+        } else {
+            console.log(0);
+            console.log(row);
+            row.style.display = 'none'; // Cache la ligne
+        }
+    });
+}
+
+
+
 

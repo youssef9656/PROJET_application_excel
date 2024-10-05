@@ -64,6 +64,32 @@ if (isset($_GET['message'])) {
 
 ';
             break;
+                case 'stock_insuffisant':
+                    echo '
+<div class="modalBesoin" id="myModal">
+    <div id="container11">
+        <div id="error-box">
+            <button class="close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+            </button>
+            <div class="face2">
+                <div class="eye"></div>
+                <div class="eye right"></div>
+                <div class="mouth sad"></div>
+            </div>
+            <div class="shadow move"></div>
+            <div class="message"><h1 class="alert">Alert !</h1><p class="modaleBody">  Vous avez dépassé le stock final pour l\'article :  ' . $nomArticle . '   <br> Le stock actuel est :' . $stockFinaleValue . '  </div>
+        </div>
+    </div>
+
+</div>
+
+
+';
+            break;
 
 
         case 'ss':
@@ -83,7 +109,7 @@ if (isset($_GET['message'])) {
                 <div class="mouth sad"></div>
             </div>
             <div class="shadow move"></div>
-            <div class="message"><h1 class="alert">Alert !</h1><p class="modaleBody">    Il y a un besoin dans l\'article : ' . $nomArticle . '   ' . $stockFinaleValue .'    </div>
+            <div class="message"><h1 class="alert">Alert !</h1><p class="modaleBody">    Il y a un besoin dans l\'article : ' . $nomArticle . '    <br> Le stock actuel est :' . $stockFinaleValue . '   </div>
         </div>
     </div>
 
@@ -117,6 +143,57 @@ if (isset($_GET['message'])) {
 
 ';
             break;
+
+        case 'reclamationError' :
+            echo '
+<div class="modalBesoin" id="myModal">
+    <div id="container11">
+        <div id="error-box">
+            <button class="close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+            </button>
+            <div class="face2">
+                <div class="eye"></div>
+                <div class="eye right"></div>
+                <div class="mouth sad"></div>
+            </div>
+            <div class="shadow move"></div>
+            <div class="message"><h1 class="alert">Alert !</h1><p class="modaleBody">   Erreur lors de l\'enregistrement de la réclamation. Veuillez réessayer.  </div>
+        </div>
+    </div>
+
+</div>
+
+
+';
+            break ;
+        case 'reclamationSuccess':
+            echo '
+<div class="modalBesoin" id="myModal">
+    <div id="container11">
+        <div class="success-box">
+            <button class="close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+            </button>
+            <div class="face2">
+                <div class="eye"></div>
+                <div class="eye right"></div>
+                <div class="mouth sad"></div>
+            </div>
+            <div class="shadow move"></div>
+            <div class="message"><h1 class="alert">Alert !</h1><p class="modaleBody">   Votre reclamation a été ajouter avec succès .   </div>
+        </div>
+    </div>
+
+</div>
+
+';
     }
 }
 
@@ -294,6 +371,14 @@ if (isset($_GET['message'])) {
     }
 
 
+    .sortie_value{
+        width: 0;
+        height: 0;
+        border: none;
+        background-color: white;
+        color: white;
+    }
+
 </style>
 
 
@@ -452,6 +537,8 @@ if (isset($_GET['message'])) {
                         <input type="datetime-local" id="date_operation" name="date_operation" required>
                     </div>
 
+                    <input type="text" name="sortie_value" class="sortie_value" id="sortie_value">
+
                     <button type="submit" class="btn btn-primary">Modifier Opération</button>
                 </form>
             </div>
@@ -511,7 +598,27 @@ if (isset($_GET['message'])) {
 <!---->
 
 
-
+<!-- modale reclamation -->
+<div class="modal fade" id="reclamationModal" tabindex="-1" aria-labelledby="reclamationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reclamationModalLabel">Ajouter une réclamation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="reclamationForm">
+                    <input type="hidden" id="operationId" name="operationId">
+                    <div class="mb-3">
+                        <label for="reclamationText" class="form-label">Réclamation:</label>
+                        <textarea class="form-control" id="reclamationText" name="reclamationText" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -552,7 +659,20 @@ if (isset($_GET['message'])) {
                 myModale.style.display = "none"
             }, 3300)
 
+
+
+
+
+
         })
+
+
+        setTimeout(()=>{
+
+
+        },1000)
+
+
     })
 
 

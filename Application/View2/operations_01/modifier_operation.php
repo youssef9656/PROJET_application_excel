@@ -28,8 +28,9 @@ function getNom($conn, $table, $idColonne, $nomColonne, $id) {
     return '';
 }
 
+
 // Fonction pour vérifier le stock
-function verifierStock($articleName, $sortie, $conn) {
+function verifierStock($articleName, $sortie, $conn , $sortie_precedent) {
     $sqlStockFinal = "SELECT Stock_Final FROM etat_de_stocks WHERE Article = ?";
     $stmtStock = $conn->prepare($sqlStockFinal);
     $stmtStock->bind_param("s", $articleName);
@@ -38,7 +39,8 @@ function verifierStock($articleName, $sortie, $conn) {
 
     if ($stmtStock->fetch()) {
         $stmtStock->close();
-        if ($sortie <= $stockFinal) {
+        $stockFinale = $stockFinal + $sortie_precedent ;
+        if ($sortie <= $stockFinale) {
             return true;
         } else {
             echo "Erreur : La sortie de l'opération doit être inférieure ou égale au stock final ($stockFinal).";
@@ -85,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sortie = isset($_POST['sortie']) ? floatval($_POST['sortie']) : 0.00;
     $prix = isset($_POST['prix']) ? floatval($_POST['prix']) : 0.00;
     $dateOperation = isset($_POST['date_operation']) ? $_POST['date_operation'] : '';
+    $sortie_precedent = isset($_POST['sortie_value']) ? $_POST['sortie_value'] : '';
 
     $formattedDateOperation = date('Y-m-d H:i:s', strtotime($dateOperation));
 
@@ -95,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // --- Stock check before modification ---
     $articleName = getNom($conn, 'article', 'id_article', 'nom', $articleId); // Get article name
-    if (!verifierStock($articleName, $sortie, $conn)) {
+    if (!verifierStock($articleName, $sortie, $conn , $sortie_precedent)) {
 
         // Stock insuffisant, annuler l'opération et afficher un message d'erreur
         $sqlStockFinal1 = "SELECT Stock_Final FROM etat_de_stocks WHERE Article = ?";
@@ -107,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stockFinaleValue = $stockFinal1 ;
         }
 
-        header("Location: option_Ent_Sor.php?message=stock_insuffisant&stockFinaleValue=$stockFinaleValue");
+        header("Location: option_Ent_Sor.php?message=stock_insuffisant&stockFinaleValue=$stockFinaleValue&nomArticle=$articleName");
         exit();
     }
     // --- End of stock check ---
@@ -288,7 +291,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Redirection avec message de succès
             if (article_besoin($articleName, "besoin", $conn)) {
-                header("Location: option_Ent_Sor.php?message=ss&nomArticle=$articleName");
+                $sqlStockFinal1 = "SELECT Stock_Final FROM etat_de_stocks WHERE Article = ?";
+                $stmtStock1 = $conn->prepare($sqlStockFinal1);
+                $stmtStock1->bind_param("s", $articleName);
+                $stmtStock1->execute();
+                $stmtStock1->bind_result($stockFinal1);
+                if ($stmtStock1->fetch()) {
+                    $stockFinaleValue = $stockFinal1 ;
+                }
+                header("Location: option_Ent_Sor.php?message=ss&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue");
             } else {
                 header("Location: option_Ent_Sor.php");
             }
