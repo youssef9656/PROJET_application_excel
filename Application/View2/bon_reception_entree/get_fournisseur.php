@@ -7,7 +7,7 @@ if (isset($_GET['nom_fournisseur']) && isset($_GET['prenom_fournisseur'])) {
     $prenom = $_GET['prenom_fournisseur'];
 
     // Préparer la requête SQL pour récupérer les informations du fournisseur
-    $sql = "SELECT * FROM fournisseurs WHERE nom_fournisseur = ? AND prenom_fournisseur = ?";
+    $sql = "SELECT * FROM fournisseurs WHERE nom_fournisseur = ? AND prenom_fournisseur = ? AND action_A_D = 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('ss', $nom, $prenom);
     $stmt->execute();
