@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Vérifier le nom d'utilisateur et définir la session
         if ($userName === 'admin') {
             $_SESSION['role'] = 'admin';  // Définir la session pour l'admin
-            header("Location: ../View2/operations_01/option_Ent_Sor.php");
+            header("Location: ../View2/reclamation/reclamation.php");
         } elseif ($userName === 'user') {
             $_SESSION['role'] = 'user';   // Définir la session pour l'utilisateur
             header("Location: ../View/operations_01/option_Ent_Sor.php");

@@ -73,7 +73,7 @@ if (!$result) {
             width: 100%;
             border-collapse: collapse;
             background-color: #ffffff;
-            height: 80vh;
+            max-height: 80vh;
 
         }
 
@@ -89,6 +89,7 @@ if (!$result) {
             top: 60px;
             background-color: #007bff;
             color: #ffffff;
+            z-index: 12;
         }
 
         .table-operation tbody tr:nth-child(even) {
@@ -105,6 +106,7 @@ if (!$result) {
 
         .table-operation th {
             font-weight: bold;
+
         }
 
         .table-operation td input {
@@ -196,7 +198,8 @@ if (!$result) {
                 echo '<a style="color:red" href="supprimer_operation.php?id=' . urlencode($row['id']) . '" onclick="return confirm(\'Êtes-vous sûr de vouloir supprimer cette opération ?\')">';
                 echo '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16"><path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/></svg>';
                 echo '</a>';
-                echo '<a href="#" data-bs-toggle="modal" data-bs-target="#reclamationModal" data-operation-id="' . htmlspecialchars($row['id']) . '">Reclamation</a>';
+                echo '<a href="#" data-bs-toggle="modal" data-bs-target="#reclamationModal" data-operation-id="' . htmlspecialchars($row['id']) . '"><button class="btn-12"><span>Reclamation</span></button>
+</a>';
                 echo '</td>';
                 echo '</tr>';
             }

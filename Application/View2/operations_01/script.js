@@ -11,7 +11,29 @@ setTimeout(() => {
     var reclamationModal = document.getElementById('reclamationModal');
     var reclamationForm = document.getElementById('reclamationForm');
     var operationIdInput = document.getElementById('operationId');
+    var saveNullButton = document.getElementById('saveNullButton');
+    saveNullButton.addEventListener('click', function (event) {
+        var operationId = operationIdInput.value;
 
+        // Envoyer une requête AJAX pour enregistrer la réclamation avec la valeur NULL
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "enregistrer_reclamation_null.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                var response = JSON.parse(this.responseText);
+                if (response.success) {
+                    // Rediriger l'utilisateur vers la page avec le message de succès
+                    window.location.href = "option_Ent_Sor.php?message=" + encodeURIComponent(response.message);
+                } else {
+                    // Afficher un message d'erreur à l'utilisateur (par exemple, avec une alerte)
+                    alert(response.message);
+                }
+                reclamationModal.hide(); // Fermer le modal
+            }
+        };
+        xhr.send("operationId=" + operationId);
+    });
     // Add an event listener to the modal to capture the operation ID
     reclamationModal.addEventListener('show.bs.modal', function (event) {
         var button = event.relatedTarget; // Button that triggered the modal
@@ -48,6 +70,29 @@ setTimeout(() => {
 
         xhr.send("operationId=" + operationId + "&reclamationText=" + reclamationText);
     });
+
+
+
+
+    // afficher la reclamation si elle trouve dans la base de donné
+    reclamationModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var operationId = button.getAttribute('data-operation-id');
+        operationIdInput.value = operationId;
+
+        // Récupérer la réclamation existante depuis la base de données
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "recuperer_reclamation.php?operationId=" + operationId, true);
+        xhr.onreadystatechange = function() {
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                var reclamation = this.responseText;
+                document.getElementById('reclamationText').value = reclamation;
+            }
+        };
+        xhr.send();
+    });
+
+
 
 
     document.getElementById('filterBtn').addEventListener('click', function () {

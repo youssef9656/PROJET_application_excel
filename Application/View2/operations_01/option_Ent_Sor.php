@@ -184,7 +184,7 @@ if (isset($_GET['message'])) {
             <div class="face2">
                 <div class="eye"></div>
                 <div class="eye right"></div>
-                <div class="mouth sad"></div>
+                <div class="mouth happy"></div>
             </div>
             <div class="shadow move"></div>
             <div class="message"><h1 class="alert">Alert !</h1><p class="modaleBody">   Votre reclamation a été ajouter avec succès .   </div>
@@ -615,6 +615,7 @@ if (isset($_GET['message'])) {
                     </div>
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
                 </form>
+                <button id="saveNullButton" class="btn btn-secondary">Enregistrer comme NULL</button>
             </div>
         </div>
     </div>

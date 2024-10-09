@@ -1,0 +1,202 @@
+
+body{
+    background-image: url("../../includes/image/pexels-pixabay-262978.jpg");
+    background-size: cover;
+}
+
+.accueil{
+    margin: 10px auto 0 auto;
+    width: 85%;
+    height: 14vh;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    font-weight: 600;
+    font-family: "Gill Sans", sans-serif;
+    /*font-family: serif;*/
+    /*background-image: linear-gradient(-20deg , rgba(0, 221, 255, 0.56), #00fffa, #00ff0b, #008509, rgba(0, 221, 255, 0.56), rgba(0, 221, 255, 0.56), rgba(0, 221, 255, 0.56));*/
+    /*background-image: linear-gradient(-20deg , rgb(255, 255, 255), rgb(0, 255, 11));*/
+    /*background-color: white;*/
+    background-size: 300px;
+    background-position: center;
+    background-clip: text;
+    color: transparent;
+    backdrop-filter: blur(70px);
+}
+
+.content1{
+    margin: 10px auto 0 auto;
+    width: 85%;
+    height: 40vh;
+    background-color: white;
+    border-radius: 10px;
+
+}
+
+.content2{
+    margin: 10px auto 0 auto;
+    width: 85%;
+    height: auto;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.note-div{
+    border: 2px solid #505000;
+    border-radius: 10px;
+    width: 95%;
+    /*background-image: linear-gradient(-20deg , #fff1bb, #df9400, rgba(255, 205, 0, 0.02));*/
+    background: #ffc300;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: auto;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    /*padding: 2px;*/
+
+}
+
+.note-div::before{
+    content: "";
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    top: -90%;
+    left: 70%;
+    border-radius: 50%;
+    border: 35px solid rgba(255, 255, 255, 0.102);
+    transition: all .8s ease;
+    filter: blur(.5rem);
+}
+
+.note-div:hover::before{
+    width: 140px;
+    height: 140px;
+    top: -90%;
+    left: 90%;
+    filter: blur(0rem);
+    border: 35px solid rgba(230, 0, 0, 0.31);
+}
+
+.note-ligne{
+    margin-left: 2px;
+    width: 5px;
+    background-color: #505000;
+    border-radius: 5px;
+}
+.note-text{
+    color: #000000;
+    margin-left: 20px;
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.note-modifier{
+    height: 40px;
+    /*width: 100px;*/
+}
+
+.btn-12,
+.btn-12 *,
+.btn-12 :after,
+.btn-12 :before,
+.btn-12:after,
+.btn-12:before {
+    border: 0 solid;
+    box-sizing: border-box;
+}
+
+.btn-12 {
+    min-width: 100px;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: button;
+    background-color: #000;
+    background-image: none;
+    color: #fff;
+    cursor: pointer;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
+    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+    font-size: 70%;
+    font-weight: 900;
+    line-height: 1.5;
+    margin: 0;
+    -webkit-mask-image: -webkit-radial-gradient(#000, #fff);
+    padding: 0;
+    text-transform: uppercase;
+    z-index: 1;
+}
+
+.btn-12:disabled {
+    cursor: default;
+}
+
+.btn-12:-moz-focusring {
+    outline: auto;
+}
+
+.btn-12 svg {
+    display: block;
+    vertical-align: middle;
+}
+
+.btn-12 [hidden] {
+    display: none;
+}
+
+.btn-12 {
+    border-radius: 99rem;
+    border-width: 2px;
+    overflow: hidden;
+    padding: 0.5rem 0.5rem;
+    position: relative;
+}
+
+.btn-12 span {
+    mix-blend-mode: difference;
+}
+
+.btn-12:after,
+.btn-12:before {
+    background: linear-gradient(
+            90deg,
+            #fff 25%,
+            transparent 0,
+            transparent 50%,
+            #fff 0,
+            #fff 75%,
+            transparent 0
+    );
+    content: "";
+    inset: 0;
+    position: absolute;
+    transform: translateY(var(--progress, 100%));
+    transition: transform 0.2s ease;
+}
+
+.btn-12:after {
+    --progress: -100%;
+    background: linear-gradient(
+            90deg,
+            transparent 0,
+            transparent 25%,
+            #fff 0,
+            #fff 50%,
+            transparent 0,
+            transparent 75%,
+            #fff 0
+    );
+    z-index: -1;
+}
+
+.btn-12:hover:after,
+.btn-12:hover:before {
+    --progress: 0;
+}
