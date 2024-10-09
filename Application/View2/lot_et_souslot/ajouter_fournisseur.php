@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Vérifier que les champs ne sont pas vides
     if (!empty($lot_id) && !empty($fournisseur_id)) {
         // Vérifier si le fournisseur est déjà associé au lot
-        $checkQuery = "SELECT COUNT(*) AS count FROM lot_fournisseurs WHERE lot_id = ? AND id_fournisseur = ?";
+        $checkQuery = "SELECT COUNT(*) AS count FROM lot_fournisseurs WHERE lot_id = ? AND id_fournisseur = ? ";
         $stmt = $conn->prepare($checkQuery);
         $stmt->bind_param("ii", $lot_id, $fournisseur_id);
         $stmt->execute();
