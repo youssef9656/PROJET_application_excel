@@ -317,9 +317,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if ($stmtStock1->fetch()) {
                     $stockFinaleValue = $stockFinal1 ;
                 }
-                header("Location: option_Ent_Sor.php?message=ss&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue");
+                header("Location: reclamation.php?message=ss&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue");
             } else {
-                header("Location: option_Ent_Sor.php");
+                header("Location: reclamation.php");
             }
 
             exit();

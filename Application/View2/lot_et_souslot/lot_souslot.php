@@ -261,7 +261,7 @@ if (isset($_GET['message'])) {
                             <option value="" selected disabled>Choisir un fournisseur</option>
                             <?php
                             // Récupérer les fournisseurs depuis la base de données
-                            $fournisseurQuery = "SELECT id_fournisseur, nom_fournisseur , prenom_fournisseur FROM fournisseurs";
+                            $fournisseurQuery = "SELECT id_fournisseur, nom_fournisseur , prenom_fournisseur FROM fournisseurs WHERE action_A_D = 1";
                             $fournisseurResult = mysqli_query($conn, $fournisseurQuery);
                             while ($fournisseurRow = mysqli_fetch_assoc($fournisseurResult)) {
                                 echo '<option value="' . htmlspecialchars($fournisseurRow['id_fournisseur']) . '">' . htmlspecialchars($fournisseurRow['nom_fournisseur']) . " ". htmlspecialchars($fournisseurRow['prenom_fournisseur']) . '</option>';

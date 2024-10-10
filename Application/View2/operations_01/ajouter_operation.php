@@ -63,7 +63,7 @@ function getDernierPrix($articleName, $conn) {
 function getFournisseurName($fournisseurId, $conn) {
     $fournisseurName = '';
     if ($fournisseurId) {
-        $queryFournisseur = "SELECT nom_fournisseur, prenom_fournisseur FROM fournisseurs WHERE id_fournisseur = ?";
+        $queryFournisseur = "SELECT nom_fournisseur, prenom_fournisseur FROM fournisseurs WHERE id_fournisseur = ? and action_A_D = 1";
         $stmt = $conn->prepare($queryFournisseur);
         $stmt->bind_param("i", $fournisseurId);
         $stmt->execute();

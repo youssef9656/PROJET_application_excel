@@ -8,7 +8,7 @@ if ($lotId > 0) {
         SELECT f.id_fournisseur, f.nom_fournisseur , prenom_fournisseur
         FROM fournisseurs f
         JOIN lot_fournisseurs lf ON f.id_fournisseur = lf.id_fournisseur
-        WHERE lf.lot_id = ?";
+        WHERE lf.lot_id = ? and f.action_A_D = 1";
 
     if ($stmt = $conn->prepare($query)) {
         $stmt->bind_param("i", $lotId);

@@ -614,8 +614,9 @@ if (isset($_GET['message'])) {
                         <textarea class="form-control" id="reclamationText" name="reclamationText" rows="3"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <button type="button" id="saveNullButton" class="btn btn-secondary">Supprimer la reclamation</button>
+
                 </form>
-                <button id="saveNullButton" class="btn btn-secondary">Enregistrer comme NULL</button>
             </div>
         </div>
     </div>

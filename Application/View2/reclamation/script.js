@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 option.textContent = `${fournisseur.nom_fournisseur} ${fournisseur.prenom_fournisseur}`;
                                 fournisseurModifier.appendChild(option);
                             });
-                            fournisseurModifier.disabled = !articleId;
+                            // fournisseurModifier.disabled = !articleId;
                         });
 
                     fetch(`get_services.php?article_id=${articleId}`)
@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 option.textContent = service.service;
                                 serviceModifier.appendChild(option);
                             });
-                            serviceModifier.disabled = !articleId;
+                            // serviceModifier.disabled = !articleId;
                         });
                 });
 
@@ -383,3 +383,24 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Ouvrir le modal
+
+
+// modale besoin function
+
+document.addEventListener("DOMContentLoaded" , ()=> {
+    let close = document.querySelector(".close");
+    let modale = document.querySelector('#container11');
+    let myModale = document.querySelector("#myModal")
+    close.addEventListener('click', () => {
+        modale.style.animation = "modaleAnimation 2s forwards"
+        setTimeout(() => {
+            myModale.style.opacity = "0"
+        }, 1000)
+        setTimeout(() => {
+            myModale.style.display = "none"
+        }, 3300)
+
+
+    })
+
+})
