@@ -3,6 +3,12 @@ include '../../Config/check_session.php';
 checkUserRole('admin');
 
 include '../../Config/connect_db.php'; ?>
+<?php
+$pageName= ' Statistiques Dépenses Sorties';
+
+include '../../includes/header.php';
+
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -12,70 +18,94 @@ include '../../Config/connect_db.php'; ?>
     <script src="../../includes/node_modules/chart.js/dist/chart.umd.js"></script>
 <!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
 </head>
-<?php
-$pageName= ' Statistiques Dépenses Sorties';
 
-include '../../includes/header.php';
 
-?>
+<style>
+    body {
+        background-color: #f0f4f8;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-<STYLE>
-
-    h1 {
+    h1, h6 {
         text-align: center;
-        color: #2c3e50;
-        margin-bottom: 30px;
-    }
-
-    /* Styles pour Select et Input */
-    select, input[type="date"] {
-        height: 38px; /* Ajuste la hauteur pour les rendre plus petits */
-        padding: 5px; /* Réduit le padding */
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        font-size: 14px; /* Ajuste la taille de la police */
-        background-color: #fff;
-    }
-
-    button {
-        background-color: #3498db;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s ease;
-        display: block;
-        margin: 20px auto;
-    }
-
-    button:hover {
-        background-color: #2980b9;
+        color: #34495e;
+        margin-top: 20px;
     }
 
     .formC {
         display: flex;
-        flex-wrap: wrap; /* Permet aux éléments de s'enrouler sur plusieurs lignes */
-        gap: 15px; /* Espace entre les éléments */
-        width: 100%; /* Largeur maximale du formulaire */
-        margin: 0 auto; /* Centre le formulaire sur la page */
+        flex-wrap: wrap;
+        gap: 20px;
+        width: 90%;
+        margin: 30px auto;
+        padding: 30px;
+        background-color: #fff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
     }
 
     .formC > div {
-        flex: 1; /* Permet à chaque colonne de prendre l'espace disponible */
-        min-width: 200px; /* Largeur minimale pour les colonnes */
+        flex: 1;
+        min-width: 250px;
     }
 
-    .formC label {
-        font-weight: bold; /* Met en gras les étiquettes */
+    select, input[type="date"] {
+        height: 45px;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        font-size: 16px;
+        transition: border-color 0.2s ease;
     }
+
+    select:focus, input[type="date"]:focus {
+        border-color: #3498db;
+        outline: none;
+    }
+
+    .buttonfiltre {
+        background-color: #2ecc71;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+        margin-top: 25px;
+    }
+
+    .buttonfiltre:hover {
+        background-color: #27ae60;
+    }
+
     #chartdiv {
         width: 100%;
-        height: 500px;
+        height: 600px;
     }
-</STYLE>
 
+    .chart-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+        padding: 0 5%;
+    }
+
+    .chart-container > #div1 {
+        width:60%;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .chart-container > #div2 {
+        width: 40%;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+</style>
 <body>
 <h6 class="text-center">Afficher les Graphiques et Statistiques</h6>
 <div class="formC row g-3">
@@ -117,18 +147,19 @@ include '../../includes/header.php';
     </div>
 
     <div class="col-sm-4">
-        <button class="btn btn-primary mt-3" onclick="fetchData()">Afficher Graphiques</button>
+        <button class="btn  buttonfiltre btn-primary mt-3" onclick="fetchData()">Afficher Graphiques</button>
     </div>
 </div>
 
 
 
 
-<div class="col-12 row p-5 mt-4 container" >
-    <div class="col-6">
+
+<div class="chart-container">
+    <div id="div1">
         <canvas id="entreeChart"></canvas>
     </div>
-    <div class="col-4">
+    <div  id="div2">
         <canvas id="sortieChart"></canvas>
     </div>
 </div>
@@ -173,6 +204,7 @@ include '../../includes/header.php';
         fetch(`getdata2.php?lot=${encodeURIComponent(lot)}&sous_lot=${encodeURIComponent(sousLot)}&service_operation=${encodeURIComponent(service)}&date_from=${encodeURIComponent(dateFrom)}&date_to=${encodeURIComponent(dateTo)}`)
             .then(response => response.json())
             .then(data => {
+
                 displayCharts(data.charts);
             })
             .catch(error => {
@@ -185,9 +217,118 @@ include '../../includes/header.php';
     let sortieChartInstance = null;
 
     function displayCharts(data) {
-        const dates = data.map(item => item.date_operation);
-        const totalSortie = data.map(item => item.total_sortie_operations);
-        const nomSortie = [...new Set(data.map(d => d.nom_article).filter(service => service))];
+        // Récupérer les dates et les totaux des entrées
+        // const dates = data.map(item => item.date_operation);
+        // const totalEntree = data.map(item => item.total_depense_entree);
+
+
+
+
+        const result = data.reduce((acc, current) => {
+            const existingArticle = acc.find(item => item.nom_article === current.nom_article);
+
+            // Convertir l'entrée en nombre
+            const entreeValue = parseFloat(current.entree);
+
+            if (existingArticle) {
+                // Additionner les 'entree' pour l'article existant
+                existingArticle.entree += entreeValue;
+
+                // Mettre à jour le dernier prix_operation et la date_operation si disponible
+                if (current.prix_operation) {
+                    existingArticle.prix_operation = current.prix_operation;
+                }
+                existingArticle.date_operation = current.date_operation; // Mettre à jour la date
+            } else {
+                // Ajouter un nouvel article à l'accumulateur
+                acc.push({...current, entree: entreeValue}); // Ajouter l'entrée comme nombre
+            }
+
+            return acc;
+        }, []);
+
+// Ajouter la somme des entree et prix_operation à chaque objet
+        const finalResult = result.map(item => {
+            const prix = item.prix_operation ? parseFloat(item.prix_operation) : 0; // Assurer que prix_operation soit un nombre
+            const total = item.entree * prix; // Calculer le total
+            return {
+                nom_article: item.nom_article,
+                total_sourter: item.entree, // Somme des entree
+                prix_operation: prix, // Dernier prix_operation
+                total: total, // Total calculé
+                date_operation: item.date_operation // Dernière date_operation
+            };
+        });
+
+// Afficher le résultat final
+        const dates = finalResult.map(item => item.date_operation);
+        const total_sourt = finalResult.map(item => item.total);
+        const nom_article = finalResult.map(item => item.nom_article);
+
+
+
+
+
+
+
+        function aggregateData(data) {
+            const result = {};
+
+            data.forEach(item => {
+                const { service_operation, entree, prix_operation, date_operation } = item;
+
+                // Initialisation de l'objet pour chaque fournisseur
+                if (!result[service_operation]) {
+                    result[service_operation] = {
+                        totalEntree: 0,
+                        lastPrixOperation: null,
+                        lastDateOperation: null,
+                    };
+                }
+
+                // Somme des entrees pour le fournisseur
+                result[service_operation].totalEntree += parseFloat(entree);
+
+                // Mettre à jour le dernier prix d'opération s'il existe
+                if (prix_operation) {
+                    result[service_operation].lastPrixOperation = parseFloat(prix_operation);
+                }
+
+                // Mettre à jour la dernière date d'opération
+                if (!result[service_operation].lastDateOperation || new Date(date_operation) > new Date(result[service_operation].lastDateOperation)) {
+                    result[service_operation].lastDateOperation = date_operation;
+                }
+            });
+
+            // Formater le résultat final
+            const formattedResult = [];
+
+            for (const fournisseur in result) {
+                const { totalEntree, lastPrixOperation, lastDateOperation } = result[fournisseur];
+                const total = totalEntree * (lastPrixOperation || 0); // Calcul du total
+
+                formattedResult.push({
+                    service_operation: fournisseur,
+                    totalEntree,
+                    total,
+                    lastDateOperation
+                });
+            }
+
+            return formattedResult;
+        }
+
+        const aggregatedData = aggregateData(data);
+        console.log(aggregatedData);
+
+        const service_operation = aggregatedData.map(item => item.service_operation);
+        const total = aggregatedData.map(item => item.total);
+
+        console.log(service_operation)
+        // Récupérer les noms des fournisseurs, sans doublons
+        // const nomEntree = [...new Set(data.map(d => d.nom_pre_fournisseur).filter(service => service))];
+
+        // Détruire le graphique existant si présent avant de créer un nouveau
         if (entreeChartInstance) {
             entreeChartInstance.destroy();
         }
@@ -198,23 +339,24 @@ include '../../includes/header.php';
                 labels: dates,
                 datasets: [{
                     label: 'Total Depenses Sorties',
-                    data: totalSortie,
+                    data: total_sourt,
                     borderColor: 'blue',
                     fill: false
                 }]
             }
         });
 
+        // Détruire le graphique existant si présent avant de créer un nouveau
         if (sortieChartInstance) {
             sortieChartInstance.destroy();
         }
         const ctx2 = document.getElementById('sortieChart').getContext('2d');
         sortieChartInstance = new Chart(ctx2, {
             type: 'polarArea',
-            data : {
-                labels:nomSortie ,
+            data: {
+                labels: service_operation,  // Utiliser les noms des fournisseurs comme étiquettes
                 datasets: [{
-                    data: totalSortie,
+                    data: total,
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(75, 192, 192)',
@@ -226,6 +368,51 @@ include '../../includes/header.php';
             }
         });
     }
+
+
+    // function displayCharts(data) {
+    //     console.log(data)
+    //     const dates = data.map(item => item.date_operation);
+    //     const totalSortie = data.map(item => item.total_sortie_operations);
+    //     const nomSortie = [...new Set(data.map(d => d.nom_article).filter(service => service))];
+    //     if (entreeChartInstance) {
+    //         entreeChartInstance.destroy();
+    //     }
+    //     const ctx1 = document.getElementById('entreeChart').getContext('2d');
+    //     entreeChartInstance = new Chart(ctx1, {
+    //         type: 'line',
+    //         data: {
+    //             labels: dates,
+    //             datasets: [{
+    //                 label: 'Total Depenses Sorties',
+    //                 data: totalSortie,
+    //                 borderColor: 'blue',
+    //                 fill: false
+    //             }]
+    //         }
+    //     });
+    //
+    //     if (sortieChartInstance) {
+    //         sortieChartInstance.destroy();
+    //     }
+    //     const ctx2 = document.getElementById('sortieChart').getContext('2d');
+    //     sortieChartInstance = new Chart(ctx2, {
+    //         type: 'polarArea',
+    //         data : {
+    //             labels:nomSortie ,
+    //             datasets: [{
+    //                 data: totalSortie,
+    //                 backgroundColor: [
+    //                     'rgb(255, 99, 132)',
+    //                     'rgb(75, 192, 192)',
+    //                     'rgb(255, 205, 86)',
+    //                     'rgb(201, 203, 207)',
+    //                     'rgb(54, 162, 235)'
+    //                 ]
+    //             }]
+    //         }
+    //     });
+    // }
 
 
 

@@ -61,7 +61,7 @@ include '../../includes/header.php';
         outline: none;
     }
 
-    button {
+    .buttonfiltre {
         background-color: #2ecc71;
         color: white;
         padding: 12px 25px;
@@ -73,7 +73,7 @@ include '../../includes/header.php';
         margin-top: 25px;
     }
 
-    button:hover {
+    .buttonfiltre:hover {
         background-color: #27ae60;
     }
 
@@ -147,7 +147,7 @@ include '../../includes/header.php';
     </div>
 
     <div>
-        <button class="btn btn-primary" onclick="fetchData()">Afficher Graphiques</button>
+        <button class="btn  buttonfiltre btn-primary" onclick="fetchData()">Afficher Graphiques</button>
     </div>
 </div>
 
@@ -200,6 +200,7 @@ include '../../includes/header.php';
             .then(response => response.json())
             .then(data => {
                 displayCharts(data.charts);
+
             })
             .catch(error => {
                 console.error("There was a problem with the fetch operation:", error);
@@ -214,11 +215,115 @@ include '../../includes/header.php';
 
     function displayCharts(data) {
         // Récupérer les dates et les totaux des entrées
-        const dates = data.map(item => item.date_operation);
-        const totalEntree = data.map(item => item.total_depense_entree);
+        // const dates = data.map(item => item.date_operation);
+        // const totalEntree = data.map(item => item.total_depense_entree);
 
+
+
+
+        const result = data.reduce((acc, current) => {
+            const existingArticle = acc.find(item => item.nom_article === current.nom_article);
+
+            // Convertir l'entrée en nombre
+            const entreeValue = parseFloat(current.entree);
+
+            if (existingArticle) {
+                // Additionner les 'entree' pour l'article existant
+                existingArticle.entree += entreeValue;
+
+                // Mettre à jour le dernier prix_operation et la date_operation si disponible
+                if (current.prix_operation) {
+                    existingArticle.prix_operation = current.prix_operation;
+                }
+                existingArticle.date_operation = current.date_operation; // Mettre à jour la date
+            } else {
+                // Ajouter un nouvel article à l'accumulateur
+                acc.push({...current, entree: entreeValue}); // Ajouter l'entrée comme nombre
+            }
+
+            return acc;
+        }, []);
+
+// Ajouter la somme des entree et prix_operation à chaque objet
+        const finalResult = result.map(item => {
+            const prix = item.prix_operation ? parseFloat(item.prix_operation) : 0; // Assurer que prix_operation soit un nombre
+            const total = item.entree * prix; // Calculer le total
+            return {
+                nom_article: item.nom_article,
+                total_entree: item.entree, // Somme des entree
+                prix_operation: prix, // Dernier prix_operation
+                total: total, // Total calculé
+                date_operation: item.date_operation // Dernière date_operation
+            };
+        });
+
+// Afficher le résultat final
+        const dates = finalResult.map(item => item.date_operation);
+        const totalEntree = finalResult.map(item => item.total);
+        const nom_article = finalResult.map(item => item.nom_article);
+
+
+
+
+
+
+
+        function aggregateData(data) {
+            const result = {};
+
+            data.forEach(item => {
+                const { nom_pre_fournisseur, entree, prix_operation, date_operation } = item;
+
+                // Initialisation de l'objet pour chaque fournisseur
+                if (!result[nom_pre_fournisseur]) {
+                    result[nom_pre_fournisseur] = {
+                        totalEntree: 0,
+                        lastPrixOperation: null,
+                        lastDateOperation: null,
+                    };
+                }
+
+                // Somme des entrees pour le fournisseur
+                result[nom_pre_fournisseur].totalEntree += parseFloat(entree);
+
+                // Mettre à jour le dernier prix d'opération s'il existe
+                if (prix_operation) {
+                    result[nom_pre_fournisseur].lastPrixOperation = parseFloat(prix_operation);
+                }
+
+                // Mettre à jour la dernière date d'opération
+                if (!result[nom_pre_fournisseur].lastDateOperation || new Date(date_operation) > new Date(result[nom_pre_fournisseur].lastDateOperation)) {
+                    result[nom_pre_fournisseur].lastDateOperation = date_operation;
+                }
+            });
+
+            // Formater le résultat final
+            const formattedResult = [];
+
+            for (const fournisseur in result) {
+                const { totalEntree, lastPrixOperation, lastDateOperation } = result[fournisseur];
+                const total = totalEntree * (lastPrixOperation || 0); // Calcul du total
+
+                formattedResult.push({
+                    nom_pre_fournisseur: fournisseur,
+                    totalEntree,
+                    total,
+                    lastDateOperation
+                });
+            }
+
+            return formattedResult;
+        }
+
+        const aggregatedData = aggregateData(data);
+        console.log(aggregatedData);
+
+        const nom_pre_fournisseur = aggregatedData.map(item => item.nom_pre_fournisseur);
+        const total = aggregatedData.map(item => item.total);
+
+        console.log(nom_pre_fournisseur)
         // Récupérer les noms des fournisseurs, sans doublons
-        const nomEntree = [...new Set(data.map(d => d.nom_pre_fournisseur).filter(service => service))];
+        // const nomEntree = [...new Set(data.map(d => d.nom_pre_fournisseur).filter(service => service))];
 
         // Détruire le graphique existant si présent avant de créer un nouveau
         if (entreeChartInstance) {
@@ -246,9 +351,9 @@ include '../../includes/header.php';
         sortieChartInstance = new Chart(ctx2, {
             type: 'polarArea',
             data: {
-                labels: nomEntree,  // Utiliser les noms des fournisseurs comme étiquettes
+                labels: nom_pre_fournisseur,  // Utiliser les noms des fournisseurs comme étiquettes
                 datasets: [{
-                    data: totalEntree,
+                    data: total,
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(75, 192, 192)',

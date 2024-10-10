@@ -11,23 +11,29 @@ $date_to = $_GET['date_to'] ?? '';
 $sql = "
     SELECT 
         o.date_operation, 
-        SUM(o.entree_operation * p.prix_operation) AS total_depense_entree,
+        SUM(o.entree_operation) AS entree,  -- Utiliser SUM pour obtenir la somme des entrées
+        p.prix_operation AS prix_operation, 
         o.nom_article,
         o.service_operation,
-        COUNT(o.nom_pre_fournisseur) as nom_pre_fournisseur ,
+        COUNT(DISTINCT o.nom_pre_fournisseur) AS nombre_fournisseurs,  -- Compter les fournisseurs distincts
         o.nom_pre_fournisseur
     FROM operation o
     LEFT JOIN (
         SELECT 
             nom_article, 
-            MAX(date_operation) AS last_date, 
-            prix_operation 
+            MAX(date_operation) AS last_date 
         FROM operation 
+        WHERE pj_operation='Bon entrée' 
         GROUP BY nom_article
-    ) p 
-    ON o.nom_article = p.nom_article AND o.date_operation = p.last_date
-    WHERE pj_operation='Bon entrée' and  1=1 
+    ) last_operations ON o.nom_article = last_operations.nom_article 
+                        AND o.date_operation = last_operations.last_date
+    LEFT JOIN operation p ON o.nom_article = p.nom_article 
+                          AND p.date_operation = last_operations.last_date
+    WHERE o.pj_operation = 'Bon entrée'
 ";
+
+
+
 
 if (!empty($lot)) {
     $sql .= " AND o.lot_name = '" . $conn->real_escape_string($lot) . "'";
@@ -38,14 +44,16 @@ if (!empty($sous_lot)) {
 if (!empty($fournisseur)) {
     $sql .= " AND o.nom_pre_fournisseur = '" . $conn->real_escape_string($fournisseur) . "'";
 }
-//if (!empty($service)) {
-//    $sql .= " AND o.service_name = '" . $conn->real_escape_string($service) . "'";
-//}
+// Uncomment this if you need the service filter
+// if (!empty($service)) {
+//     $sql .= " AND o.service_name = '" . $conn->real_escape_string($service) . "'";
+// }
 if (!empty($date_from) && !empty($date_to)) {
     $sql .= " AND o.date_operation BETWEEN '" . $conn->real_escape_string($date_from) . "' AND '" . $conn->real_escape_string($date_to) . "'";
 }
 
-$sql .= " GROUP BY o.date_operation ORDER BY o.date_operation";
+$sql .= " GROUP BY o.date_operation, o.nom_article, o.service_operation, o.nom_pre_fournisseur, p.prix_operation 
+          ORDER BY o.date_operation";
 
 $result = $conn->query($sql);
 
