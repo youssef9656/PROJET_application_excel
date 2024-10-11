@@ -1,0 +1,137 @@
+
+body{
+    background-image: url("../../includes/image/pexels-pixabay-262978.jpg");
+    background-size: cover;
+}
+
+.accueil{
+    margin: 10px auto 0 auto;
+    width: 85%;
+    height: 14vh;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    font-weight: 600;
+    font-family: "Gill Sans", sans-serif;
+    /*font-family: serif;*/
+    /*background-image: linear-gradient(-20deg , rgba(0, 221, 255, 0.56), #00fffa, #00ff0b, #008509, rgba(0, 221, 255, 0.56), rgba(0, 221, 255, 0.56), rgba(0, 221, 255, 0.56));*/
+    /*background-image: linear-gradient(-20deg , rgb(255, 255, 255), rgb(0, 255, 11));*/
+    /*background-color: white;*/
+    background-size: 300px;
+    background-position: center;
+    background-clip: text;
+    color: transparent;
+    backdrop-filter: blur(70px);
+}
+
+.content1{
+    margin: 10px auto 0 auto;
+    width: 85%;
+    height: 40vh;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+.table{
+    width: 40%;
+    border: 3px;
+
+}
+
+.pas{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+/* Style global pour la page */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+/* Style du modal */
+.modal-content {
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.modal-header {
+    border-bottom: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    color: #343a40;
+}
+
+.close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #aaa;
+}
+
+.close:hover {
+    color: #333;
+}
+
+.modal-body {
+    padding: 20px 0;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-size: 0.9rem;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+
+
+/* Style des boutons pour afficher/masquer le mot de passe */
+.show-btn , .show-btn1{
+    position: absolute;
+    right: 15px;
+    top: 70%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+
+
+/* Responsivité du modal */
+@media (max-width: 576px) {
+    .modal-dialog {
+        max-width: 100%;
+        margin: 10px;
+    }
+
+    .modal-content {
+        padding: 15px;
+    }
+}
+
+/* Positionner correctement le bouton d'affichage/masquage des mots de passe */
+.form-group {
+    position: relative;
+}

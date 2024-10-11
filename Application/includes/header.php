@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../../includes/css/bootstrap.css">
 <!--    <script src="../../includes/js/bootstrap.js"></script>-->
 
-    <title>Catalogue de Temps</title>
+<!--    <title>Catalogue de Temps</title>-->
 
     <style>
 
@@ -243,9 +243,18 @@
                     </ul>
                 </li>
                 
-                <li class="nav-item"> <a class="nav-link" href="../../View2/upload_exl/pload_exl.php">Importer les données</a>  </li>';
+                <li class="nav-item"> <a class="nav-link" href="../../View2/upload_exl/pload_exl.php">Importer les données</a>  </li>
+                
+                <li class="nav-item item-hover">
+                    <a class="nav-link" href="../../View2/password/password.php">Admin page</a>
+                </li>
+                ';
+
+
 
                 }
+
+
 
                 ?>
 
