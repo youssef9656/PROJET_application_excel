@@ -10,7 +10,11 @@ $query = "SELECT id, reclamation FROM operation WHERE reclamation IS NOT NULL";
 $result = $conn->query($query);
 
 if (isset($_GET['message'])) {
-    $nomArticle = isset($_GET['nomArticle']) ? htmlspecialchars($_GET['nomArticle']) : 'l\'article inconnu';
+    if (isset($_GET['nomArticle'])) {
+        $nomArticle = htmlspecialchars($_GET['nomArticle']);
+    } else {
+        $nomArticle = 'l\'article inconnu';
+    }
     if (isset($_GET['nomArticle'])){
         $nomArticle = htmlspecialchars($_GET['nomArticle']);
     }else{

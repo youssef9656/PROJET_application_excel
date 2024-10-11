@@ -1,7 +1,11 @@
 <?php
 include '../../config/connect_db.php';
 
-$lotId = isset($_GET['lot_id']) ? intval($_GET['lot_id']) : 0;
+if (isset($_GET['lot_id'])) {
+    $lotId = intval($_GET['lot_id']);
+} else {
+    $lotId = 0;
+}
 
 if ($lotId > 0) {
     $query = "

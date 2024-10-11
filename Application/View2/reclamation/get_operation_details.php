@@ -6,7 +6,11 @@ error_reporting(E_ALL);
 include '../../config/connect_db.php';
 
 // Récupérer l'ID de l'opération à partir des paramètres GET
-$operationId = isset($_GET['operation_id']) ? intval($_GET['operation_id']) : 0;
+if (isset($_GET['operation_id'])) {
+    $operationId = intval($_GET['operation_id']);
+} else {
+    $operationId = 0;
+}
 
 if ($operationId > 0) {
     // Préparer la requête pour récupérer les détails de l'opération

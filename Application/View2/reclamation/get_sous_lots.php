@@ -5,7 +5,11 @@
 include '../../config/connect_db.php';
 
 // Récupérer l'ID du lot à partir des paramètres GET
-$lotId = isset($_GET['lot_id']) ? intval($_GET['lot_id']) : 0;
+if (isset($_GET['lot_id'])) {
+    $lotId = intval($_GET['lot_id']);
+} else {
+    $lotId = 0;
+}
 
 if ($lotId > 0) {
     $query = "SELECT sous_lot_id, sous_lot_name FROM sous_lots WHERE lot_id = ?";

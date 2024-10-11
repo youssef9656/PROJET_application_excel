@@ -667,7 +667,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             let entrer = document.getElementById('entree');
                             let sortie = document.getElementById('sortie');
 
-                            if (entree_value === 0){
+                            if (entree_value === 0 || entrer === ''){
+                                serviceModifier.disabled = false
+                                fournisseurModifier.disabled = true
                                 entrer.value = ''
                                 entrer.disabled = true
                             }
@@ -676,17 +678,25 @@ document.addEventListener('DOMContentLoaded', function () {
                                 entrer.value = entree_value;
                                 sortie.value = ''
                                 sortie.disabled = true
+                                serviceModifier.disabled = true
+                                fournisseurModifier.disabled = false
                             }
 
-                            if (sortie_value === 0){
+                            if (sortie_value === 0 || sortie === ''){
+                                fournisseurModifier.disabled = false
+                                serviceModifier.disabled = true
                                 sortie.value = ''
                                 sortie.disabled = true
+
 
                             }else{
                                 sortie.disabled = false
                                 sortie.value = sortie_value;
                                 entrer.value = ''
                                 entrer.disabled = true
+                                fournisseurModifier.disabled = true
+                                serviceModifier.disabled = false
+
 
                             }
 

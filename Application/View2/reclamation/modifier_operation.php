@@ -92,18 +92,78 @@ function article_besoin($article, $besoin, $conn)
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $operationId = isset($_POST['operation_id']) ? intval($_POST['operation_id']) : 0;
-    $lotId = isset($_POST['lot']) ? intval($_POST['lot']) : 0;
-    $sousLotId = isset($_POST['sousLot']) ? intval($_POST['sousLot']) : 0;
-    $articleId = isset($_POST['article']) ? intval($_POST['article']) : 0;
-    $fournisseurId = isset($_POST['fournisseur']) ? intval($_POST['fournisseur']) : 0;
-    $serviceId = isset($_POST['service']) ? intval($_POST['service']) : 0;
-    $ref = isset($_POST['ref']) ? $_POST['ref'] : '';
-    $entree = isset($_POST['entree']) ? floatval($_POST['entree']) : 0.00;
-    $sortie = isset($_POST['sortie']) ? floatval($_POST['sortie']) : 0.00;
-    $prix = isset($_POST['prix']) ? floatval($_POST['prix']) : 0.00;
-    $dateOperation = isset($_POST['date_operation']) ? $_POST['date_operation'] : '';
-    $sortie_precedent = isset($_POST['sortie_value']) ? $_POST['sortie_value'] : '';
+    if (isset($_POST['operation_id'])) {
+        $operationId = intval($_POST['operation_id']);
+    } else {
+        $operationId = 0;
+    }
+
+    if (isset($_POST['lot'])) {
+        $lotId = intval($_POST['lot']);
+    } else {
+        $lotId = 0;
+    }
+
+    if (isset($_POST['sousLot'])) {
+        $sousLotId = intval($_POST['sousLot']);
+    } else {
+        $sousLotId = 0;
+    }
+
+    if (isset($_POST['article'])) {
+        $articleId = intval($_POST['article']);
+    } else {
+        $articleId = 0;
+    }
+
+    if (isset($_POST['fournisseur'])) {
+        $fournisseurId = intval($_POST['fournisseur']);
+    } else {
+        $fournisseurId = 0;
+    }
+
+    if (isset($_POST['service'])) {
+        $serviceId = intval($_POST['service']);
+    } else {
+        $serviceId = 0;
+    }
+
+    if (isset($_POST['ref'])) {
+        $ref = $_POST['ref'];
+    } else {
+        $ref = '';
+    }
+
+    if (isset($_POST['entree'])) {
+        $entree = floatval($_POST['entree']);
+    } else {
+        $entree = 0.00;
+    }
+
+    if (isset($_POST['sortie'])) {
+        $sortie = floatval($_POST['sortie']);
+    } else {
+        $sortie = 0.00;
+    }
+
+    if (isset($_POST['prix'])) {
+        $prix = floatval($_POST['prix']);
+    } else {
+        $prix = 0.00;
+    }
+
+    if (isset($_POST['date_operation'])) {
+        $dateOperation = $_POST['date_operation'];
+    } else {
+        $dateOperation = '';
+    }
+
+    if (isset($_POST['sortie_value'])) {
+        $sortie_precedent = $_POST['sortie_value'];
+    } else {
+        $sortie_precedent = '';
+    }
+
     $reclamation = NULL;
 
     $formattedDateOperation = date('Y-m-d H:i:s', strtotime($dateOperation));
@@ -179,7 +239,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-    $prix = ($entree == 0.00) ? $prix_sortie : $prix;
+    if ($entree == 0.00) {
+        $prix = $prix_sortie;
+    } else {
+        $prix = $prix;
+    }
     $depense_sortie = $prix * $sortie;
     $depense_entre = $entree * $prix;
 

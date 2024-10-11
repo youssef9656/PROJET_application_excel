@@ -5,7 +5,11 @@ error_reporting(E_ALL);
 include '../../config/connect_db.php';
 
 // Récupérer l'ID du sous-lot à partir des paramètres GET
-$sousLotId = isset($_GET['sous_lot_id']) ? intval($_GET['sous_lot_id']) : 0;
+if (isset($_GET['sous_lot_id'])) {
+    $sousLotId = intval($_GET['sous_lot_id']);
+} else {
+    $sousLotId = 0;
+}
 
 if ($sousLotId > 0) {
     $query = "SELECT a.id_article, a.nom FROM article a
