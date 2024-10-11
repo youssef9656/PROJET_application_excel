@@ -227,16 +227,16 @@ if (isset($_GET['message'])) {
             ?>
             <div class="note-div">
                 <div class="note-ligne"></div>
-                <div class="note-text"> iaug fasdu gfdgsualui gf<?php echo htmlspecialchars($reclamation); ?></div>
+                <div class="note-text"><?php echo htmlspecialchars($reclamation); ?></div>
                 <div class="note-buttons">
                     <button class="btn-12 note-modifier modifier-operation" data-id="<?php echo $id_operation; ?>"><span>Modifier</span></button>
-                    <button class="btn-12 note-modifier supprimer-operation" data-id="<?php echo $id_operation; ?>"><span>Supprimer</span></button>
+                    <button class="btn-12 note-modifier supprimer_reclamation" data-id="<?php echo $id_operation; ?>"><span>Supprimer</span></button>
                 </div>
             </div>
             <?php
         }
     } else {
-        echo "<p>Aucune réclamation trouvée.</p>";
+        echo "<div class='aucune'>Aucune réclamation trouvée.</div>";
     }
     ?>
 
@@ -262,7 +262,7 @@ if (isset($_GET['message'])) {
                 </button>
             </div>
             <div class="note-div">
-                <div class="note-ligne"></div>
+<!--                <div class="note-ligne"></div>-->
                 <div class="note-text" id="text-reclamation-modal"></div>
             </div>
 

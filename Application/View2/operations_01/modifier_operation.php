@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sousLotId = isset($_POST['sousLot']) ? intval($_POST['sousLot']) : 0;
     $articleId = isset($_POST['article']) ? intval($_POST['article']) : 0;
     $fournisseurId = isset($_POST['fournisseur']) ? intval($_POST['fournisseur']) : 0;
-    $serviceId = isset($_POST['service']) ? intval($_POST['service']) : 0;
+    $serviceId = isset($_POST['service']) ? $_POST['service'] : 0;
     $ref = isset($_POST['ref']) ? $_POST['ref'] : '';
     $entree = isset($_POST['entree']) ? floatval($_POST['entree']) : 0.00;
     $sortie = isset($_POST['sortie']) ? floatval($_POST['sortie']) : 0.00;
@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $unite = getNom($conn, 'article', 'id_article', 'unite', $articleId);
     $fournisseurName = getNom($conn, 'fournisseurs', 'id_fournisseur', 'nom_fournisseur', $fournisseurId) . ' ' .
         getNom($conn, 'fournisseurs', 'id_fournisseur', 'prenom_fournisseur', $fournisseurId);
-    $serviceName = getNom($conn, 'service_zone', 'id', 'service', $serviceId);
+//    $serviceName = getNom($conn, 'service_zone', 'id', 'service', $serviceId);
 
     $queryPrix = "SELECT prix_operation FROM operation WHERE nom_article = ? ORDER BY date_operation DESC LIMIT 1";
     if ($stmt = $conn->prepare($queryPrix)) {
@@ -176,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     if ($stmt = $conn->prepare($queryInsert)) {
-        $stmt->bind_param("ssssssssssssss", $lotName, $sousLotName, $articleName, $formattedDateOperation, $entree, $sortie, $fournisseurName, $serviceName, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie);
+        $stmt->bind_param("ssssssssssssss", $lotName, $sousLotName, $articleName, $formattedDateOperation, $entree, $sortie, $fournisseurName, $serviceId, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie);
         if ($stmt->execute()) {
             // --- Update etat_de_stocks ---
             $start_date = '1000-01-01';

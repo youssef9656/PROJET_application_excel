@@ -291,3 +291,6 @@ body{
     display: flex;
     gap: 10px;
 }
+.aucune{
+    font-size: 40px;
+}

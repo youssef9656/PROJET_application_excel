@@ -75,17 +75,38 @@ function getFournisseurName($fournisseurId, $conn) {
     return $fournisseurName;
 }
 
+
+function getService($serviceId, $conn)
+{
+    $serviceName = ''; // Variable pour stocker le nom du service
+    if ($serviceId) { // Vérifiez si un ID de service est fourni
+        $queryService = "SELECT service FROM service_zone WHERE id = ?"; // Requête SQL
+        $stmt = $conn->prepare($queryService); // Préparer la requête
+        $stmt->bind_param("i", $serviceId); // Lier l'ID du service en tant qu'entier
+        $stmt->execute(); // Exécuter la requête
+        $result = $stmt->get_result(); // Obtenir le résultat
+        if ($result->num_rows > 0) { // Vérifiez si des données ont été trouvées
+            $serviceData = $result->fetch_assoc(); // Récupérer les données
+            $serviceName = $serviceData['service']; // Stocker le nom du service
+        }
+        $stmt->close(); // Fermer la déclaration
+    }
+    return $serviceName; // Retourner le nom du service
+}
+
 // Fonction pour insérer une opération
-function insererOperation($lotName, $sousLotName, $articleName, $entree, $sortie, $fournisseurName, $serviceName, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie, $conn) {
+function insererOperation($lotName, $sousLotName, $articleName, $entree, $sortie, $fournisseurName, $serviceName1, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie, $conn) {
     $queryInsert = "INSERT INTO operation (lot_name, sous_lot_name, nom_article, date_operation, entree_operation, sortie_operation, nom_pre_fournisseur, service_operation, prix_operation, unite_operation, pj_operation, ref, depense_entre, depense_sortie)
                     VALUES (?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmtInsert = $conn->prepare($queryInsert);
-    $stmtInsert->bind_param("sssdsssssssss", $lotName, $sousLotName, $articleName, $entree, $sortie, $fournisseurName, $serviceName, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie);
+    $stmtInsert->bind_param("sssdsssssssss", $lotName, $sousLotName, $articleName, $entree, $sortie, $fournisseurName, $serviceName1, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie);
 
     if ($stmtInsert->execute()) {
-        echo "Opération ajoutée avec succès.";
+        return true;
     } else {
-        echo "Erreur lors de l'insertion de l'opération : " . $stmtInsert->error;
+        // Enregistrer l'erreur dans un journal ou la renvoyer pour la gérer plus tard
+        error_log("Erreur lors de l'insertion de l'opération : " . $stmtInsert->error);
+        return false;
     }
     $stmtInsert->close();
 }
@@ -101,15 +122,11 @@ function verifierStock($articleName, $sortie, $conn) {
     if ($stmtStock->fetch()) {
         $stmtStock->close();
         if ($sortie <= $stockFinal) {
-            $stockFinaleValue = $stockFinal;
-            return $stockFinaleValue & true;
+            return true;
         } else {
-            echo "Erreur : La sortie de l'opération doit être inférieure ou égale au stock final ($stockFinal).";
-
             return false;
         }
     } else {
-        echo "Aucun stock trouvé pour l'article $articleName.";
         return false;
     }
 }
@@ -157,23 +174,8 @@ function mettreAJourEtatStocks($conn) {
             AND p.date_operation BETWEEN '$start_date' AND '$end_date'
             ORDER BY p.date_operation DESC
             LIMIT 30
-        ) AS Prix,
-        (
-            a.stock_initial + COALESCE(SUM(o.entree_operation), 0) - COALESCE(SUM(o.sortie_operation), 0)
-        ) * (
-            SELECT AVG(p.prix_operation)
-            FROM operation p
-            WHERE p.nom_article = a.nom
-            AND p.date_operation BETWEEN '$start_date' AND '$end_date'
-            ORDER BY p.date_operation DESC
-            LIMIT 30
-        ) AS Stock_Value,
-        a.stock_min AS Stock_Min,
-        CASE 
-            WHEN a.stock_initial + COALESCE(SUM(o.entree_operation), 0) - COALESCE(SUM(o.sortie_operation), 0) < a.stock_min 
-            THEN 'besoin' 
-            ELSE 'bon' 
-        END AS Requirement_Status
+        ) AS Prix, 
+        a.stock_min AS Stock_Min 
     FROM 
         article a
     LEFT JOIN 
@@ -187,36 +189,34 @@ function mettreAJourEtatStocks($conn) {
     $result = $conn->query($sql_select);
 
     if ($result->num_rows > 0) {
-        // Vider la table avant l'insertion
-        $conn->query("TRUNCATE TABLE etat_de_stocks");
-
         while ($row = $result->fetch_assoc()) {
-            $id = $row['ID'];
-            $article = $row['Article'];
-            $stock_initial = $row['Stock_Initial'];
-            $total_entry_operations = $row['Total_Entry_Operations'];
-            $total_exit_operations = $row['Total_Exit_Operations'];
-            $stock_final = $row['Stock_Final'];
             $prix = $row['Prix'];
-            $stock_value = $row['Stock_Value'];
-            $stock_min = $row['Stock_Min'];
-            $requirement_status = $row['Requirement_Status'];
-
-            $total_depenses_entree = $total_entry_operations * $prix;
-            $total_depenses_sortie = $total_exit_operations * $prix;
-
-            $sql_insert = "
+            $stock_final = $row['Stock_Final'];
+            $stock_value = $stock_final * $prix;
+            $total_depenses_entree = $row['Total_Entry_Operations'] * $prix;
+            $total_depenses_sortie = $row['Total_Exit_Operations'] * $prix;
+            $requirement_status = ($stock_final < $row['Stock_Min']) ? 'besoin' : 'bon';$sql_update = "
                 INSERT INTO etat_de_stocks (ID, Article, Stock_Initial, Total_Entry_Operations, Total_Exit_Operations, 
                     Stock_Final, Prix, Stock_Value, Total_Depenses_Entree, Total_Depenses_Sortie, Stock_Min, Requirement_Status)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE 
+                    Total_Entry_Operations = VALUES(Total_Entry_Operations),
+                    Total_Exit_Operations = VALUES(Total_Exit_Operations),
+                    Stock_Final = VALUES(Stock_Final),
+                    Prix = VALUES(Prix),
+                    Stock_Value = VALUES(Stock_Value),
+                    Total_Depenses_Entree = VALUES(Total_Depenses_Entree),
+                    Total_Depenses_Sortie = VALUES(Total_Depenses_Sortie),
+                    Requirement_Status = VALUES(Requirement_Status)
             ";
-            $stmt = $conn->prepare($sql_insert);
-            $stmt->bind_param("isssiiidddis", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $total_depenses_entree, $total_depenses_sortie, $stock_min, $requirement_status);
+            $stmt = $conn->prepare($sql_update);
+            $stmt->bind_param("isssiiidddis", $row['ID'], $row['Article'], $row['Stock_Initial'], $row['Total_Entry_Operations'], $row['Total_Exit_Operations'], $stock_final, $prix, $stock_value, $total_depenses_entree, $total_depenses_sortie, $row['Stock_Min'], $requirement_status);
             $stmt->execute();
             $stmt->close();
         }
     } else {
-        echo "Aucune donnée à traiter.";
+        // Enregistrer l'absence de données dans un journal
+        error_log("Aucune donnée à traiter dans mettreAJourEtatStocks()");
     }
 }
 
@@ -225,7 +225,7 @@ $lotId = $_POST['lot'];
 $sousLotId = $_POST['sousLot'];
 $articleId = $_POST['article'];
 $ref = $_POST['ref'];
-$serviceName = isset($_POST['service']) ? $_POST['service'] : '';
+$serviceName = isset($_POST['service']) ? $_POST['service'] : null;
 $fournisseurId = isset($_POST['fournisseur']) ? $_POST['fournisseur'] : null;
 $entree = isset($_POST['entree']) ? floatval($_POST['entree']) : 0.00;
 $sortie = isset($_POST['sortie']) ? floatval($_POST['sortie']) : 0.00;
@@ -238,6 +238,7 @@ $articleName = $articleData['nom'];
 $unite = $articleData['unite'];
 $prix_sortie = getDernierPrix($articleName, $conn);
 $fournisseurName = getFournisseurName($fournisseurId, $conn);
+$serviceName1 = getService($serviceName , $conn);
 
 // Calcul du prix et des dépenses
 $prix = ($entree == 0.00) ? $prix_sortie : floatval($_POST['prix']);
@@ -253,45 +254,44 @@ if (!empty($entree)) {
 }
 
 // Vérifier le stock et insérer l'opération
-$isInserted = false;
-
+$operationAjoutee = false;
 if (verifierStock($articleName, $sortie, $conn)) {
-    insererOperation($lotName, $sousLotName, $articleName, $entree, $sortie, $fournisseurName, $serviceName, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie, $conn);
-    $isInserted = true;
-    return $isInserted;
+    $operationAjoutee = insererOperation($lotName, $sousLotName, $articleName, $entree, $sortie, $fournisseurName, $serviceName1, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie, $conn);
 }
 
 // Mettre à jour la table etat_de_stocks
 mettreAJourEtatStocks($conn);
 
-
-
-
-
+// Obtenir la valeur de stock final
 $sqlStockFinal1 = "SELECT Stock_Final FROM etat_de_stocks WHERE Article = ?";
 $stmtStock1 = $conn->prepare($sqlStockFinal1);
 $stmtStock1->bind_param("s", $articleName);
 $stmtStock1->execute();
 $stmtStock1->bind_result($stockFinal1);
 if ($stmtStock1->fetch()) {
-    $stockFinaleValue = $stockFinal1 ;
+    $stockFinaleValue = $stockFinal1;
 }
-
 $stmtStock1->close();
 
 // Redirection et affichage du message
-if (article_besoin($articleName, "besoin", $conn)) {
-    if ($isInserted){
-        echo json_encode(['success' => true]);
-        header("Location: option_Ent_Sor.php?message=ssajouter&nomArticle=$articleName");
-    }else{
-        header("Location: option_Ent_Sor.php?message=eppuisement&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue");
-    }
+$message = "itwork"; // Message par défaut
+$redirectUrl = "option_Ent_Sor.php";
 
+if (article_besoin($articleName, "besoin", $conn)) {
+    if ($operationAjoutee) {
+        $message = "ssajouter";
+        $redirectUrl .= "?message=$message&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
+
+    } else {
+        $message = "eppuisement";
+        $redirectUrl .= "?message=$message&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
+    }
 } else {
-    header("Location: option_Ent_Sor.php");
+    $redirectUrl .= "?message=$message";
 }
 
+// Redirection finale
+header("Location: $redirectUrl");
 exit();
 
 $conn->close();

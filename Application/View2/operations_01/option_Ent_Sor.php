@@ -55,7 +55,7 @@ if (isset($_GET['message'])) {
                 <div class="mouth sad"></div>
             </div>
             <div class="shadow move"></div>
-            <div class="message"><h1 class="alert">Alert !</h1><p class="modaleBody">    Il y a un besoin dans l\'article : ' . $nomArticle . '    </div>
+            <div class="message"><h1 class="alert">Alert !</h1><p class="modaleBody">    Il y a un besoin dans l\'article : ' . $nomArticle . '  <br> Le stock actuel est : '.$stockFinaleValue .'</div>
         </div>
     </div>
 

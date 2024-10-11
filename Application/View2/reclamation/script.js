@@ -184,47 +184,291 @@ document.querySelectorAll('.note-div').forEach(noteDiv => {
 //     });
 // });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// document.addEventListener('DOMContentLoaded', function () {
+//     setTimeout(() => {
+//         // Gère l'activation/désactivation des champs en fonction de l'entrée/sortie
+//         document.getElementById('entree').addEventListener('input', function() {
+//             if (this.value) {
+//                 document.getElementById('sortie').disabled = true;
+//                 document.getElementById('service').disabled = true;
+//                 document.getElementById('fournisseur').disabled = false;
+//                 document.getElementById('prix').disabled = false;
+//             } else {
+//                 document.getElementById('sortie').disabled = false;
+//                 document.getElementById('service').disabled = true;
+//                 document.getElementById('fournisseur').disabled = true;
+//             }
+//         });
+//
+//         document.getElementById('sortie').addEventListener('input', function() {
+//             if (this.value) {
+//                 document.getElementById('entree').disabled = true;
+//                 document.getElementById('fournisseur').disabled = true;
+//                 document.getElementById('service').disabled = false;
+//                 document.getElementById('prix').disabled = true;
+//             } else {
+//                 document.getElementById('entree').disabled = false;
+//                 document.getElementById('fournisseur').disabled = true;
+//                 document.getElementById('service').disabled = true;
+//             }
+//         });
+//
+//         const modifierButtons = document.querySelectorAll('.modifier-operation');
+//         const lotModifier = document.getElementById('lot');
+//         const sousLotModifier = document.getElementById('sousLot');
+//         const articleModifier = document.getElementById('article');
+//         const fournisseurModifier = document.getElementById('fournisseur');
+//         const serviceModifier = document.getElementById('service');
+//         const dateOperationModifier = document.getElementById('date_operation');
+//         const operationIdInput = document.getElementById('operationId');
+//         const reclamationModal = document.querySelector('#text-reclamation-modal');
+//
+//         // Écouter les événements sur les boutons de modification
+//         modifierButtons.forEach(button => {
+//             button.addEventListener('click', function () {
+//                 const operationId = this.getAttribute('data-id');
+//                 const lotName = this.getAttribute('data-lot');
+//                 const sousLotName = this.getAttribute('data-sous-lot');
+//                 const articleName = this.getAttribute('data-article');
+//                 const sortieValue = this.getAttribute('data-sortie');
+//
+//                 // Pré-remplir les champs avec les valeurs actuelles de l'opération
+//                 operationIdInput.value = operationId;
+//
+//                 // Charger les lots
+//                 fetch('get_lots.php')
+//                     .then(response => response.json())
+//                     .then(data => {
+//                         lotModifier.innerHTML = '<option value="">-- Sélectionner Lot --</option>';
+//                         // Vérifier si data est un tableau
+//                         if (Array.isArray(data)) {
+//                             data.forEach(lot => {
+//                                 const option = document.createElement('option');
+//                                 option.value = lot.lot_id;
+//                                 option.textContent = lot.lot_name;
+//
+//                                 // Ajouter la valeur par défaut
+//                                 if (lot.lot_name === lotName) {
+//                                     option.selected = true;
+//                                 }
+//                                 lotModifier.appendChild(option);
+//                             });
+//                         } else {
+//                             console.error("Erreur lors du chargement des lots :", data);
+//                         }
+//                         lotModifier.dispatchEvent(new Event('change'));
+//                     })
+//                     .catch(error => {
+//                         console.error('Erreur lors de la récupération des lots :', error);
+//                     });
+//
+//                 // Charger les sous-lots en fonction du lot sélectionné
+//                 lotModifier.addEventListener('change', function () {
+//                     const lotId = this.value;
+//                     fetch(`get_sous_lots.php?lot_id=${lotId}`)
+//                         .then(response => response.json())
+//                         .then(data => {
+//                             sousLotModifier.innerHTML = '<option value="">-- Sélectionner Sous-lot --</option>';
+//                             // Vérifier si data est un tableau
+//                             if (Array.isArray(data)) {
+//                                 data.forEach(sousLot => {
+//                                     const option = document.createElement('option');
+//                                     option.value = sousLot.sous_lot_id;
+//                                     option.textContent = sousLot.sous_lot_name;
+//                                     sousLotModifier.appendChild(option);
+//                                 });
+//                             } else {
+//                                 console.error("Erreur lors du chargement des sous-lots :", data);
+//                             }
+//                             sousLotModifier.disabled = !lotId;
+//                             sousLotModifier.dispatchEvent(new Event('change'));
+//                         })
+//                         .catch(error => {
+//                             console.error('Erreur lors de la récupération des sous-lots :', error);
+//                         });
+//                 });
+//
+//                 // Charger les articles en fonction du sous-lot sélectionné
+//                 sousLotModifier.addEventListener('change', function () {
+//                     const sousLotId = this.value;
+//                     fetch(`get_articles.php?sous_lot_id=${sousLotId}`)
+//                         .then(response => response.json())
+//                         .then(data => {
+//                             articleModifier.innerHTML = '<option value="">-- Sélectionner Article --</option>';
+//                             // Vérifier si data est un tableau
+//                             if (Array.isArray(data)) {
+//                                 data.forEach(article => {
+//                                     const option = document.createElement('option');
+//                                     option.value = article.id_article;
+//                                     option.textContent = article.nom;
+//                                     articleModifier.appendChild(option);
+//                                 });
+//                             } else {
+//                                 console.error("Erreur lors du chargement des articles :", data);
+//                             }
+//                             articleModifier.disabled = !sousLotId;
+//                         })
+//                         .catch(error => {
+//                             console.error('Erreur lors de la récupération des articles :', error);
+//                         });
+//                 });
+//
+//                 // Charger les fournisseurs et services en fonction de l'article sélectionné
+//                 articleModifier.addEventListener('change', function () {
+//                     const articleId = this.value;
+//                     fetch(`get_fournisseurs.php?article_id=${articleId}`)
+//                         .then(response => response.json())
+//                         .then(data => {
+//                             fournisseurModifier.innerHTML = '<option value="">-- Sélectionner Fournisseur --</option>';
+//                             // Vérifier si data est un tableau
+//                             if (Array.isArray(data)) {
+//                                 data.forEach(fournisseur => {
+//                                     const option = document.createElement('option');
+//                                     option.value = fournisseur.id_fournisseur;
+//                                     option.textContent = `${fournisseur.nom_fournisseur} ${fournisseur.prenom_fournisseur}`;
+//                                     fournisseurModifier.appendChild(option);
+//                                 });
+//                             } else {
+//                                 console.error("Erreur lors du chargement des fournisseurs :", data);
+//                             }
+//                             fournisseurModifier.disabled = false; // Activer le sélecteur
+//                         })
+//                         .catch(error => {
+//                             console.error('Erreur lors de la récupération des fournisseurs :', error);
+//                         });
+//
+//                     fetch(`get_services.php?article_id=${articleId}`)
+//                         .then(response => response.json())
+//                         .then(data => {
+//                             serviceModifier.innerHTML = '<option value="">-- Sélectionner Service --</option>';
+//                             // Vérifier si data est un tableau
+//                             if (Array.isArray(data)) {
+//                                 data.forEach(service => {
+//                                     const option = document.createElement('option');
+//                                     option.value = service.id;
+//                                     option.textContent = service.service;
+//                                     serviceModifier.appendChild(option);
+//                                 });
+//                             } else {
+//                                 console.error("Erreur lors du chargement des services :", data);
+//                             }
+//                             serviceModifier.disabled = false; // Activer le sélecteur
+//                         })
+//                         .catch(error => {
+//                             console.error('Erreur lors de la récupération des services :', error);
+//                         });
+//                 });
+//
+//                 // Charger les détails de l'opération actuelle
+//                 fetch(`get_operation_details.php?operation_id=${operationId}`)
+//                     .then(response => response.json())
+//                     .then(data => {
+//                         if (data) {
+//                             console.log("Détails de l'opération :", data);
+//                             sousLotModifier.value = data.sous_lot_name; // Assurez-vous que le nom du sous-lot est correct
+//                             articleModifier.value = data.nom_article; // Assurez-vous que le nom de l'article est correct
+//                             fournisseurModifier.value = data.nom_pre_fournisseur; // Assurez-vous que le nom du fournisseur est correct
+//                             serviceModifier.value = data.service_operation; // Assurez-vous que le nom du service est correct
+//                             reclamationModal.textContent = data.reclamation;
+//
+//                             const formattedDate = data.date_operation.replace(" ", "T").substring(0, 16);
+//                             dateOperationModifier.value = formattedDate;
+//
+//                             document.getElementById('ref').value = data.ref;
+//                             document.getElementById('entree').value = data.entree;
+//                             document.getElementById('sortie').value = sortieValue; // Utiliser la valeur de sortie du bouton
+//                             document.getElementById('prix').value = data.prix;
+//                         }
+//                     })
+//                     .catch(error => {
+//                         console.error('Erreur lors de la récupération des détails de l\'opération :', error);
+//                     });
+//
+//                 // Ouvrir le modal
+//                 const modal = new bootstrap.Modal(document.getElementById('modifierOperationModal'));
+//                 modal.show();
+//             });
+//         });
+//     }, 100);
+// });
+
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
     setTimeout(() => {
         // Gère l'activation/désactivation des champs en fonction de l'entrée/sortie
-        document.getElementById('entree').addEventListener('input', function() {
-            if (this.value) {
-                document.getElementById('sortie').disabled = true;
-                document.getElementById('service').disabled = true;
-                document.getElementById('fournisseur').disabled = false;
-                document.getElementById('prix').disabled = false;
-            } else {
-                document.getElementById('sortie').disabled = false;
-                document.getElementById('service').disabled = true;
-                document.getElementById('fournisseur').disabled = true;
-            }
-        });
 
-        document.getElementById('sortie').addEventListener('input', function() {
-            if (this.value) {
-                document.getElementById('entree').disabled = true;
-                document.getElementById('fournisseur').disabled = true;
-                document.getElementById('service').disabled = false;
-                document.getElementById('prix').disabled = true;
-            } else {
-                document.getElementById('entree').disabled = false;
-                document.getElementById('fournisseur').disabled = true;
-                document.getElementById('service').disabled = true;
-            }
-        });
 
         const modifierButtons = document.querySelectorAll('.modifier-operation');
-        const lotModifier = document.getElementById('lot');
-        const sousLotModifier = document.getElementById('sousLot');
-        const articleModifier = document.getElementById('article');
-        const fournisseurModifier = document.getElementById('fournisseur');
-        const serviceModifier = document.getElementById('service');
-        const dateOperationModifier = document.getElementById('date_operation');
-        const operationIdInput = document.getElementById('operationId');
+
 
         // Écouter les événements sur les boutons de modification
         modifierButtons.forEach(button => {
             button.addEventListener('click', function () {
+
+
+                document.getElementById('entree').addEventListener('input', function() {
+                    if (this.value) {
+                        document.getElementById('sortie').disabled = true;
+                        document.getElementById('service').disabled = true;
+                        document.getElementById('fournisseur').disabled = false;
+                        document.getElementById('prix').disabled = false;
+                    } else {
+                        document.getElementById('sortie').disabled = false;
+                        document.getElementById('service').disabled = true;
+                        document.getElementById('fournisseur').disabled = true;
+                    }
+                });
+
+                document.getElementById('sortie').addEventListener('input', function() {
+                    if (this.value) {
+                        document.getElementById('entree').disabled = true;
+                        document.getElementById('fournisseur').disabled = true;
+                        document.getElementById('service').disabled = false;
+                        document.getElementById('prix').disabled = true;
+                    } else {
+                        document.getElementById('entree').disabled = false;
+                        document.getElementById('fournisseur').disabled = true;
+                        document.getElementById('service').disabled = true;
+                    }
+                });
+
+                const lotModifier = document.getElementById('lot');
+                const sousLotModifier = document.getElementById('sousLot');
+                const articleModifier = document.getElementById('article');
+                const fournisseurModifier = document.getElementById('fournisseur');
+                const serviceModifier = document.getElementById('service');
+                const dateOperationModifier = document.getElementById('date_operation');
+                const operationIdInput = document.getElementById('operationId');
+                const reclamationModal = document.querySelector('#text-reclamation-modal');
+
+
                 const operationId = this.getAttribute('data-id');
                 const lotName = this.getAttribute('data-lot');
                 const sousLotName = this.getAttribute('data-sous-lot');
@@ -232,153 +476,241 @@ document.addEventListener('DOMContentLoaded', function () {
                 const sortieValue = this.getAttribute('data-sortie');
 
                 // Pré-remplir les champs avec les valeurs actuelles de l'opération
-                document.getElementById('sortie').value = sortieValue;
                 operationIdInput.value = operationId;
 
                 // Charger les lots
-                fetch('get_lots.php')
-                    .then(response => response.json())
-                    .then(data => {
-                        lotModifier.innerHTML = '<option value="">-- Sélectionner Lot --</option>';
-                        data.forEach(lot => {
-                            const option = document.createElement('option');
-                            option.value = lot.lot_id;
-                            option.textContent = lot.lot_name;
-                            if (lot.lot_name === lotName) {
-                                option.selected = true;
-                            }
-                            lotModifier.appendChild(option);
-                        });
-                        lotModifier.dispatchEvent(new Event('change'));
-                    });
-
-                // Charger les sous-lots en fonction du lot sélectionné
-                lotModifier.addEventListener('change', function () {
-                    const lotId = this.value;
-                    fetch(`get_sous_lots.php?lot_id=${lotId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            sousLotModifier.innerHTML = '<option value="">-- Sélectionner Sous-lot --</option>';
-                            data.forEach(sousLot => {
-                                const option = document.createElement('option');
-                                option.value = sousLot.sous_lot_id;
-                                option.textContent = sousLot.sous_lot_name;
-                                sousLotModifier.appendChild(option);
-                            });
-                            sousLotModifier.disabled = !lotId;
-                            sousLotModifier.dispatchEvent(new Event('change'));
-                        });
-                });
-
-                // Charger les articles en fonction du sous-lot sélectionné
-                sousLotModifier.addEventListener('change', function () {
-                    const sousLotId = this.value;
-                    fetch(`get_articles.php?sous_lot_id=${sousLotId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            articleModifier.innerHTML = '<option value="">-- Sélectionner Article --</option>';
-                            data.forEach(article => {
-                                const option = document.createElement('option');
-                                option.value = article.id_article;
-                                option.textContent = article.nom;
-                                articleModifier.appendChild(option);
-                            });
-                            articleModifier.disabled = !sousLotId;
-                        });
-                });
-
-                // Charger les fournisseurs et services en fonction de l'article sélectionné
-                lotModifier.addEventListener('change', function () {
-                    const articleId = this.value;
-                    fetch(`get_fournisseurs.php?lot_id=${articleId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            fournisseurModifier.innerHTML = '<option value="">-- Sélectionner Fournisseur --</option>';
-                            data.forEach(fournisseur => {
-                                const option = document.createElement('option');
-                                option.value = fournisseur.id_fournisseur;
-                                option.textContent = `${fournisseur.nom_fournisseur} ${fournisseur.prenom_fournisseur}`;
-                                fournisseurModifier.appendChild(option);
-                            });
-                            // fournisseurModifier.disabled = !articleId;
-                        });
-
-                    fetch(`get_services.php?article_id=${articleId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            serviceModifier.innerHTML = '<option value="">-- Sélectionner Service --</option>';
-                            data.forEach(service => {
-                                const option = document.createElement('option');
-                                option.value = service.id;
-                                option.textContent = service.service;
-                                serviceModifier.appendChild(option);
-                            });
-                            // serviceModifier.disabled = !articleId;
-                        });
-                });
-
-                // Charger les détails de l'opération actuelle
                 fetch(`get_operation_details.php?operation_id=${operationId}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data) {
-                            sousLotModifier.value = data.lot_name;
-                            articleModifier.value = data.nom_article;
-                            fournisseurModifier.value = data.nom_pre_fournisseur;
-                            serviceModifier.value = data.service_operation;
-
+                            console.log("Détails de l'opération :", data);
                             const formattedDate = data.date_operation.replace(" ", "T").substring(0, 16);
                             dateOperationModifier.value = formattedDate;
+                            let lot_value = data.lot_name;
+                            let sous_lot_value = data.sous_lot_name
+                            let article_value = data.nom_article
+                            let ref_value = data.ref
+                            let entree_value = parseFloat(data.entree_operation)
+                            let sortie_value = parseFloat(data.sortie_operation)
+                            let prix_value = data.prix_operation
+                            let fournisseur_value = ''
+                            if (data.nom_pre_fournisseur !== null && data.nom_pre_fournisseur !== ''){
+                                fournisseur_value = data.nom_pre_fournisseur
+                            }
+                            let service_value = ''
+                            if (data.service_operation !== null && data.service_operation !== ''){
+                                service_value = data.service_operation
+                            }
+                            reclamationModal.textContent = data.reclamation;
 
-                            document.getElementById('ref').value = data.ref;
-                            document.getElementById('entree').value = data.entree;
-                            document.getElementById('sortie').value = data.sortie;
-                            document.getElementById('prix').value = data.prix;
+                            document.getElementById('ref').value = ref_value
+                            document.getElementById('prix').value = prix_value
+
+
+                            fetch('get_lots.php')
+                                .then(response => response.json())
+                                .then(data => {
+                                    lotModifier.innerHTML = '<option value="">-- Sélectionner Lot --</option>';
+                                    // Vérifier si data est un tableau
+                                    if (Array.isArray(data)) {
+                                        data.forEach(lot => {
+                                            const option = document.createElement('option');
+                                            option.value = lot.lot_id;
+                                            option.textContent = lot.lot_name;
+
+                                            // Ajouter la valeur par défaut
+                                            if (lot.lot_name === lotName) {
+                                                option.selected = true;
+                                            }
+                                            lotModifier.appendChild(option);
+
+                                            if (option.innerHTML === lot_value){
+                                                option.selected = true ;
+                                            }
+                                        });
+                                    } else {
+                                        console.error("Erreur lors du chargement des lots :", data);
+                                    }
+                                    lotModifier.dispatchEvent(new Event('change'));
+                                })
+                                .catch(error => {
+                                    console.error('Erreur lors de la récupération des lots :', error);
+                                });
+
+                            // Charger les sous-lots en fonction du lot sélectionné
+                            lotModifier.addEventListener('change', function () {
+                                const lotId = this.value;
+                                fetch(`get_sous_lots.php?lot_id=${lotId}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        sousLotModifier.innerHTML = '<option value="">-- Sélectionner Sous-lot --</option>';
+                                        // Vérifier si data est un tableau
+                                        if (Array.isArray(data)) {
+                                            data.forEach(sousLot => {
+                                                const option = document.createElement('option');
+                                                option.value = sousLot.sous_lot_id;
+                                                option.textContent = sousLot.sous_lot_name;
+                                                sousLotModifier.appendChild(option);
+
+                                                if (option.innerHTML === sous_lot_value){
+                                                    sousLotModifier.disabled = false
+                                                    option.selected = true
+                                                }
+                                            });
+                                        } else {
+                                            console.error("Erreur lors du chargement des sous-lots :", data);
+                                        }
+                                        // sousLotModifier.disabled = !lotId;
+                                        sousLotModifier.dispatchEvent(new Event('change'));
+                                    })
+                                    .catch(error => {
+                                        console.error('Erreur lors de la récupération des sous-lots :', error);
+                                    });
+                            });
+
+                            // Charger les articles en fonction du sous-lot sélectionné
+                            sousLotModifier.addEventListener('change', function () {
+                                const sousLotId = this.value;
+                                fetch(`get_articles.php?sous_lot_id=${sousLotId}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        articleModifier.innerHTML = '<option value="">-- Sélectionner Article --</option>';
+                                        // Vérifier si data est un tableau
+                                        if (Array.isArray(data)) {
+                                            data.forEach(article => {
+                                                const option = document.createElement('option');
+                                                option.value = article.id_article;
+                                                option.textContent = article.nom;
+                                                articleModifier.appendChild(option);
+
+                                                if (option.innerHTML === article_value){
+                                                    // articleName.disabled = false;
+                                                    option.selected = true;
+                                                }
+                                            });
+                                        } else {
+                                            console.error("Erreur lors du chargement des articles :", data);
+                                        }
+                                        articleModifier.disabled = !sousLotId;
+                                    })
+                                    .catch(error => {
+                                        console.error('Erreur lors de la récupération des articles :', error);
+                                    });
+                            });
+
+                            // Charger les fournisseurs et services en fonction de l'article sélectionné
+                            lotModifier.addEventListener('change', function () {
+                                const articleId = this.value;
+                                fetch(`get_fournisseurs.php?lot_id=${articleId}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        fournisseurModifier.innerHTML = '<option value="">-- Sélectionner Fournisseur --</option>';
+                                        // Vérifier si data est un tableau
+                                        if (Array.isArray(data)) {
+                                            data.forEach(fournisseur => {
+                                                const option = document.createElement('option');
+                                                option.value = fournisseur.id_fournisseur;
+                                                option.textContent = `${fournisseur.nom_fournisseur} ${fournisseur.prenom_fournisseur}`;
+                                                fournisseurModifier.appendChild(option);
+                                                if (option.innerHTML === fournisseur_value){
+                                                    fournisseurModifier.disabled = false;
+                                                    option.selected = true
+                                                    serviceModifier.disabled = true;
+                                                }
+                                                else{
+                                                    option.selected = false
+                                                    fournisseurModifier.disabled = true;
+                                                }
+                                            });
+                                        } else {
+                                            console.error("Erreur lors du chargement des fournisseurs :", data);
+                                        }
+                                        fournisseurModifier.disabled = false; // Activer le sélecteur
+                                    })
+                                    .catch(error => {
+                                        console.error('Erreur lors de la récupération des fournisseurs :', error);
+                                    });
+
+                                fetch(`get_services.php`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        serviceModifier.innerHTML = '<option value="">-- Sélectionner Service --</option>';
+                                        // Vérifier si data est un tableau
+                                        if (Array.isArray(data)) {
+                                            data.forEach(service => {
+                                                const option = document.createElement('option');
+                                                option.value = service.id;
+                                                option.textContent = service.service;
+                                                serviceModifier.appendChild(option);
+
+                                                console.log(service_value)
+                                                if (option.innerHTML === service_value){
+                                                    serviceModifier.disabled = false;
+                                                    option.selected = true;
+                                                    fournisseurModifier.disabled = true;
+                                                }else{
+                                                    option.selected = false
+                                                    serviceModifier.disabled = true;
+                                                }
+
+                                            });
+                                        } else {
+                                            console.error("Erreur lors du chargement des services :", data);
+                                        }
+                                        serviceModifier.disabled = false; // Activer le sélecteur
+                                    })
+                                    .catch(error => {
+                                        console.error('Erreur lors de la récupération des services :', error);
+                                    });
+                            });
+
+                            let entrer = document.getElementById('entree');
+                            let sortie = document.getElementById('sortie');
+
+                            if (entree_value === 0){
+                                entrer.value = ''
+                                entrer.disabled = true
+                            }
+                            else{
+                                entrer.disabled = false
+                                entrer.value = entree_value;
+                                sortie.value = ''
+                                sortie.disabled = true
+                            }
+
+                            if (sortie_value === 0){
+                                sortie.value = ''
+                                sortie.disabled = true
+
+                            }else{
+                                sortie.disabled = false
+                                sortie.value = sortie_value;
+                                entrer.value = ''
+                                entrer.disabled = true
+
+                            }
+
+
+
+
+
+
+
+
                         }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la récupération des détails de l\'opération :', error);
                     });
+
+                // Charger les détails de l'opération actuelle
+
 
                 // Ouvrir le modal
                 const modal = new bootstrap.Modal(document.getElementById('modifierOperationModal'));
                 modal.show();
             });
         });
-        const formModifier = document.getElementById('modifierOperationForm');
-
-        // formModifier.addEventListener('submit', function (e) {
-        //     e.preventDefault(); // Empêcher l'envoi par défaut du formulaire
-        //
-        //     // Création de l'objet FormData pour envoyer les données du formulaire
-        //     const formData = new FormData(this);
-        //
-        //     // Envoi de la requête AJAX
-        //     fetch('modifier_operation.php', {
-        //         method: 'POST',
-        //         body: formData,
-        //     })
-        //         .then(response => response.text()) // Récupérez la réponse en tant que texte
-        //         .then(text => {
-        //             // console.log('Réponse brute:', text); // Affichez la réponse brute
-        //             // console.log(response)
-        //             try {
-        //                 const data = JSON.parse(text); // Essayez de convertir en JSON
-        //                 console.log(data)
-        //                 if (data.success) {
-        //                     alert('Opération modifiée avec succès');
-        //                     const modal = bootstrap.Modal.getInstance(document.getElementById('modifierOperationModal'));
-        //                     modal.hide();
-        //                 } else {
-        //                     alert('Erreur lors de la modification : ' + data.message);
-        //                 }
-        //             } catch (error) {
-        //                 console.error('Erreur lors de l\'analyse JSON :', error);
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error('Erreur lors de la requête AJAX :', error);
-        //         });
-        //
-        // });
-
     }, 100);
 });
 
@@ -403,4 +735,48 @@ document.addEventListener("DOMContentLoaded" , ()=> {
 
     })
 
+})
+
+
+var supprimer_reclamation = document.querySelectorAll('.supprimer_reclamation');
+
+supprimer_reclamation.forEach((supp)=>{
+    supp.addEventListener('click', function (event) {
+        var operationId = this.dataset.id;
+
+        function deleteFunction(operationId){
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "supprimer_reclamation.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    var response = JSON.parse(this.responseText);
+                    if (response.success) {
+                        // Rediriger l'utilisateur vers la page avec le message de succès
+                        // window.location.href = "option_Ent_Sor.php?message=" + encodeURIComponent(response.message);
+                        location.reload()
+                    } else {
+                        // Afficher un message d'erreur à l'utilisateur (par exemple, avec une alerte)
+                        alert(response.message);
+                    }
+                    reclamationModal.hide(); // Fermer le modal
+                }
+            };
+            xhr.send("operationId=" + operationId);
+        }
+
+
+        function confirmDeletion() {
+            if (window.confirm("Voulez-vous vraiment supprimer cette réclamation ?")) {
+                deleteFunction(operationId);
+            } else {
+                console.log("Suppression annulée.");
+            }
+        }
+
+        confirmDeletion()
+
+        // Envoyer une requête AJAX pour enregistrer la réclamation avec la valeur NULL
+
+    });
 })

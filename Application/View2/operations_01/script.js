@@ -172,6 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('sousLot').innerHTML = '<option value="">-- Sélectionner Sous-lot --</option>';
             document.getElementById('article').innerHTML = '<option value="">-- Sélectionner Article --</option>';
             document.getElementById('fournisseur').innerHTML = '<option value="">-- Sélectionner Fournisseur --</option>';
+            document.getElementById('service').innerHTML = '<option value="">-- Sélectionner Fournisseur --</option>';
         }
     });
 
@@ -446,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             serviceModifier.innerHTML = '<option value="">-- Sélectionner Service --</option>';
                             data.forEach(service => {
                                 const option = document.createElement('option');
-                                option.value = service.id;
+                                option.value = service.service;
                                 option.textContent = service.service;
                                 serviceModifier.appendChild(option);
                             });
