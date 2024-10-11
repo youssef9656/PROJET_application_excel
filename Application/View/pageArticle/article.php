@@ -1,20 +1,22 @@
 <?php
 include '../../Config/check_session.php';
-checkUserRole('user');
-
+checkUserRole('admin');
 
 include '../../Config/connect_db.php';
 $pageName = 'Article';
 
-$querySelect = "SELECT * FROM fournisseurs";
+$querySelect = "SELECT * FROM article";
 $paramsSelect = [];
 $data = selectData($querySelect, $paramsSelect);
 
-$queryProduit = "SELECT DISTINCT nom_fournisseur FROM fournisseurs";
-$nom_fournisseur = selectData($queryProduit, []);
+$querynom_article = "SELECT DISTINCT nom FROM article";
+$nom_article = selectData($querynom_article, []);
 
-$queryElement = "SELECT DISTINCT prenom_fournisseur FROM fournisseurs";
-$prenom_fournisseur = selectData($queryElement, []);
+$querystock_min = "SELECT DISTINCT stock_min FROM article";
+$stock_min = selectData($querystock_min, []);
+
+$querystock_initial= "SELECT DISTINCT stock_initial FROM article";
+$stock_initial = selectData($querystock_initial, []);
 
 ?>
 
@@ -26,142 +28,332 @@ $prenom_fournisseur = selectData($queryElement, []);
           content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><?php echo $pageName; ?></title>
-    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
-    <style>
-        /* تحسين شكل الزر + */
-        #ajouterBtn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        #ajouterBtn:hover {
-            background-color: #0056b3;
-        }
-
-        /* تعيين الموقع المطلق للنموذج */
-        .floating-form {
-            position: absolute;
-            top: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: white;
-            border: 1px solid #ccc;
-            padding: 20px;
-            z-index: 9999;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            width: 400px;
-            display: none;
-            height: 500px;
-            overflow-y: scroll;
-
-
-        }
-
-        /* تحسين شكل الزر داخل النموذج */
-        #submitArticle {
-            background-color: #1441fc;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        #modifier_Ar{
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        }
-
-        #submitArticle:hover {
-            background-color: #218838;
-        }
-
-        #hideBtn {
-            background-color: #35dcdc;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        #hideBtn:hover {
-            background-color: #2370c8;
-        }
-
-        .table-container {
-            max-height: 400px; /* Ajuste la hauteur en fonction de tes besoins */
-            overflow-y: auto; /* Ajoute une barre de défilement verticale si le contenu dépasse la hauteur */
-            /*border: 1px solid #050505; !* Optionnel : ajouter une bordure autour du conteneur *!*/
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .table thead th {
-            position: -webkit-sticky; /* Pour les anciens navigateurs WebKit */
-            position: sticky;
-            top: 0; /* Fixe l'en-tête en haut du conteneur */
-            background: #f9f9f9; /* Ajoute une couleur d'arrière-plan pour l'en-tête */
-            z-index: 1; /* Assure que l'en-tête est au-dessus du contenu du tableau */
-            border-bottom: 2px solid #ddd; /* Optionnel : ajouter une bordure sous l'en-tête */
-        }
-
-        .table tbody td {
-            padding: 10px; /* Ajuste le padding pour les cellules du tableau */
-            border-bottom: 1px solid #ddd; /* Ajoute une bordure sous chaque cellule */
-        }
-
-    </style>
+<!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
 </head>
+<style>
+    /* Amélioration de l'apparence du bouton "ajouter" */
+    #ajouterBtn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 50%;
+        font-size: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    #ajouterBtn:hover {
+        background-color: #0056b3;
+        transform: scale(1.1);
+    }
+
+    /* Apparence améliorée du formulaire flottant */
+    .floating-form {
+        position: absolute;
+        top: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: white;
+        border: 1px solid #ccc;
+        padding: 20px;
+        z-index: 9999;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        width: 60%;
+        display: none;
+        height: 80vh;
+        border-radius: 8px;
+    }
+
+    /* Champs de saisie du formulaire */
+    .floating-form input,
+    .floating-form select,
+    .floating-form textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .floating-form input:focus,
+    .floating-form select:focus,
+    .floating-form textarea:focus {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        border-color: #66afe9;
+    }
+
+    /* Boutons du formulaire */
+    .floating-form button {
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        transition: box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+    .floating-form button:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        background-color: #0056b3;
+    }
+
+    /* Bouton "soumettre" dans le formulaire */
+    #submitArticle {
+        background-color: #1441fc;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+    #submitArticle:hover {
+        background-color: #0d34d2;
+    }
+
+    /* Bouton "modifier" dans le formulaire */
+    #modifier_Ar {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+    #modifier_Ar:hover {
+        background-color: #218838;
+    }
+
+    /* Bouton "cacher" dans le formulaire */
+    #hideBtn {
+        background-color: #35dcdc;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+    #hideBtn:hover {
+        background-color: #2370c8;
+    }
+
+    /* Conteneur de la table avec défilement */
+    .table-container {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .table thead th {
+        position: sticky;
+        top: 0;
+        background: #f9f9f9;
+        z-index: 1;
+        border-bottom: 2px solid #ddd;
+    }
+    .table tbody td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Éléments de la recherche */
+    .form-control {
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        padding: .375rem .75rem;
+    }
+    /* Style général de la page */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Style du conteneur de recherche */
+    .search-container {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease;
+    }
+
+    /* Input de recherche */
+    .search-input {
+        padding: 10px;
+        border: 2px solid #e3e3e3;
+        border-radius: 5px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .search-input:focus {
+        border-color: #007bff;
+        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+    }
+
+    /* Liste déroulante (datalist) */
+    .datalist {
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    /* Boutons et sélecteur */
+    .search-select {
+        padding: 10px;
+        border-radius: 5px;
+        border: 2px solid #e3e3e3;
+        transition: border-color 0.3s ease;
+    }
+    .search-select:focus {
+        border-color: #007bff;
+    }
+
+    /* Animation pour une meilleure transition visuelle */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Transition et style de bouton */
+    button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    button:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+
+    /* Media queries pour les petits écrans */
+    @media (max-width: 768px) {
+        .search-container {
+            flex-direction: column;
+        }
+        .search-input, .search-select {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+    }
+
+</style>
+
+
 <body>
 <?php include '../../includes/header.php'; ?>
 
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center">
+<div class="col-12 row  text-center w-100 search-container">
+    <div class="col">
+        <input type="text" list='nom1' class="form-control keepDatalist search-input" placeholder="Chercher Article"
+               id="nom_article1" onchange="filterTable()">
+        <datalist id='nom1'>
+            <option value=""></option>
+            <?php foreach($nom_article as $p):?>
+                <option value='<?= $p['nom'] ?>'><?= $p['nom'] ?></option>
+            <?php endforeach;?>
+        </datalist>
+    </div>
+    <div class="col">
+        <input type="text" list='stock_minarticle' class="form-control keepDatalist search-input" placeholder="Chercher Stock Min"
+               id="stock_min1" onchange="filterTable()">
+        <datalist id='stock_minarticle'>
+            <option value=""></option>
+            <?php foreach($stock_min as $p):?>
+                <option value='<?= $p['stock_min'] ?>'><?= $p['stock_min'] ?></option>
+            <?php endforeach;?>
+        </datalist>
+    </div>
+    <div class="col">
+        <input type="text" list='stock_initialarticle' class="form-control keepDatalist search-input" placeholder="Chercher Stock Initial"
+               id="stock_initial1" onchange="filterTable()">
+        <datalist id='stock_initialarticle'>
+            <option value=""></option>
+            <?php foreach($stock_initial as $p):?>
+                <option value='<?= $p['stock_initial'] ?>'><?= $p['stock_initial'] ?></option>
+            <?php endforeach;?>
+        </datalist>
+    </div>
+    <div class="col-2">
+        <select class="form-control search-select" onchange="filterTable()" id="selectAll_son">
+            <option value="All">All</option>
+            <option value="SonLot">Son lot</option>
+        </select>
+    </div>
+    <div class="col-2">
+<button onclick="location.reload()" class="btn btn-secondary">Affiche tout</button>
+    </div>
+</div>
+<div class="container mt-1">
+    <div class="d-flex justify-content-between align-items-center col-12">
         <h4>Les Articles</h4>
-        <button id="ajouterBtn">+</button>
+        <button id="ajouterBtn" CLASS="m-3">+</button>
     </div>
 
     <div id="formContainer" class="floating-form">
-        <form id="articleForm">
-            <label for="nom">Nom:</label>
-            <input type="text" id="nom" name="nom" class="form-control" required><br><br>
+        <form id="articleForm" class="row col-12">
+            <div class="col-6">
+                <label for="nom">Nom:</label>
+                <input type="text" id="nom" name="nom" class="form-control" required>
+            </div>
 
-            <label for="description">Description:</label>
-            <textarea id="description" name="description" class="form-control" required></textarea><br><br>
+            <div class="col-6">
 
             <label for="stock_min">Stock Min:</label>
             <input type="number" id="stock_min" name="stock_min" class="form-control" required><br><br>
+            </div>
+            <div class="col-6">
 
             <label for="stock_initial">Stock Initial:</label>
             <input type="number" id="stock_initial" name="stock_initial" class="form-control" required><br><br>
+            </div>
+            <div class="col-6">
 
             <label for="prix">Prix:</label>
             <input type="number" id="prix" name="prix" class="form-control" step="0.01"><br><br>
+            </div>
 
-            <label for="unite">Unité:</label>
-            <input type="text" id="unite" name="unite" class="form-control" required><br><br>
+            <div class="col-6">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" class="form-control "  style="height: 140px" required></textarea><br><br>
+            </div>
 
-            <button type="submit" id="submitArticle">Ajouter Article</button>
-            <button type="button" id="modifier_Ar" style="display: none;" class="btn btn-success ">Modifier</button>
-            <button type="button" id="hideBtn" class="btn">Annuler </button>
+            <div class="col-6">
+                <div>
+                <label for="unite">Unité:</label>
+                <input type="text" id="unite" name="unite" class="form-control" required>
+          </div>
+
+                </br>
+                <div class="col text-center">
+                    <button type="submit" id="submitArticle">Ajouter Article</button>
+                    <button type="button" id="modifier_Ar" style="display: none;" class="btn btn-success ">Modifier</button>
+                    <button type="button" id="hideBtn" class="btn">Annuler </button>
+                </div>
+            </div>
+
+
+
+
         </form>
     </div>
 
@@ -303,6 +495,27 @@ function vide(){
 
 
     $('#tbl_article').load('afficherarticle.php #tblar');
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const  nom_article = document.getElementById('nom_article1');
+        const  stock_min = document.getElementById('stock_min1');
+        const  stock_initial = document.getElementById('stock_initial1');
+        const  selectAll_son = document.getElementById('selectAll_son');
+        window.filterTable = function() {
+
+            var url = 'afficherarticle.php?nom_article=' + encodeURI(nom_article.value) + '&stock_min=' + encodeURI(stock_min.value) + '&stock_initial=' + encodeURI(stock_initial.value) + '&selectAll_son=' + encodeURI(selectAll_son.value);
+            $('#tbl_article').load(url + ' #tblar',function (){
+
+
+            });
+
+        }
+
+    });
+
+
 </script>
 </body>
 </html>

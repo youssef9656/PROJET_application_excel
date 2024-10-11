@@ -2,9 +2,34 @@
 // تضمين ملف الاتصال بقاعدة البيانات
 include '../../Config/connect_db.php';
 
-// جلب البيانات من جدول المقالات
-$sql = "SELECT * FROM article";
-$result = $conn->query($sql);
+// Initialisation de la requête
+$querySelect = "SELECT * FROM article WHERE 1=1 ";
+
+// Conditions pour filtrer par nom, stock_min, stock_initial
+if (isset($_GET['nom_article']) && !empty($_GET['nom_article'])) {
+    $querySelect .= " AND nom ='" . $conn->real_escape_string($_GET['nom_article']) . "' ";
+}
+if (isset($_GET['stock_min']) && !empty($_GET['stock_min'])) {
+    $querySelect .= " AND stock_min ='" . $conn->real_escape_string($_GET['stock_min']) . "' ";
+}
+if (isset($_GET['stock_initial']) && !empty($_GET['stock_initial'])) {
+    $querySelect .= " AND stock_initial ='" . $conn->real_escape_string($_GET['stock_initial']) . "' ";
+}
+
+// Vérifier la valeur de selectAll_son
+if (isset($_GET['selectAll_son']) && !empty($_GET['selectAll_son'])) {
+    if ($_GET['selectAll_son'] == "SonLot") {
+        // Ajouter une condition pour exclure les articles dans les sous-lots
+        $querySelect .= " AND id_article NOT IN (SELECT article_id FROM sous_lot_articles)";
+    }
+    // Pas besoin de réécrire la requête si l'option est autre que "SonLot"
+}
+
+// Ajouter l'ordre des résultats
+$querySelect .= " ORDER BY nom";
+
+// Exécuter la requête
+$result = $conn->query($querySelect);
 
 ?>
 
@@ -18,8 +43,8 @@ $result = $conn->query($sql);
 <body>
 <h1>Liste des Articles</h1>
 <div id="tblar">
-<?php if ($result->num_rows > 0): ?>
-    <table class="table table-bordered" id="tblarticle">
+    <?php if ($result->num_rows > 0): ?>
+    <table class="table table-bordered sheetjs" id="tblarticle">
         <thead>
         <tr>
             <th>ID</th>
@@ -32,7 +57,7 @@ $result = $conn->query($sql);
             <th>Action</th>
         </tr>
         </thead>
-<tbody>
+        <tbody>
         <?php while($row = $result->fetch_assoc()): ?>
             <tr id-data="<?php echo $row['id_article']; ?>">
                 <td><?php echo $row['id_article']; ?></td>
@@ -46,7 +71,7 @@ $result = $conn->query($sql);
                     <a id="modify" onclick='editArticle(this,<?php echo $row["id_article"]; ?> )'  href="#" style="color:green;"  >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/></svg>
-                       </a>
+                    </a>
 
                     <a href="#" onclick='deleteArticle(<?php echo $row["id_article"]; ?>)' style="color:red">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
@@ -59,7 +84,7 @@ $result = $conn->query($sql);
                 </td>
             </tr>
         <?php endwhile; ?>
-</tbody>
+        </tbody>
     </table>
 </div>
 <?php else: ?>
@@ -67,7 +92,7 @@ $result = $conn->query($sql);
 <?php endif; ?>
 
 <?php
-// إغلاق الاتصال بقاعدة البيانات
+// Fermeture de la connexion
 $conn->close();
 ?>
 </body>

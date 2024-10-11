@@ -3,7 +3,7 @@ include '../../Config/connect_db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupérer les données du formulaire
-    $nom = $_POST['nom'];
+    $nom = ucfirst(strtolower($_POST['nom']));
     $description = $_POST['description'];
     $stock_min = $_POST['stock_min'];
     $stock_initial = $_POST['stock_initial'];

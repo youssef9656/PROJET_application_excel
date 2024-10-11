@@ -1,9 +1,8 @@
-<?php include '../../Config/connect_db.php'; $pageName= 'Catalogue du temps'; ?>
 <?php
 include '../../Config/check_session.php';
-checkUserRole('user');
+checkUserRole('admin');
 
-?>
+include '../../Config/connect_db.php'; $pageName= 'Catalogue du temps'; ?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -12,8 +11,12 @@ checkUserRole('user');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Etat des stocks</title>
     <script src="../../includes/jquery.sheetjs.js"></script>
-    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
-    <!-- Custom CSS -->
+<!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
+<!--    <script src="libriryPdf/unpkg/jspdf.min.js"></script>-->
+    <script src="../../includes/libriryPdf/unpkg/jspdf.umd.min.js"></script>
+    <script src="../../includes/xlsx.full.min.js"></script>
+
+
     <style>
         #divbesoin{
             /*position: absolute;*/
@@ -22,8 +25,6 @@ checkUserRole('user');
             /*height: 500px;*/
 
         }
-
-
 
 
         .table-container {
@@ -73,99 +74,99 @@ include '../../includes/header.php';
 <div id="divbesoin"  class="container m-2">
 
 </div>
-<style>
-    /* From Uiverse.io by vinodjangid07 */
-    .Btn {
-        width: 50px;
-        height: 50px;
-        border: none;
-        border-radius: 50%;
-        background-color: rgb(27, 27, 27);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        position: relative;
-        transition-duration: .3s;
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.11);
-    }
-
-    .svgIcon {
-        fill: rgb(214, 178, 255);
-    }
-
-    .icon2 {
-        width: 18px;
-        height: 5px;
-        border-bottom: 2px solid rgb(182, 143, 255);
-        border-left: 2px solid rgb(182, 143, 255);
-        border-right: 2px solid rgb(182, 143, 255);
-    }
-
-    .tooltip {
-        position: absolute;
-        right: -105px;
-        opacity: 0;
-        background-color: rgb(12, 12, 12);
-        color: white;
-        padding: 5px 10px;
-        border-radius: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition-duration: .2s;
-        pointer-events: none;
-        letter-spacing: 0.5px;
-    }
-
-    .tooltip::before {
-        position: absolute;
-        content: "";
-        width: 10px;
-        height: 10px;
-        background-color: rgb(12, 12, 12);
-        background-size: 1000%;
-        background-position: center;
-        transform: rotate(45deg);
-        left: -5%;
-        transition-duration: .3s;
-    }
-
-    .Btn:hover .tooltip {
-        opacity: 1;
-        transition-duration: .3s;
-    }
-
-    .Btn:hover {
-        background-color: rgb(150, 94, 255);
-        transition-duration: .3s;
-    }
-
-    .Btn:hover .icon2 {
-        border-bottom: 2px solid rgb(235, 235, 235);
-        border-left: 2px solid rgb(235, 235, 235);
-        border-right: 2px solid rgb(235, 235, 235);
-    }
-
-    .Btn:hover .svgIcon {
-        fill: rgb(255, 255, 255);
-        animation: slide-in-top 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-    }
-
-    @keyframes slide-in-top {
-        0% {
-            transform: translateY(-10px);
-            opacity: 0;
-        }
-
-        100% {
-            transform: translateY(0px);
-            opacity: 1;
-        }
-    }
-
-</style>
+<!--<style>-->
+<!--    /* From Uiverse.io by vinodjangid07 */-->
+<!--    .Btn {-->
+<!--        width: 50px;-->
+<!--        height: 50px;-->
+<!--        border: none;-->
+<!--        border-radius: 50%;-->
+<!--        background-color: rgb(27, 27, 27);-->
+<!--        display: flex;-->
+<!--        flex-direction: column;-->
+<!--        align-items: center;-->
+<!--        justify-content: center;-->
+<!--        cursor: pointer;-->
+<!--        position: relative;-->
+<!--        transition-duration: .3s;-->
+<!--        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.11);-->
+<!--    }-->
+<!---->
+<!--    .svgIcon {-->
+<!--        fill: rgb(214, 178, 255);-->
+<!--    }-->
+<!---->
+<!--    .icon2 {-->
+<!--        width: 18px;-->
+<!--        height: 5px;-->
+<!--        border-bottom: 2px solid rgb(182, 143, 255);-->
+<!--        border-left: 2px solid rgb(182, 143, 255);-->
+<!--        border-right: 2px solid rgb(182, 143, 255);-->
+<!--    }-->
+<!---->
+<!--    .tooltip {-->
+<!--        position: absolute;-->
+<!--        right: -105px;-->
+<!--        opacity: 0;-->
+<!--        background-color: rgb(12, 12, 12);-->
+<!--        color: white;-->
+<!--        padding: 5px 10px;-->
+<!--        border-radius: 5px;-->
+<!--        display: flex;-->
+<!--        align-items: center;-->
+<!--        justify-content: center;-->
+<!--        transition-duration: .2s;-->
+<!--        pointer-events: none;-->
+<!--        letter-spacing: 0.5px;-->
+<!--    }-->
+<!---->
+<!--    .tooltip::before {-->
+<!--        position: absolute;-->
+<!--        content: "";-->
+<!--        width: 10px;-->
+<!--        height: 10px;-->
+<!--        background-color: rgb(12, 12, 12);-->
+<!--        background-size: 1000%;-->
+<!--        background-position: center;-->
+<!--        transform: rotate(45deg);-->
+<!--        left: -5%;-->
+<!--        transition-duration: .3s;-->
+<!--    }-->
+<!---->
+<!--    .Btn:hover .tooltip {-->
+<!--        opacity: 1;-->
+<!--        transition-duration: .3s;-->
+<!--    }-->
+<!---->
+<!--    .Btn:hover {-->
+<!--        background-color: rgb(150, 94, 255);-->
+<!--        transition-duration: .3s;-->
+<!--    }-->
+<!---->
+<!--    .Btn:hover .icon2 {-->
+<!--        border-bottom: 2px solid rgb(235, 235, 235);-->
+<!--        border-left: 2px solid rgb(235, 235, 235);-->
+<!--        border-right: 2px solid rgb(235, 235, 235);-->
+<!--    }-->
+<!---->
+<!--    .Btn:hover .svgIcon {-->
+<!--        fill: rgb(255, 255, 255);-->
+<!--        animation: slide-in-top 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;-->
+<!--    }-->
+<!---->
+<!--    @keyframes slide-in-top {-->
+<!--        0% {-->
+<!--            transform: translateY(-10px);-->
+<!--            opacity: 0;-->
+<!--        }-->
+<!---->
+<!--        100% {-->
+<!--            transform: translateY(0px);-->
+<!--            opacity: 1;-->
+<!--        }-->
+<!--    }-->
+<!---->
+<!--</style>-->
 
 
 <div class="m-2">
@@ -187,17 +188,55 @@ include '../../includes/header.php';
                 <option value="bon">Bon</option>
             </select>
         </div>
-        <button onclick="fetchData()" class="btn btn-primary">Rechercher</button>
-        <button class="Btn btn" onclick="printtable()">
-            <svg class="svgIcon" viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg"><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"></path></svg>
-            <span class="icon2"></span>
-            <span class="tooltip">Download</span>
-        </button>
+<!--        <div class="col-1">-->
+<!--            <button onclick="fetchData()" class="btn btn-primary mt-4">Rechercher</button>-->
+<!--        </div>-->
+<!--        <div class="col-1">-->
+<!--            <button class="Btn " id="downloadPdfButton">-->
+<!--                <svg class="svgIcon" viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg"><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"></path></svg>-->
+<!--                <span class="icon2"></span>-->
+<!--                <span class="tooltip">Download</span>-->
+<!--            </button>-->
+<!---->
+<!--        </div>-->
+<!--        <button class="Btn btn" onclick="printtable()" id="downloadPdfButton">-->
+<!--            <svg class="svgIcon" viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg"><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"></path></svg>-->
+<!--            <span class="icon2"></span>-->
+<!--            <span class="tooltip">Download</span>-->
+<!--        </button>-->
+        <div class="col-2">
+            <table class="table table-bordered table-hover table-primary sheetjs" style="width: 150px; margin-left:10px; height: 150px ">
+                <thead>
+                <tr>
+                    <th >Valeur Stock final </th>
+                    <td id="totale_Stock_final"></td>
+
+                </tr>
+                <tr>
+                    <th>Total Dépenses Entrées final </th>
+                    <td id="Total_Entrees_final"></td>
+
+                </tr>
+                <tr>
+                    <th>  Total Dépenses Sorties final </th>
+                    <td id="Total_Sorties_final"></td>
+
+                </tr>
+                <tr >
+                    <td style="background-color: #00a357">Total </td>
+                    <td id="Total_final" style="background-color: #00a357"></td>
+
+                </tr>
+                </thead>
+
+            </table>
+
+        </div>
     </div>
 
 <div style="display:flex;flex-flow: row">
     <div class="table-container mt-4" >
-        <table id="articles_table" class="table table-Primary table-bordered table-hover  table-group-divider" >
+        <table id="articles_table" class="table table-Primary table-bordered table-hover  table-group-divider sheetjs" >
             <thead class="thead-dark">
             <tr>
                 <th>ID</th>
@@ -207,7 +246,7 @@ include '../../includes/header.php';
                 <th>Total Sorties</th>
                 <th>Stock Final</th>
                 <th>Prix Moyen</th>
-                <th>Valeur Stock</th>
+                <th>Valeur Stock Final</th>
                 <th>Total Depenses Entrées</th> <!-- العمود الجديد -->
                 <th>Total Depenses Sorties</th> <!-- العمود الجديد -->
                 <th>Stock Min</th>
@@ -219,31 +258,6 @@ include '../../includes/header.php';
         </table>
     </div>
 
-    <table class="table table-bordered table-hover table-primary" style="width: 150px; margin-left:10px; height: 150px ">
-        <thead>
-        <tr>
-            <th >Valeur Stock final </th>
-            <td id="totale_Stock_final"></td>
-
-        </tr>
-        <tr>
-            <th>Total Depenses Entrées final </th>
-            <td id="Total_Entrees_final"></td>
-
-        </tr>
-        <tr>
-            <th> Entrées Total Depenses Sorties final </th>
-            <td id="Total_Sorties_final"></td>
-
-        </tr>
-        <tr >
-            <td style="background-color: #00a357">Total </td>
-            <td id="Total_final" style="background-color: #00a357"></td>
-
-        </tr>
-        </thead>
-
-    </table>
 
 </div>
 </div>
@@ -340,12 +354,12 @@ document.getElementById("Total_Entrees_final").innerText=Total_Entrees_final.toF
         window.print()
     }
 
-
-
     // Fetch data on page load without any filters (show all data)
     document.addEventListener('DOMContentLoaded', fetchData);
 </script>
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
+<script src="pdf.js"></script>
+
 
 </body>
 </html>

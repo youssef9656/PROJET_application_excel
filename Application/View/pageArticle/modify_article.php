@@ -13,6 +13,37 @@ if (isset($_POST['id_article'])) {
     $prix = $_POST['prix'];
     $unite = $_POST['unite'];
 
+    if (true) {
+        // Si l'exécution est réussie, mettre à jour la table operation
+        $updateOperation = $conn->prepare("
+    UPDATE `operation` 
+    SET `nom_article` = ? 
+    WHERE `nom_article` =(SELECT `nom` FROM `article` WHERE `id_article` = ?)");
+
+
+        if ($updateOperation) {
+            // Lier les paramètres pour la mise à jour de la table operation
+            $updateOperation->bind_param("si", $nom, $id_article);
+
+            // Exécuter la mise à jour
+            if ($updateOperation->execute()) {
+                // Si la mise à jour est réussie
+                echo json_encode(["success" => true, "message" => "Article modifié avec succès"]);
+            } else {
+                // En cas d'échec d'exécution de la mise à jour de l'opération
+                echo json_encode(["success" => false, "message" => "Erreur lors de la mise à jour de l'opération"]);
+            }
+            // Fermer la déclaration préparée
+            $updateOperation->close();
+        } else {
+            // En cas d'échec de la préparation de la mise à jour de l'opération
+            echo json_encode(["success" => false, "message" => "Échec de la préparation de la mise à jour de l'opération"]);
+        }
+    } else {
+        // En cas d'échec d'exécution de la mise à jour de l'article
+        echo json_encode(["success" => false, "message" => "Erreur lors de la modification de l'article"]);
+    }
+
     // Préparer la requête SQL pour mettre à jour l'article
     $sql = "UPDATE article SET 
                 nom = ?, 
@@ -27,17 +58,8 @@ if (isset($_POST['id_article'])) {
     if ($stmt = $conn->prepare($sql)) {
         // Associer les paramètres à la requête
         $stmt->bind_param("ssiiisi", $nom, $description, $stock_min, $stock_initial, $prix, $unite, $id_article);
-
-        // Exécuter la requête
-        if ($stmt->execute()) {
-            // Si l'exécution est réussie
-            echo json_encode(["success" => true, "message" => "Article modifié avec succès"]);
-        } else {
-            // En cas d'échec d'exécution
-            echo json_encode(["success" => false, "message" => "Erreur lors de la modification de l'article"]);
-        }
-
-        // Fermer la déclaration préparée
+        $stmt->execute();
+        // Fermer la déclaration préparée pour l'article
         $stmt->close();
     } else {
         // En cas d'échec de la préparation de la requête
