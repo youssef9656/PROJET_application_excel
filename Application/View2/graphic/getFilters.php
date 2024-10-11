@@ -7,7 +7,11 @@ $filters = [];
 $lotQuery = "SELECT DISTINCT lot_name FROM operation WHERE   pj_operation='Bon entrée'";
 $sousLotQuery = "SELECT DISTINCT sous_lot_name FROM operation WHERE   pj_operation='Bon entrée'";
 $articleQuery = "SELECT DISTINCT nom_article FROM operation WHERE   pj_operation='Bon entrée'";
-$fournisseurQuery = "SELECT DISTINCT nom_pre_fournisseur FROM operation WHERE   pj_operation='Bon entrée'";
+$fournisseurQuery = " SELECT DISTINCT o.nom_pre_fournisseur 
+        FROM operation o
+        JOIN fournisseurs f ON o.nom_pre_fournisseur = CONCAT(f.nom_fournisseur, ' ', f.prenom_fournisseur)
+        WHERE f.action_A_D = 1 
+        AND o.pj_operation = 'Bon entrée' ";
 
 $filters['lot'] = $conn->query($lotQuery)->fetch_all(MYSQLI_ASSOC);
 $filters['sous_lot'] = $conn->query($sousLotQuery)->fetch_all(MYSQLI_ASSOC);

@@ -70,12 +70,7 @@ include '../../includes/header.php';
     .container {
         max-width: 1200px;
     }
-    .col-md-6 {
-        padding: 10px;
-    }
-    .text-center {
-        margin-top: 20px;
-    }
+
     footer {
         text-align: center;
         padding: 20px;
@@ -93,48 +88,48 @@ include '../../includes/header.php';
     <div class="row filter-section">
         <div class="col-md-2">
             <label for="lotSelect">Lot:</label>
-            <select id="lotSelect" class="form-select" onchange="updateSousLot()">
+            <select id="lotSelect" class="form-select" onchange="updateSousLot();fetchData()">
                 <option value="">All</option>
             </select>
         </div>
 
         <div class="col-md-2">
             <label for="sousLotSelect">Sous-lot:</label>
-            <select id="sousLotSelect" class="form-select" onchange="updateArticle()">
+            <select id="sousLotSelect" class="form-select" onchange="updateArticle();fetchData()">
                 <option value="">All</option>
             </select>
         </div>
 
         <div class="col-md-2">
             <label for="articleSelect">Article:</label>
-            <select id="articleSelect" class="form-select">
+            <select id="articleSelect" class="form-select" onchange="fetchData()">
                 <option value="">All</option>
             </select>
         </div>
 
         <div class="col-md-2">
-            <label for="fournisseurSelect">Fournisseur:</label>
-            <select id="fournisseurSelect" class="form-select">
+            <label for="fournisseurSelect">Service:</label>
+            <select id="fournisseurSelect" class="form-select" onchange="fetchData()">
                 <option value="">All</option>
             </select>
         </div>
 
         <div class="col-md-2">
             <label for="startDate">Start Date:</label>
-            <input type="date" id="startDate" class="form-control">
+            <input type="date" id="startDate" class="form-control" onchange="fetchData()">
         </div>
 
         <div class="col-md-2">
             <label for="endDate">End Date:</label>
-            <input type="date" id="endDate" class="form-control">
+            <input type="date" id="endDate" class="form-control" onchange="fetchData()">
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12 text-center">
-            <button class="btn btn-primary" onclick="fetchData()">Apply Filters</button>
-        </div>
-    </div>
+<!--    <div class="row">-->
+<!--        <div class="col-12 text-center">-->
+<!--            <button class="btn btn-primary" onclick="fetchData()">Apply Filters</button>-->
+<!--        </div>-->
+<!--    </div>-->
 
     <div class="row mb-12">
         <div class="col-md-8">
@@ -385,8 +380,8 @@ include '../../includes/header.php';
 
                 filters.fournisseur.forEach(fournisseur => {
                     const option = document.createElement('option');
-                    option.value = fournisseur.nom_pre_fournisseur;
-                    option.textContent = fournisseur.nom_pre_fournisseur;
+                    option.value = fournisseur.service_operation;
+                    option.textContent = fournisseur.service_operation;
                     fournisseurSelect.appendChild(option);
                 });
             });
@@ -435,6 +430,7 @@ include '../../includes/header.php';
                 const lotSelect = document.getElementById('lotSelect');
                 const fournisseurSelect = document.getElementById('fournisseurSelect');
 
+
                 filters.lot.forEach(lot => {
                     const option = document.createElement('option');
                     option.value = lot.lot_name;
@@ -442,10 +438,11 @@ include '../../includes/header.php';
                     lotSelect.appendChild(option);
                 });
 
+                console.log(filters)
                 filters.fournisseur.forEach(fournisseur => {
                     const option = document.createElement('option');
-                    option.value = fournisseur.nom_pre_fournisseur;
-                    option.textContent = fournisseur.nom_pre_fournisseur;
+                    option.value = fournisseur.service_operation;
+                    option.textContent = fournisseur.service_operation;
                     fournisseurSelect.appendChild(option);
                 });
             })

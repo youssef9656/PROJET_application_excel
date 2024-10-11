@@ -32,7 +32,7 @@ while ($row = $result->fetch_assoc()) {
 }
 
 // استرجاع البيانات الخاصة بـ 'fournisseur'
-$sql = "SELECT DISTINCT nom_pre_fournisseur FROM operation  WHERE  pj_operation='Bon sortie'";
+$sql = "SELECT DISTINCT z FROM operation  WHERE  pj_operation='Bon sortie'";
 $result = $conn->query($sql);
 while ($row = $result->fetch_assoc()) {
     $data['fournisseur'][] = ['value' => $row['nom_pre_fournisseur'], 'text' => $row['nom_pre_fournisseur']];

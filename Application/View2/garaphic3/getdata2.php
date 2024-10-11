@@ -3,7 +3,6 @@ include '../../config/connect_db.php';
 
 $lot = $_GET['lot'] ?? '';
 $sous_lot = $_GET['sous_lot'] ?? '';
-$fournisseur = $_GET['fournisseur'] ?? '';
 $service = $_GET['service'] ?? '';
 $date_from = $_GET['date_from'] ?? '';
 $date_to = $_GET['date_to'] ?? '';
@@ -41,13 +40,11 @@ if (!empty($lot)) {
 if (!empty($sous_lot)) {
     $sql .= " AND o.sous_lot_name = '" . $conn->real_escape_string($sous_lot) . "'";
 }
-if (!empty($fournisseur)) {
-    $sql .= " AND o.nom_pre_fournisseur = '" . $conn->real_escape_string($fournisseur) . "'";
-}
+
 // Uncomment this if you need the service filter
-// if (!empty($service)) {
-//     $sql .= " AND o.service_name = '" . $conn->real_escape_string($service) . "'";
-// }
+if (!empty($service)) {
+    $sql .= " AND o.service_operation = '" . $conn->real_escape_string($service) . "'";
+}
 if (!empty($date_from) && !empty($date_to)) {
     $sql .= " AND o.date_operation BETWEEN '" . $conn->real_escape_string($date_from) . "' AND '" . $conn->real_escape_string($date_to) . "'";
 }

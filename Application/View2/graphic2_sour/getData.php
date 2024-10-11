@@ -67,7 +67,7 @@ if ($article) {
 }
 
 if ($fournisseur) {
-    $sql .= " AND nom_pre_fournisseur = ?";
+    $sql .= " AND service_operation = ?";
     $params[] = $fournisseur;
     $types .= 's';
 }

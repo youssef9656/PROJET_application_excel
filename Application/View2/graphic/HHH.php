@@ -3,7 +3,12 @@ include '../../Config/check_session.php';
 checkUserRole('admin');
 
 include '../../Config/connect_db.php'; ?>
+<?php
+$pageName= 'Statistiques des entree';
 
+include '../../includes/header.php';
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,12 +19,7 @@ include '../../Config/connect_db.php'; ?>
 <!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
 </head>
 <body>
-<?php
-$pageName= 'Statistiques des entree';
 
-include '../../includes/header.php';
-
-?>
 <style>
     /* Couleurs de la palette */
     :root {
@@ -126,21 +126,9 @@ include '../../includes/header.php';
         padding: 15px; /* Espacement accru pour une meilleure esthétique */
     }
 
-    /* Centrage des boutons */
-    .text-center {
-        margin-top: 20px;
-    }
+
 
     /* Pied de page */
-    footer {
-        text-align: center;
-        padding: 20px;
-        margin-top: 50px;
-        background-color: var(--primary-color);
-        color: white;
-        font-size: 14px;
-        border-radius: 0 0 10px 10px; /* Coins arrondis en bas */
-    }
 </style>
 
 <div class="container mt-2">
@@ -150,7 +138,7 @@ include '../../includes/header.php';
     <div class="row filter-section">
         <div class="col-md-2">
             <label for="lotSelect">Lot:</label>
-            <select id="lotSelect" class="form-select" onchange="updateSousLot()">
+            <select id="lotSelect" class="form-select" onchange="updateSousLot();fetchData()">
                 <option value="">All</option>
             </select>
         </div>
@@ -164,14 +152,14 @@ include '../../includes/header.php';
 
         <div class="col-md-2">
             <label for="articleSelect">Article:</label>
-            <select id="articleSelect" class="form-select">
+            <select id="articleSelect" class="form-select" onchange="fetchData()">
                 <option value="">All</option>
             </select>
         </div>
 
         <div class="col-md-2">
             <label for="fournisseurSelect">Fournisseur:</label>
-            <select id="fournisseurSelect" class="form-select">
+            <select id="fournisseurSelect" class="form-select" onchange="fetchData()">
                 <option value="">All</option>
             </select>
         </div>
@@ -183,15 +171,15 @@ include '../../includes/header.php';
 
         <div class="col-md-2">
             <label for="endDate">End Date:</label>
-            <input type="date" id="endDate" class="form-control">
+            <input type="date" id="endDate" class="form-control" onchange="fetchData()">
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12 text-center">
-            <button class="btn btn-primary" onclick="fetchData()">Apply Filters</button>
-        </div>
-    </div>
+<!--    <div class="row">-->
+<!--        <div class="col-12 text-center">-->
+<!--            <button class="btn btn-primary" onclick="fetchData()">Apply Filters</button>-->
+<!--        </div>-->
+<!--    </div>-->
 
     <!-- المبيانان جنبًا إلى جنب -->
     <div class="row">

@@ -111,7 +111,7 @@ include '../../includes/header.php';
 <div class="formC">
     <div>
         <label for="lot">Lot:</label>
-        <select id="lot" class="form-select" onchange="updateSousLot()">
+        <select id="lot" class="form-select" onchange="updateSousLot();fetchData()">
             <option value="">Sélectionner un lot</option>
             <?php
             $result = $conn->query("SELECT DISTINCT lot_name FROM operation");
@@ -124,31 +124,31 @@ include '../../includes/header.php';
 
     <div>
         <label for="sous_lot">Sous Lot:</label>
-        <select id="sous_lot" class="form-select" onchange="updateFournisseur()">
+        <select id="sous_lot" class="form-select" onchange="updateFournisseur();fetchData()">
             <option value="">Sélectionner un sous lot</option>
         </select>
     </div>
 
     <div>
         <label for="fournisseur">Fournisseur:</label>
-        <select id="fournisseur" class="form-select">
+        <select id="fournisseur" class="form-select" onchange="fetchData()">
             <option value="">Sélectionner un fournisseur</option>
         </select>
     </div>
 
     <div>
         <label for="date_from">Date de début:</label>
-        <input type="date" id="date_from" class="form-control">
+        <input type="date" id="date_from" class="form-control" onchange="fetchData()">
     </div>
 
     <div>
         <label for="date_to">Date de fin:</label>
-        <input type="date" id="date_to" class="form-control">
+        <input type="date" id="date_to" class="form-control" onchange="fetchData()">
     </div>
 
-    <div>
-        <button class="btn  buttonfiltre btn-primary" onclick="fetchData()">Afficher Graphiques</button>
-    </div>
+<!--    <div>-->
+<!--        <button class="btn  buttonfiltre btn-primary" onclick="fetchData()">Afficher Graphiques</button>-->
+<!--    </div>-->
 </div>
 
 <div class="chart-container">
@@ -162,22 +162,50 @@ include '../../includes/header.php';
 
 <script src="../../includes/js/bootstrap.bundle.min.js"></script>
 <script>
+    // Fonction pour récupérer les sous-lots en fonction du lot sélectionné
+    // Fonction pour récupérer les sous-lots en fonction du lot sélectionné ou tous par défaut
     function updateSousLot() {
         const lot = document.getElementById("lot").value;
-        fetch(`get_sous_lots.php?lot=${encodeURIComponent(lot)}`)
+        let url = "get_sous_lots.php";
+
+        // Si un lot est sélectionné, ajouter le paramètre à l'URL
+        if (lot) {
+            url += `?lot=${encodeURIComponent(lot)}`;
+        }
+
+        fetch(url)
             .then(response => response.json())
             .then(data => {
                 const sousLotSelect = document.getElementById("sous_lot");
-                sousLotSelect.innerHTML = '<option value="">Sélectionner un sous lot</option>';
+                sousLotSelect.innerHTML = '<option value="">Sélectionner un sous-lot</option>';
                 data.forEach(sousLot => {
                     sousLotSelect.innerHTML += `<option value="${sousLot.sous_lot_name}">${sousLot.sous_lot_name}</option>`;
                 });
+
+                // Appeler la fonction pour mettre à jour les fournisseurs après avoir chargé les sous-lots
+                updateFournisseur();
+            })
+            .catch(error => {
+                console.error("Erreur lors de la récupération des sous-lots:", error);
             });
     }
 
+    // Charger les sous-lots par défaut au chargement de la page
+    document.addEventListener("DOMContentLoaded", function() {
+        updateSousLot(); // Afficher tous les sous-lots par défaut au chargement
+    });
+
+    // Fonction pour mettre à jour les fournisseurs selon le sous-lot sélectionné ou afficher tous par défaut
     function updateFournisseur() {
         const sousLot = document.getElementById("sous_lot").value;
-        fetch(`get_fournisseurs.php?sous_lot=${encodeURIComponent(sousLot)}`)
+        let url = "get_fournisseurs.php";
+
+        // Si un sous-lot est sélectionné, ajouter le paramètre à l'URL
+        if (sousLot) {
+            url += `?sous_lot=${encodeURIComponent(sousLot)}`;
+        }
+
+        fetch(url)
             .then(response => response.json())
             .then(data => {
                 const fournisseurSelect = document.getElementById("fournisseur");
@@ -188,24 +216,29 @@ include '../../includes/header.php';
             });
     }
 
+    // Fonction pour récupérer et afficher les données
     function fetchData() {
         const lot = document.getElementById("lot").value;
         const sousLot = document.getElementById("sous_lot").value;
         const fournisseur = document.getElementById("fournisseur").value;
-        // const service = document.getElementById("service").value;
         const dateFrom = document.getElementById("date_from").value;
         const dateTo = document.getElementById("date_to").value;
 
         fetch(`getdata.php?lot=${encodeURIComponent(lot)}&sous_lot=${encodeURIComponent(sousLot)}&fournisseur=${encodeURIComponent(fournisseur)}&date_from=${encodeURIComponent(dateFrom)}&date_to=${encodeURIComponent(dateTo)}`)
             .then(response => response.json())
             .then(data => {
-                displayCharts(data.charts);
-
+                displayCharts(data.charts); // Fonction pour afficher les graphiques
             })
             .catch(error => {
                 console.error("There was a problem with the fetch operation:", error);
             });
     }
+
+    // Charger tous les fournisseurs au chargement de la page
+    document.addEventListener("DOMContentLoaded", function() {
+        updateFournisseur(); // Affiche tous les fournisseurs par défaut au chargement
+    });
+
 
 
 
