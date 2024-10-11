@@ -1,8 +1,6 @@
- <?php
-// تضمين ملف الاتصال بقاعدة البيانات
+<?php
 include '../../Config/connect_db.php';
 
-// جلب البيانات من جدول المقالات
 $sql = "SELECT * FROM article WHERE id_article NOT IN (SELECT article_id FROM sous_lot_articles);";
 $result = $conn->query($sql);
 
@@ -21,13 +19,16 @@ $result1 = $conn->query($sql);
 <body>
 <h1>Liste des Articles</h1>
 <div id="tblar">
+<style>
 
+</style>
     <?php if ($result->num_rows > 0): ?>
     <table class="table table-bordered table-hover table-light text-center" id="tble1">
-        <thead>
+        <thead class="sticky-header">
         <tr>
             <th>ID</th>
             <th>Nom</th>
+
             <th>Description</th>
             <th>Stock Min</th>
             <th>Stock Initial</th>
@@ -64,8 +65,11 @@ $result1 = $conn->query($sql);
 <?php endif; ?>
 
 <?php
-// إغلاق الاتصال بقاعدة البيانات
+
+
+
 $conn->close();
 ?>
 </body>
+
 </html>

@@ -35,7 +35,7 @@ $query3 = "
     FROM lot_fournisseurs lf
     JOIN fournisseurs f ON lf.id_fournisseur = f.id_fournisseur
     JOIN lots l ON lf.lot_id = l.lot_id where l.lot_name =( SELECT  lots.lot_name FROM sous_lots JOIN lots ON sous_lots.lot_id = lots.lot_id where sous_lots.sous_lot_name ='$sous_lot_name') 
-    ORDER BY l.lot_name
+    ORDER BY l.lot_name 
 ";
 $result3 = @mysqli_query($conn, $query3);
 
@@ -43,6 +43,8 @@ $result3 = @mysqli_query($conn, $query3);
 ?>
 
 <div id="tblarARlot">
+
+    </style>
     <table  class="table table-bordered text-center m-0"  style="font-size: 10px;height: 100px" >
         <thead><th >lot</th><th>Fournisseur</th></thead>
         <tr>
@@ -105,6 +107,10 @@ $result3 = @mysqli_query($conn, $query3);
                     </a>
 
                 </td>
+
+
+
+
             </tr>
         <?php endwhile; ?>
         </tbody>
@@ -115,7 +121,8 @@ $result3 = @mysqli_query($conn, $query3);
 <?php endif; ?>
 
 <?php
-// إغلاق الاتصال بقاعدة البيانات
+
+
 $conn->close();
 ?>
 </body>
