@@ -207,6 +207,8 @@ if (isset($_GET['message'])) {
     <script src="../../includes/js/bootstrap123.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="lato_styles/lato_style.css">
+    <script src="../../includes/node_modules/chart.js/dist/chart.umd.js"></script>
+
 
 </head>
 <body>
@@ -214,11 +216,7 @@ if (isset($_GET['message'])) {
 <div class="accueil">
     Accueil
 </div>
-<!--div pour statistique-->
-<!--<div class="content1">-->
-<!---->
-<!---->
-<!--</div>-->
+
 <div class="content2">
 
 
@@ -252,6 +250,19 @@ if (isset($_GET['message'])) {
 <!--    </div>-->
 
 
+
+</div>
+
+
+<!--div pour statistique-->
+
+<div class="content1 row">
+        <div  STYLE="width: 45% ;">
+            <canvas id="sortieChart"></canvas>
+        </div>
+    <div  STYLE="width: 45% ;">
+        <canvas id="sortieChart2"></canvas>
+    </div>
 
 </div>
 
@@ -349,3 +360,263 @@ if (isset($_GET['message'])) {
 <script src="script.js"></script>
 </body>
 </html>
+<script src="../../includes/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+<script>
+
+    let sortieChartInstance = null; // Declare outside to access globally
+    let sortieChartInstance1 = null; // Declare outside to access globally
+
+    function fetchData() {
+        const lot = "";
+        const sousLot = "";
+        const fournisseur = "";
+        const dateFrom = "";
+        const dateTo = "";
+
+        fetch(`getdataSTATISTIQUE.php?lot=${encodeURIComponent(lot)}&sous_lot=${encodeURIComponent(sousLot)}&fournisseur=${encodeURIComponent(fournisseur)}&date_from=${encodeURIComponent(dateFrom)}&date_to=${encodeURIComponent(dateTo)}`)
+            .then(response => response.json())
+            .then(data => {
+                displayCharts(data.charts); // Fonction pour afficher les graphiques
+            })
+            .catch(error => {
+                console.error("There was a problem with the fetch operation:", error);
+            });
+    }
+
+    function displayCharts(data) {
+        function aggregateData(data) {
+            const result = {};
+
+            data.forEach(item => {
+                const { nom_pre_fournisseur, entree, prix_operation, date_operation } = item;
+
+                if (!result[nom_pre_fournisseur]) {
+                    result[nom_pre_fournisseur] = {
+                        totalEntree: 0,
+                        lastPrixOperation: null,
+                        lastDateOperation: null,
+                    };
+                }
+
+                result[nom_pre_fournisseur].totalEntree += parseFloat(entree);
+                if (prix_operation) {
+                    result[nom_pre_fournisseur].lastPrixOperation = parseFloat(prix_operation);
+                }
+                if (!result[nom_pre_fournisseur].lastDateOperation || new Date(date_operation) > new Date(result[nom_pre_fournisseur].lastDateOperation)) {
+                    result[nom_pre_fournisseur].lastDateOperation = date_operation;
+                }
+            });
+
+            const formattedResult = [];
+            for (const fournisseur in result) {
+                const { totalEntree, lastPrixOperation, lastDateOperation } = result[fournisseur];
+                const total = totalEntree * (lastPrixOperation || 0);
+                formattedResult.push({
+                    nom_pre_fournisseur: fournisseur,
+                    totalEntree,
+                    total,
+                    lastDateOperation
+                });
+            }
+            return formattedResult;
+        }
+
+        const aggregatedData = aggregateData(data);
+        console.log(aggregatedData);
+
+        const nom_pre_fournisseur = aggregatedData.map(item => item.nom_pre_fournisseur);
+        const total = aggregatedData.map(item => item.total);
+
+        if (sortieChartInstance) {
+            sortieChartInstance.destroy();
+        }
+
+        const ctx2 = document.getElementById('sortieChart').getContext('2d');
+
+        const config = {
+            type: 'bar',
+            data: {
+                labels: nom_pre_fournisseur,
+                datasets: [{
+                    data: total,
+                    backgroundColor: [
+                        '#FF6B6B',
+                        '#4ECDC4',
+                        '#FFD93D',
+                        '#C7CEEA',
+                        '#6B73FF'
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 0.5)',
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                indexAxis: 'x',
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#e0e0e0',
+                        },
+                        ticks: {
+                            color: '#0000FF',
+                            font: {
+                                size: 1,
+                                weight: '600',
+                                family: 'Poppins'
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#FF0000',
+                            font: {
+                                size: 1,
+                                weight: '600',
+                                family: 'Poppins'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'end',
+                        color: '#000',
+                        font: {
+                            size: 14,
+                            weight: 'bold',
+                            family: 'Poppins'
+                        },
+                        formatter: function(value, context) {
+                            return value;
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1500,
+                    easing: 'easeInOutBounce',
+                }
+            },
+            plugins: [ChartDataLabels]
+        };
+
+        sortieChartInstance = new Chart(ctx2, config);
+    }
+
+    function fetchData2() {
+        const lot = "";
+        const sousLot = ""
+        const service = "";
+        const dateFrom = "";
+        const dateTo = "";
+
+        fetch(`getdata2STATISYTIQUE.php?lot=${encodeURIComponent(lot)}&sous_lot=${encodeURIComponent(sousLot)}&service=${encodeURIComponent(service)}&date_from=${encodeURIComponent(dateFrom)}&date_to=${encodeURIComponent(dateTo)}`)
+            .then(response => response.json())
+            .then(data => {
+                displayCharts2(data.charts);
+            })
+            .catch(error => {
+                console.error("There was a problem with the fetch operation:", error);
+            });
+    }
+
+    function displayCharts2(data) {
+        function aggregateData2(data) {
+            const result = {};
+
+            data.forEach(item => {
+                const { service_operation, entree, prix_operation, date_operation } = item;
+
+                if (!result[service_operation]) {
+                    result[service_operation] = {
+                        totalEntree: 0,
+                        lastPrixOperation: null,
+                        lastDateOperation: null,
+                    };
+                }
+
+                result[service_operation].totalEntree += parseFloat(entree);
+                if (prix_operation) {
+                    result[service_operation].lastPrixOperation = parseFloat(prix_operation);
+                }
+                if (!result[service_operation].lastDateOperation || new Date(date_operation) > new Date(result[service_operation].lastDateOperation)) {
+                    result[service_operation].lastDateOperation = date_operation;
+                }
+            });
+
+            const formattedResult = [];
+            for (const fournisseur in result) {
+                const { totalEntree, lastPrixOperation, lastDateOperation } = result[fournisseur];
+                const total = totalEntree * (lastPrixOperation || 0);
+                formattedResult.push({
+                    service_operation: fournisseur,
+                    totalEntree,
+                    total,
+                    lastDateOperation
+                });
+            }
+            return formattedResult;
+        }
+
+        const aggregatedData = aggregateData2(data);
+        console.log(aggregatedData);
+
+        const service_operation = aggregatedData.map(item => item.service_operation);
+        const total = aggregatedData.map(item => item.total);
+
+        if (sortieChartInstance1) {
+            sortieChartInstance1.destroy();
+        }
+        const ctx2 = document.getElementById('sortieChart2').getContext('2d');
+        sortieChartInstance1 = new Chart(ctx2, {
+            type: 'pie', // Type 'pie'
+            data: {
+                labels: service_operation,
+                datasets: [{
+                    data: total,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(75, 192, 192)',
+                        'rgb(255, 205, 86)',
+                        'rgb(201, 203, 207)',
+                        'rgb(54, 162, 235)'
+                    ]
+                }]
+            },
+            options: {
+                plugins: {
+                    datalabels: {
+                        formatter: (value, ctx) => {
+                            let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                            let percentage = (value * 100 / sum).toFixed(2) + "%"; // Calcul du pourcentage
+                            return percentage; // Retourne le pourcentage
+                        },
+                        color: '#fff', // Couleur des pourcentages
+                        font: {
+                            size: 14,  // Taille de la police
+                            weight: 'bold'
+                        },
+                        align: 'center', // Aligne le texte au centre du segment
+                        anchor: 'center' // Le texte reste dans le segment
+                    }
+                }
+            }
+        });
+
+
+    }
+
+    // Combine both fetch calls in one window.onload function
+    window.onload = function() {
+        fetchData();
+        fetchData2();
+    };
+
+</script>
