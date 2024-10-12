@@ -28,6 +28,10 @@ body{
 }
 
 .content1{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+
     margin: 10px auto 0 auto;
     width: 85%;
     height: 40vh;

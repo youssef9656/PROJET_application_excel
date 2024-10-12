@@ -210,6 +210,7 @@ if (isset($_GET['message'])) {
     <script src="../../includes/node_modules/chart.js/dist/chart.umd.js"></script>
 
 
+
 </head>
 <body>
 
@@ -256,11 +257,11 @@ if (isset($_GET['message'])) {
 
 <!--div pour statistique-->
 
-<div class="content1 row">
-        <div  STYLE="width: 45% ;">
+<div class="content1 row ">
+        <div   STYLE="width: 50% ; height: 350px;margin: 10px"  >
             <canvas id="sortieChart"></canvas>
         </div>
-    <div  STYLE="width: 45% ;">
+    <div  class="col-md-3" STYLE="width: 40% ; height: 350px;margin: 10px" >
         <canvas id="sortieChart2"></canvas>
     </div>
 
@@ -360,7 +361,6 @@ if (isset($_GET['message'])) {
 <script src="script.js"></script>
 </body>
 </html>
-<script src="../../includes/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 

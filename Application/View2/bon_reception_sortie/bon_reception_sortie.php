@@ -355,7 +355,7 @@ include '../../includes/header.php';
                 <label class="mt-3 label" for="start_date">Date de livraison :</label>
                 <div class=" ms-3 d-flex justify-content-between ">
                     <input type="date" id="dateLivraison" class="form-control mt-2" onchange="fetchData()()">
-                    <button class="Btn ms-3 button23" id="downloadPdf" >
+                    <button class=" ms-3 button23" id="downloadPdf" >
                         <svg
                                 stroke-linejoin="round"
                                 stroke-linecap="round"
