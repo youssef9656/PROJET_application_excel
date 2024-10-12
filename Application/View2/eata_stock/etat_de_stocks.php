@@ -182,7 +182,7 @@ include '../../includes/header.php';
         </div>
         <div class="col-2">
             <label for="status_filter">Filtrer par statut:</label>
-            <select id="status_filter" class="form-control">
+            <select id="status_filter" class="form-control" onchange="fetchData()">
                 <option value="">Tous</option>
                 <option value="besoin">Besoin</option>
                 <option value="bon">Bon</option>

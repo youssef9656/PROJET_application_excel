@@ -220,7 +220,7 @@ include '../../Config/connect_db.php';
                 <label class="mt-3 for="start_date">Datede Livraison:</label>
                 <div class=" ms-3 d-flex justify-content-between ">
                     <input type="date" id="date_livraison" class="form-control mt-2" ">
-                    <button class="Btn ms-3 button" id="downloadPdf" >
+                    <button class="ms-3 button" id="downloadPdf" >
                         <svg
                                 stroke-linejoin="round"
                                 stroke-linecap="round"
