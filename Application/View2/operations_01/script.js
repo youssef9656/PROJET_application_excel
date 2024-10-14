@@ -438,7 +438,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 option.textContent = fournisseur.nom_fournisseur +" "+ fournisseur.prenom_fournisseur;
                                 fournisseurModifier.appendChild(option);
                             });
-                            fournisseurModifier.disabled = !articleId;
+                            // fournisseurModifier.disabled = !articleId;
                         });
 
                     fetch(`get_services.php?article_id=${articleId}`)
@@ -451,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 option.textContent = service.service;
                                 serviceModifier.appendChild(option);
                             });
-                            serviceModifier.disabled = !articleId;
+                            // serviceModifier.disabled = !articleId;
                         });
                 });
 
@@ -472,11 +472,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
                             // Remplir les champs supplémentaires
                             document.getElementById('ref-modifier').value = data.ref;
-                            document.getElementById('entree_modifier').value = data.entree;
-                            document.getElementById('sortie_modifier').value = data.sortie;
                             document.getElementById('prix_modifier').value = data.prix;
+
+                            if (data.entree_operation > 0){
+                                document.getElementById('entree_modifier').value = data.entree_operation;
+                                document.getElementById('sortie_modifier').disabled = true;
+                                document.getElementById('entree_modifier').disabled = false;
+                                document.getElementById('fournisseur_modifier').disabled = false;
+                                document.getElementById('service_modifier').disabled = true;
+                                document.getElementById('prix_modifier').disabled = false;
+
+                            }
+
+                            if (data.sortie_operation > 0){
+                                document.getElementById('entree_modifier').disabled = true;
+                                document.getElementById('sortie_modifier').disabled = false;
+                                document.getElementById('sortie_modifier').value = data.sortie_operation;
+                                document.getElementById('fournisseur_modifier').disabled = true;
+                                document.getElementById('service_modifier').disabled = false;
+                                document.getElementById('prix_modifier').disabled = true;
+
+                            }
+
+
                         }
                     });
+
 
 
 
@@ -572,3 +593,49 @@ function filterArticle(){
 
 
 
+$('#modifierOperationModal').on('hidden.bs.modal', function (e) {
+    // Réinitialiser le formulaire à l'intérieur du modal
+    $(this).find('form')[0].reset();
+
+    // Si vous souhaitez réinitialiser d'autres éléments, comme du texte ou des messages d'erreur
+    // Vous pouvez aussi le faire ici
+    // $(this).find('.form-group').removeClass('has-error');
+});
+
+let entrerfinal = document.getElementById('entree_modifier');
+let sortiefinal = document.getElementById('sortie_modifier');
+
+entrerfinal.addEventListener('change' , ()=>{
+    document.getElementById('sortie_modifier').disabled = true;
+    document.getElementById('service_modifier').disabled = true;
+    document.getElementById('fournisseur_modifier').disabled = false;
+    document.getElementById('prix_modifier').disabled = false;
+
+    document.getElementById('entree_modifier').disabled = false;
+    document.getElementById('fournisseur_modifier').disabled = false;
+    document.getElementById('service_modifier').disabled = true;
+    document.getElementById('prix_modifier').disabled = false
+
+    if (entrerfinal.value === ''){
+        document.getElementById('sortie_modifier').disabled = false;
+        document.getElementById('entree_modifier_').disabled = false;
+    }
+})
+
+sortiefinal.addEventListener('change' , ()=>{
+    document.getElementById('entree_modifier').disabled = true;
+    document.getElementById('fournisseur_modifier').disabled = true;
+    document.getElementById('service_modifiere').disabled = false;
+    document.getElementById('prix_modifier').disabled = true
+
+
+    document.getElementById('sortie_modifier').disabled = false;
+    document.getElementById('service_modifier').disabled = false;
+    document.getElementById('fournisseur_modifier').disabled = true;
+    document.getElementById('prix_modifier').disabled = true;
+
+    if (sortiefinal.value === ''){
+        document.getElementById('sortie_modifier').disabled = false;
+        document.getElementById('entree_modifier').disabled = false;
+    }
+})

@@ -25,7 +25,8 @@ if ($operationId > 0) {
             o.ref,
             o.pj_operation,
             o.depense_entre,
-            o.depense_sortie
+            o.depense_sortie,
+            o.prix_operation
         FROM operation o
         WHERE o.id = ?";
 
