@@ -277,6 +277,8 @@ function verifierStock($articleName, $sortie, $conn) {
     }
 }
 
+
+
 function verifierArticleStockFinal($articleId, $conn) {
     // Requête SQL pour vérifier si l'article existe déjà dans le stock final
     $query = "SELECT 1 FROM etat_de_stocks WHERE Article = ? LIMIT 1";
@@ -312,6 +314,37 @@ if (verifierArticleStockFinal($articleName , $conn)){
 $isBesoin = false;
 
 
+function checkBesoin($article, $sortie, $conn)
+{
+    $queryBesoin = "SELECT Stock_Final, Stock_Min, Requirement_Status FROM etat_de_stocks WHERE Article = ?";
+    $stmt = $conn->prepare($queryBesoin);
+    $stmt->bind_param("s", $article);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc(); // Récupérer la seule ligne
+        $stockMin = $row['Stock_Min'];
+        $stockFinal = $row['Stock_Final'];
+        $status = $row['Requirement_Status'];
+    } else {
+        return false;
+    }
+
+    $etat = $stockFinal - $sortie;
+    $stmt->close();
+
+    if ($etat <= $stockMin || $status === 'besoin') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+
+
+
 $stocktrue = false;
 if (verifierStock($articleName, $sortie, $conn)){
     $stocktrue = true;
@@ -331,24 +364,33 @@ if ($stmtStock1->fetch()) {
 $stmtStock1->close();
 
 // Redirection et affichage du message
-if (article_besoin($articleName , 'besoin' , $conn)){
+if (checkBesoin($articleName , $sortie , $conn)){
     $isBesoin = true;
 }
 $redirectUrl = "option_Ent_Sor.php";
 
 if ($articleTrouve){
-    if (verifierStock($articleName, $sortie, $conn)) {
-        if ($isBesoin) {
-            $message = "ssajouter&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
+    if (!verifierStock($articleName, $sortie, $conn)) {
+        if (checkBesoin($articleName , $sortie , $conn)) {
+            if ($operationAjoutee){
+                $message = "ssajouter&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
+            }
+            else{
+                if ($sortie > 0) {
+                    $message = "eppuisement&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
+                }
+                else{
+                    $message = "itwotk2212";
+                }
+            }
 //            $redirectUrl .= "?message=$message&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
-
         } else {
             $message = "itwotk2212";
 //            $redirectUrl .= "?message=$message&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
         }
 //        $redirectUrl .= "?message=$message";
     } else {
-        $message = "eppuisement&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
+        $message = "itwotk2212";
 //        $redirectUrl .= "?message=$message";
     }
 }else{
