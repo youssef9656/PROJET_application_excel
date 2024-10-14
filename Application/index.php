@@ -94,6 +94,7 @@ include "Config/connect_db.php";
         width: 100%;
         font-size: 24px;
         background: none;
+
         outline: none;
 
     }

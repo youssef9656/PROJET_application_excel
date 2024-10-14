@@ -96,8 +96,8 @@ function getService($serviceId, $conn)
 
 // Fonction pour insérer une opération
 function insererOperation($lotName, $sousLotName, $articleName, $entree, $sortie, $fournisseurName, $serviceName1, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie, $conn) {
-    $queryInsert = "INSERT INTO operation (lot_name, sous_lot_name, nom_article, date_operation, entree_operation, sortie_operation, nom_pre_fournisseur, service_operation, prix_operation, unite_operation, pj_operation, ref, depense_entre, depense_sortie)
-                    VALUES (?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $queryInsert = "INSERT INTO operation (lot_name, sous_lot_name, nom_article, date_operation, entree_operation, sortie_operation, nom_pre_fournisseur, service_operation, prix_operation, unite_operation, pj_operation, ref, depense_entre, depense_sortie , reclamation)
+                    VALUES (?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , NULL)";
     $stmtInsert = $conn->prepare($queryInsert);
     $stmtInsert->bind_param("sssdsssssssss", $lotName, $sousLotName, $articleName, $entree, $sortie, $fournisseurName, $serviceName1, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie);
 
@@ -112,24 +112,6 @@ function insererOperation($lotName, $sousLotName, $articleName, $entree, $sortie
 }
 
 // Fonction pour vérifier le stock
-function verifierStock($articleName, $sortie, $conn) {
-    $sqlStockFinal = "SELECT Stock_Final FROM etat_de_stocks WHERE Article = ?";
-    $stmtStock = $conn->prepare($sqlStockFinal);
-    $stmtStock->bind_param("s", $articleName);
-    $stmtStock->execute();
-    $stmtStock->bind_result($stockFinal);
-
-    if ($stmtStock->fetch()) {
-        $stmtStock->close();
-        if ($sortie <= $stockFinal) {
-            return true;
-        } else {
-            return false;
-        }
-    } else {
-        return false;
-    }
-}
 
 // Fonction pour vérifier l'état de besoin d'un article
 function article_besoin($article, $besoin, $conn)
@@ -225,10 +207,29 @@ $lotId = $_POST['lot'];
 $sousLotId = $_POST['sousLot'];
 $articleId = $_POST['article'];
 $ref = $_POST['ref'];
-$serviceName = isset($_POST['service']) ? $_POST['service'] : null;
-$fournisseurId = isset($_POST['fournisseur']) ? $_POST['fournisseur'] : null;
-$entree = isset($_POST['entree']) ? floatval($_POST['entree']) : 0.00;
-$sortie = isset($_POST['sortie']) ? floatval($_POST['sortie']) : 0.00;
+if (isset($_POST['service'])) {
+    $serviceName = $_POST['service'];
+} else {
+    $serviceName = null;
+}
+
+if (isset($_POST['fournisseur'])) {
+    $fournisseurId = $_POST['fournisseur'];
+} else {
+    $fournisseurId = null;
+}
+
+if (isset($_POST['entree'])) {
+    $entree = floatval($_POST['entree']);
+} else {
+    $entree = 0.00;
+}
+
+if (isset($_POST['sortie'])) {
+    $sortie = floatval($_POST['sortie']);
+} else {
+    $sortie = 0.00;
+}
 
 // Appel des fonctions pour obtenir les données
 $lotName = getLotName($lotId, $conn);
@@ -255,9 +256,54 @@ if (!empty($entree)) {
 
 // Vérifier le stock et insérer l'opération
 $operationAjoutee = false;
-if (verifierStock($articleName, $sortie, $conn)) {
-    $operationAjoutee = insererOperation($lotName, $sousLotName, $articleName, $entree, $sortie, $fournisseurName, $serviceName1, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie, $conn);
+
+function verifierStock($articleName, $sortie, $conn) {
+    $sqlStockFinal = "SELECT Stock_Final FROM etat_de_stocks WHERE Article = ?";
+    $stmtStock = $conn->prepare($sqlStockFinal);
+    $stmtStock->bind_param("s", $articleName);
+    $stmtStock->execute();
+    $stmtStock->bind_result($stockFinal);
+
+    if ($stmtStock->fetch()) {
+        $stmtStock->close();
+        if ($sortie <= $stockFinal) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
 }
+
+function verifierArticleStockFinal($articleId, $conn) {
+    // Requête SQL pour vérifier si l'article existe déjà dans le stock final
+    $query = "SELECT 1 FROM etat_de_stocks WHERE Article = ? LIMIT 1";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $articleId); // Lie l'ID de l'article à la requête
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Retourne true si l'article est trouvé, false sinon
+    return $result->num_rows > 0;
+}
+
+$articleTrouve = false;
+
+if (verifierArticleStockFinal($articleName , $conn)){
+    if (verifierStock($articleName, $sortie, $conn)){
+        $operationAjoutee = insererOperation($lotName, $sousLotName, $articleName, $entree, $sortie, $fournisseurName, $serviceName1, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie, $conn);
+        $articleTrouve = true;
+    }
+}
+else{
+    if ($entree > 0){
+        $operationAjoutee = insererOperation($lotName, $sousLotName, $articleName, $entree, $sortie, $fournisseurName, $serviceName1, $prix, $unite, $pjOperation, $ref, $depense_entre, $depense_sortie, $conn);
+    }
+    $articleTrouve = false;
+}
+
+
 
 // Mettre à jour la table etat_de_stocks
 mettreAJourEtatStocks($conn);
@@ -274,20 +320,33 @@ if ($stmtStock1->fetch()) {
 $stmtStock1->close();
 
 // Redirection et affichage du message
-$message = "itwork"; // Message par défaut
+
 $redirectUrl = "option_Ent_Sor.php";
 
-if (article_besoin($articleName, "besoin", $conn)) {
-    if ($operationAjoutee) {
-        $message = "ssajouter";
-        $redirectUrl .= "?message=$message&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
+if (verifierArticleStockFinal($articleName , $conn)){
+    if (article_besoin($articleName, "besoin", $conn)) {
+        if (verifierStock($articleName, $sortie, $conn)) {
+            $message = "ssajouter";
+            $redirectUrl .= "?message=$message&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
 
+        } else {
+            $message = "eppuisement";
+            $redirectUrl .= "?message=$message&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
+        }
     } else {
-        $message = "eppuisement";
-        $redirectUrl .= "?message=$message&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
+        $message = "itwork";
+        $redirectUrl .= "?message=$message";
     }
-} else {
-    $redirectUrl .= "?message=$message";
+}else{
+    if ($operationAjoutee){
+        $message = "itwork";
+    }else{
+        if($operationAjoutee == false){
+            $message = "stock_non_trouve";
+        }else{
+            $message = "error";
+        }
+    }
 }
 
 // Redirection finale

@@ -139,9 +139,7 @@ if (isset($_GET['message'])) {
         </div>
     </div>
 
-</div>
-
-';
+</div>';
             break;
 
         case 'reclamationError' :
@@ -165,10 +163,7 @@ if (isset($_GET['message'])) {
         </div>
     </div>
 
-</div>
-
-
-';
+</div>';
             break ;
         case 'reclamationSuccess':
             echo '
@@ -191,9 +186,11 @@ if (isset($_GET['message'])) {
         </div>
     </div>
 
-</div>
-
-';
+</div>';
+            break;
+        case 'stock_non_trouve' :
+            echo '<script>alert("Le stock non trouvé ...")</script>';
+            break;
     }
 }
 
