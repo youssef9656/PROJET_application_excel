@@ -136,6 +136,7 @@ function article_besoin($article, $besoin, $conn)
     }
 }
 
+
 // Fonction pour mettre à jour la table etat_de_stocks
 function mettreAJourEtatStocks($conn) {
     $start_date = '1000-01-01';
@@ -303,8 +304,18 @@ else{
     $articleTrouve = false;
 }
 
+if (verifierArticleStockFinal($articleName , $conn)){
+    $articleTrouve = true;
+}
 
 
+$isBesoin = false;
+
+
+$stocktrue = false;
+if (verifierStock($articleName, $sortie, $conn)){
+    $stocktrue = true;
+}
 // Mettre à jour la table etat_de_stocks
 mettreAJourEtatStocks($conn);
 
@@ -320,37 +331,61 @@ if ($stmtStock1->fetch()) {
 $stmtStock1->close();
 
 // Redirection et affichage du message
-
+if (article_besoin($articleName , 'besoin' , $conn)){
+    $isBesoin = true;
+}
 $redirectUrl = "option_Ent_Sor.php";
 
-if (verifierArticleStockFinal($articleName , $conn)){
-    if (article_besoin($articleName, "besoin", $conn)) {
-        if (verifierStock($articleName, $sortie, $conn)) {
-            $message = "ssajouter";
-            $redirectUrl .= "?message=$message&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
+if ($articleTrouve){
+    if (verifierStock($articleName, $sortie, $conn)) {
+        if ($isBesoin) {
+            $message = "ssajouter&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
+//            $redirectUrl .= "?message=$message&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
 
         } else {
-            $message = "eppuisement";
-            $redirectUrl .= "?message=$message&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
+            $message = "itwotk2212";
+//            $redirectUrl .= "?message=$message&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
         }
+//        $redirectUrl .= "?message=$message";
     } else {
-        $message = "itwork";
-        $redirectUrl .= "?message=$message";
+        $message = "eppuisement&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
+//        $redirectUrl .= "?message=$message";
     }
 }else{
     if ($operationAjoutee){
-        $message = "itwork";
+        if ($isBesoin){
+            $message = "ssajouter&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
+        }
+        else{
+            $message = "itwork";
+        }
     }else{
         if($operationAjoutee == false){
             $message = "stock_non_trouve";
         }else{
             $message = "error";
         }
+//        $redirectUrl .= "?message=$message";
     }
 }
 
+
+
+
+
+
+
+$redirectUrl .= "?message=$message";
 // Redirection finale
-header("Location: $redirectUrl");
+
+if ($isBesoin){
+    $isBesoin = 1;
+}else{
+    $isBesoin = 0;
+}
+
+header("Location: $redirectUrl&ss=$isBesoin");
+
 exit();
 
 $conn->close();
