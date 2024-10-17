@@ -268,12 +268,13 @@ function verifierStock($articleName, $sortie, $conn) {
     if ($stmtStock->fetch()) {
         $stmtStock->close();
         if ($sortie <= $stockFinal) {
-            return true;
+            return true; // Stock suffisant pour la sortie
         } else {
-            return false;
+            return false; // Stock insuffisant pour la sortie
         }
     } else {
-        return false;
+        $stmtStock->close();
+        return false; // Article non trouvé dans le stock
     }
 }
 
@@ -331,7 +332,7 @@ function checkBesoin($article, $sortie, $conn)
         return false;
     }
 
-    $etat = $stockFinal - $sortie;
+    $etat = $stockFinal;
     $stmt->close();
 
     if ($etat <= $stockMin || $status === 'besoin') {
@@ -370,7 +371,7 @@ if (checkBesoin($articleName , $sortie , $conn)){
 $redirectUrl = "option_Ent_Sor.php";
 
 if ($articleTrouve){
-    if (!verifierStock($articleName, $sortie, $conn)) {
+    if (verifierStock($articleName, $sortie, $conn)) {
         if (checkBesoin($articleName , $sortie , $conn)) {
             if ($operationAjoutee){
                 $message = "ssajouter&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
@@ -380,17 +381,17 @@ if ($articleTrouve){
                     $message = "eppuisement&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
                 }
                 else{
-                    $message = "itwotk2212";
+                    $message = "itwotkfffffff2212";
                 }
             }
 //            $redirectUrl .= "?message=$message&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
         } else {
-            $message = "itwotk2212";
+            $message = "itwotk221346275897783459768452";
 //            $redirectUrl .= "?message=$message&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
         }
 //        $redirectUrl .= "?message=$message";
     } else {
-        $message = "itwotk2212";
+        $message = "eppuisement&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
 //        $redirectUrl .= "?message=$message";
     }
 }else{

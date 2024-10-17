@@ -192,9 +192,22 @@
 <!--        </button>-->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
+                <?php
+
+
+                if($_SESSION['role'] == "admin") {
+                    echo '
                 <li class="nav-item item-hover">
                     <a class="nav-link" href="../reclamation/reclamation.php">Acceil</a>
-                </li>
+                </li> ';
+                }
+
+
+                ?>
+
+
+
+
                 <li class="nav-item item-hover">
                     <a class="nav-link" href="../operations_01/option_Ent_Sor.php">Journal entrées et sorties</a>
                 </li>
@@ -251,10 +264,7 @@
                 ';
 
 
-
                 }
-
-
 
                 ?>
 

@@ -65,7 +65,6 @@ include "Config/connect_db.php";
         overflow: hidden; /* Pour cacher les débordements des pseudo-éléments */
     }
 
-
     p{
         font-size: 50px;
         background-image: linear-gradient(-20deg , #ffc589, #ffffff, #ffd29d, #ffffff, #ffffff,#ffffff,#ffffff);
@@ -84,7 +83,6 @@ include "Config/connect_db.php";
         margin-top: 40px;
         /*background: transparent;*/
     }
-
 
 
 
@@ -111,6 +109,7 @@ include "Config/connect_db.php";
         border: none;
         cursor: pointer;
     }
+
     .button{
         background-image: linear-gradient(-20deg , #ffcfa1, #ffffff);
         border: 1px solid white;
@@ -120,6 +119,7 @@ include "Config/connect_db.php";
         margin-left: 57%;
         padding: 5px;
     }
+
     .bb{
         border: 1px solid white;
         border-radius: 50%;
@@ -133,8 +133,6 @@ include "Config/connect_db.php";
 <div class="main">
 
     <div class="content">
-
-
 
 
 
@@ -173,7 +171,6 @@ include "Config/connect_db.php";
 
 
 <script>
-
 
 
     function togglePassword() {

@@ -231,7 +231,7 @@ $stock_initial = selectData($querystock_initial, []);
     }
 
     /* Transition et style de bouton */
-    button {
+    #ajouterBtn {
         padding: 10px 20px;
         background-color: #007bff;
         color: white;
@@ -240,7 +240,7 @@ $stock_initial = selectData($querystock_initial, []);
         cursor: pointer;
         transition: background-color 0.3s ease, transform 0.3s ease;
     }
-    button:hover {
+    #ajouterBtn:hover {
         background-color: #0056b3;
         transform: scale(1.05);
     }
