@@ -1,4 +1,9 @@
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Inclure le fichier de connexion à la base de données
 include '../../config/connect_db.php';
 
@@ -60,7 +65,7 @@ if (isset($_GET['id'])) {
         o.date_operation BETWEEN '$start_date' AND '$end_date'
     GROUP BY 
         a.id_article, a.nom, a.stock_initial, a.stock_min
-    LIMIT 0, 25
+
 ";
 
             $result = $conn->query($sql_select);
@@ -99,7 +104,7 @@ if (isset($_GET['id'])) {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ";
                             $stmt = $conn->prepare($sql_insert);
-                            $stmt->bind_param("iissiiidddis", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $total_depenses_entree, $total_depenses_sortie, $stock_min, $requirement_status);
+                            $stmt->bind_param("isssiiidddis", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $total_depenses_entree, $total_depenses_sortie, $stock_min, $requirement_status);
                         }
 
                     } else {
@@ -110,7 +115,7 @@ if (isset($_GET['id'])) {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ";
                         $stmt = $conn->prepare($sql_insert);
-                        $stmt->bind_param("iissiiidddis", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $total_depenses_entree, $total_depenses_sortie, $stock_min, $requirement_status);
+                        $stmt->bind_param("isssiiidddis", $id, $article, $stock_initial, $total_entry_operations, $total_exit_operations, $stock_final, $prix, $stock_value, $total_depenses_entree, $total_depenses_sortie, $stock_min, $requirement_status);
                     }
 
                     $stmt->execute();
@@ -118,7 +123,6 @@ if (isset($_GET['id'])) {
             } else {
                 echo "Aucune donnée à traiter.";
             }
-            // Redirection vers la page de tableau des opérations après suppression
             header('Location: option_Ent_Sor.php?message=operation_supprimee');
             exit;
         } else {

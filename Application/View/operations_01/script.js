@@ -1,7 +1,100 @@
 // filtrer les operations par date
-
+document.addEventListener('DOMContentLoaded', ()=>{
+    document.body.style.filter = "none";
+})
 
 setTimeout(() => {
+
+
+    // reclamation code :
+    // Get the modal and form elements
+    var reclamationModal = document.getElementById('reclamationModal');
+    var reclamationForm = document.getElementById('reclamationForm');
+    var operationIdInput = document.getElementById('operationId');
+    var saveNullButton = document.getElementById('saveNullButton');
+    saveNullButton.addEventListener('click', function (event) {
+        var operationId = operationIdInput.value;
+
+        // Envoyer une requête AJAX pour enregistrer la réclamation avec la valeur NULL
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "enregistrer_reclamation_null.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                var response = JSON.parse(this.responseText);
+                if (response.success) {
+                    // Rediriger l'utilisateur vers la page avec le message de succès
+                    window.location.href = "option_Ent_Sor.php?message=" + encodeURIComponent(response.message);
+                } else {
+                    // Afficher un message d'erreur à l'utilisateur (par exemple, avec une alerte)
+                    alert(response.message);
+                }
+                reclamationModal.hide(); // Fermer le modal
+            }
+        };
+        xhr.send("operationId=" + operationId);
+    });
+    // Add an event listener to the modal to capture the operation ID
+    reclamationModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // Button that triggered the modal
+        var operationId = button.getAttribute('data-operation-id'); // Extract info from data-* attributes
+        operationIdInput.value = operationId; // Update the hidden input field
+    });
+
+    // Add an event listener to the form to handle the submission
+    reclamationForm.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        var operationId = operationIdInput.value;
+        var reclamationText = document.getElementById('reclamationText').value;
+
+        // Send an AJAX request to save the reclamation
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "enregistrer_reclamation.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function() {
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                var response = JSON.parse(this.responseText);
+                if (response.success)
+                {
+                    // Rediriger l'utilisateur vers la page avec le message de succès
+                    window.location.href = "option_Ent_Sor.php?message=" + encodeURIComponent(response.message);
+                } else {
+                    // Afficher un message d'erreur à l'utilisateur (par exemple, avec une alerte)
+                    alert(response.message);
+                }
+                reclamationModal.hide(); // Close the modal
+            }
+        };
+
+        xhr.send("operationId=" + operationId + "&reclamationText=" + reclamationText);
+    });
+
+
+
+
+    // afficher la reclamation si elle trouve dans la base de donné
+    reclamationModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var operationId = button.getAttribute('data-operation-id');
+        operationIdInput.value = operationId;
+
+        // Récupérer la réclamation existante depuis la base de données
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "recuperer_reclamation.php?operationId=" + operationId, true);
+        xhr.onreadystatechange = function() {
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                var reclamation = this.responseText;
+                document.getElementById('reclamationText').value = reclamation;
+            }
+        };
+        xhr.send();
+    });
+
+
+
+
     document.getElementById('filterBtn').addEventListener('click', function () {
         // Récupérer les valeurs des inputs
         var startDate = document.getElementById('startDate').value;
@@ -43,6 +136,28 @@ setTimeout(() => {
 }, 1000)
 
 // ajouter operation
+
+function envoyerRequete2() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "ajouter_operation.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    // Envoi de la requête AJAX
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Récupérer la réponse JSON
+            var response = JSON.parse(xhr.responseText);
+
+            // Optionnel : Ajouter une classe pour styliser le message (success ou error)
+            if (response.status === 'ss') {
+                console.log('1234')
+
+            }
+        }
+    };
+}
+envoyerRequete2()
+
 document.addEventListener('DOMContentLoaded', function() {
     // Gérer le changement de lot pour charger les sous-lots et les fournisseurs
     document.getElementById('lot').addEventListener('change', function() {
@@ -57,6 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('sousLot').innerHTML = '<option value="">-- Sélectionner Sous-lot --</option>';
             document.getElementById('article').innerHTML = '<option value="">-- Sélectionner Article --</option>';
             document.getElementById('fournisseur').innerHTML = '<option value="">-- Sélectionner Fournisseur --</option>';
+            document.getElementById('service').innerHTML = '<option value="">-- Sélectionner Fournisseur --</option>';
         }
     });
 
@@ -149,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 fournisseurSelect.disabled = false;
                 fournisseurSelect.innerHTML = '<option value="">-- Sélectionner Fournisseur --</option>';
                 fournisseurs.forEach(function(fournisseur) {
-                    fournisseurSelect.innerHTML += '<option value="' + fournisseur.id_fournisseur + '">' + fournisseur.nom_fournisseur + '</option>';
+                    fournisseurSelect.innerHTML += '<option value="' + fournisseur.id_fournisseur + '">' + fournisseur.nom_fournisseur + "  "+ fournisseur.prenom_fournisseur + '</option>';
                 });
             } else {
                 console.error("Erreur de requête AJAX pour les fournisseurs.");
@@ -250,6 +366,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 const lotName = this.getAttribute('data-lot');
                 const sousLotName = this.getAttribute('data-sous-lot');
                 const articleName = this.getAttribute('data-article');
+                const sortie_value = this.getAttribute('data-sortie');
+
+
+                document.getElementById('sortie_value').value = sortie_value
 
                 // Remplir le modal avec les données existantes
                 operationIdInput.value = operationId;
@@ -318,7 +438,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 option.textContent = fournisseur.nom_fournisseur +" "+ fournisseur.prenom_fournisseur;
                                 fournisseurModifier.appendChild(option);
                             });
-                            fournisseurModifier.disabled = !articleId;
+                            // fournisseurModifier.disabled = !articleId;
                         });
 
                     fetch(`get_services.php?article_id=${articleId}`)
@@ -327,11 +447,11 @@ document.addEventListener('DOMContentLoaded', function () {
                             serviceModifier.innerHTML = '<option value="">-- Sélectionner Service --</option>';
                             data.forEach(service => {
                                 const option = document.createElement('option');
-                                option.value = service.id;
+                                option.value = service.service;
                                 option.textContent = service.service;
                                 serviceModifier.appendChild(option);
                             });
-                            serviceModifier.disabled = !articleId;
+                            // serviceModifier.disabled = !articleId;
                         });
                 });
 
@@ -352,12 +472,58 @@ document.addEventListener('DOMContentLoaded', function () {
 
                             // Remplir les champs supplémentaires
                             document.getElementById('ref-modifier').value = data.ref;
-                            document.getElementById('entree_modifier').value = data.entree;
-                            document.getElementById('sortie_modifier').value = data.sortie;
                             document.getElementById('prix_modifier').value = data.prix;
+
+                            if (data.entree_operation > 0){
+                                document.getElementById('entree_modifier').value = data.entree_operation;
+                                document.getElementById('sortie_modifier').disabled = true;
+                                document.getElementById('entree_modifier').disabled = false;
+                                document.getElementById('fournisseur_modifier').disabled = false;
+                                document.getElementById('service_modifier').disabled = true;
+                                document.getElementById('prix_modifier').disabled = false;
+
+                            }
+
+                            if (data.sortie_operation > 0){
+                                document.getElementById('entree_modifier').disabled = true;
+                                document.getElementById('sortie_modifier').disabled = false;
+                                document.getElementById('sortie_modifier').value = data.sortie_operation;
+                                document.getElementById('fournisseur_modifier').disabled = true;
+                                document.getElementById('service_modifier').disabled = false;
+                                document.getElementById('prix_modifier').disabled = true;
+
+                            }
+
+
                         }
                     });
 
+
+
+
+                function envoyerRequete() {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("GET", "modifier_operation.php", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                    // Envoi de la requête AJAX
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            // Récupérer la réponse JSON
+                            var response = JSON.parse(xhr.responseText);
+
+                            // Optionnel : Ajouter une classe pour styliser le message (success ou error)
+                            if (response.status === 'success') {
+
+                                console.log('1234')
+
+
+                            }
+                        }
+                    };
+                }
+
+                envoyerRequete()
                 // Ouvrir le modal
                 const modal = new bootstrap.Modal(document.getElementById('modifierOperationModal'));
                 modal.show();
@@ -373,9 +539,103 @@ function ret(){
     location.reload()
 }
 
+// functions article filter
+
+
+    function populateDatalist() {
+        const datalist = document.getElementById('article_list');
+        const rows = document.querySelectorAll('#operationTable tbody tr');
+        const articles = new Set(); // Utilisation de Set pour éviter les doublons
+
+        rows.forEach(row => {
+            const article = row.querySelector('td').textContent.trim(); // Extraire le contenu de la première cellule
+            articles.add(article); // Ajouter l'article au Set
+        });
+
+        // Vider la datalist avant de la remplir
+        datalist.innerHTML = '';
+
+        // Ajouter les articles à la datalist
+        articles.forEach(article => {
+            const option = document.createElement('option');
+            option.value = article;
+            datalist.appendChild(option);
+        });
+    }
+
+
+
+    // Appeler la fonction pour remplir la datalist après le chargement du DOM
+    document.addEventListener('DOMContentLoaded',()=>{
+        setTimeout(()=>{
+            populateDatalist()
+        },1000)
+    });
+function filterArticle(){
+    populateDatalist(); // Appelle la fonction pour mettre à jour le datalist, si nécessaire
+    const filter = document.getElementById('article_filter').value.toLowerCase(); // Convertir en minuscule pour une comparaison insensible à la casse
+    const rows = document.querySelectorAll('#tbodyTableOperation tr');
+
+    rows.forEach(row => {
+        const article = row.querySelector('td').textContent.toLowerCase(); // Convertir en minuscule pour correspondre au filtre
+        if (article.includes(filter)) {
+            console.log(1);
+            console.log(row);
+            row.style.display = ''; // Affiche la ligne (valeur par défaut pour les éléments de tableau)
+        } else {
+            console.log(0);
+            console.log(row);
+            row.style.display = 'none'; // Cache la ligne
+        }
+    });
+}
 
 
 
 
+$('#modifierOperationModal').on('hidden.bs.modal', function (e) {
+    // Réinitialiser le formulaire à l'intérieur du modal
+    $(this).find('form')[0].reset();
+
+    // Si vous souhaitez réinitialiser d'autres éléments, comme du texte ou des messages d'erreur
+    // Vous pouvez aussi le faire ici
+    // $(this).find('.form-group').removeClass('has-error');
+});
+
+let entrerfinal = document.getElementById('entree_modifier');
+let sortiefinal = document.getElementById('sortie_modifier');
+
+entrerfinal.addEventListener('change' , ()=>{
+    document.getElementById('sortie_modifier').disabled = true;
+    document.getElementById('service_modifier').disabled = true;
+    document.getElementById('fournisseur_modifier').disabled = false;
+    document.getElementById('prix_modifier').disabled = false;
+
+    document.getElementById('entree_modifier').disabled = false;
+    document.getElementById('fournisseur_modifier').disabled = false;
+    document.getElementById('service_modifier').disabled = true;
+    document.getElementById('prix_modifier').disabled = false
+
+    if (entrerfinal.value === ''){
+        document.getElementById('sortie_modifier').disabled = false;
+        document.getElementById('entree_modifier_').disabled = false;
+    }
+})
+
+sortiefinal.addEventListener('change' , ()=>{
+    document.getElementById('entree_modifier').disabled = true;
+    document.getElementById('fournisseur_modifier').disabled = true;
+    document.getElementById('service_modifiere').disabled = false;
+    document.getElementById('prix_modifier').disabled = true
 
 
+    document.getElementById('sortie_modifier').disabled = false;
+    document.getElementById('service_modifier').disabled = false;
+    document.getElementById('fournisseur_modifier').disabled = true;
+    document.getElementById('prix_modifier').disabled = true;
+
+    if (sortiefinal.value === ''){
+        document.getElementById('sortie_modifier').disabled = false;
+        document.getElementById('entree_modifier').disabled = false;
+    }
+})

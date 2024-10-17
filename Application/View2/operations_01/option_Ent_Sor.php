@@ -521,7 +521,7 @@ if (isset($_GET['message'])) {
                         <label for="service-modifier" class="form-label">Service:</label>
                         <select id="service_modifier" name="service" class="form-select" disabled>
                             <option value="">-- Sélectionner Service --</option>
-                        </select>
+                        </select>pwa
                     </div>
 
                     <div class="mb-3">

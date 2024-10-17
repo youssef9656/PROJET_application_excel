@@ -29,6 +29,8 @@ if (!$result) {
         }
 
         #tableoperationdiv {
+            position: sticky;
+            top: 0px;
             margin: 20px;
         }
 
@@ -37,6 +39,11 @@ if (!$result) {
             flex-wrap: wrap;
             gap: 15px;
             margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 20;
+            padding-bottom: 20px;
         }
 
         #filters label {
@@ -66,6 +73,8 @@ if (!$result) {
             width: 100%;
             border-collapse: collapse;
             background-color: #ffffff;
+            max-height: 80vh;
+
         }
 
         .table-operation th,
@@ -77,9 +86,10 @@ if (!$result) {
 
         .table-operation thead {
             position: sticky;
-            top: 0;
+            top: 60px;
             background-color: #007bff;
             color: #ffffff;
+            z-index: 12;
         }
 
         .table-operation tbody tr:nth-child(even) {
@@ -96,6 +106,7 @@ if (!$result) {
 
         .table-operation th {
             font-weight: bold;
+
         }
 
         .table-operation td input {
@@ -107,14 +118,33 @@ if (!$result) {
 
     <div id="tableoperationdiv">
         <div id="filters">
-            <label for="startDate">Date de début:</label>
+            <label for="startDate" id="p">Date de début:</label>
             <input type="date" id="startDate" name="startDate">
 
             <label for="endDate">Date de fin:</label>
             <input type="date" id="endDate" name="endDate">
 
+
+            <label for="article_filter">Article:</label>
+            <input type="text" id="article_filter" list="article_list" onchange="filterArticle()">
+            <datalist id="article_list">
+                <!--                les articles seront ajouter ici -->
+            </datalist>
+
+
             <button id="filterBtn">Filtrer</button>
             <button id="afficher_tous">Afficher tous</button>
+
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterOperationModal">
+                Ajouter Opération
+            </button>
+
+<!--            Article filter-->
+
+
+
+
+
         </div>
 
         <table id="operationTable" class="table table-operation">
@@ -132,26 +162,45 @@ if (!$result) {
                 <th>Dépense Entrée</th>
                 <th>Prix</th>
                 <th>Déspense Sortie</th>
+                <th>Action</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="tbodyTableOperation">
             <?php
             // Afficher les données en HTML
             while ($row = mysqli_fetch_assoc($result)) {
                 echo '<tr>';
                 echo '<td>' . htmlspecialchars($row['nom_article']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['date_operation']) . '</td>';
-                echo '<td' . ($row['entree_operation'] == 0 ? ' style="background-color: orange;"' : '') . '>' . htmlspecialchars($row['entree_operation']) . '</td>';
-                echo '<td' . ($row['sortie_operation'] == 0 ? ' style="background-color: yellow;"' : '') . '>' . htmlspecialchars($row['sortie_operation']) . '</td>';
+                echo '<td' . ($row['entree_operation'] == 0 ? ' style="background-color: #00ff44;"' : '') . '>' . htmlspecialchars($row['entree_operation']) . '</td>';
+                echo '<td' . ($row['sortie_operation'] == 0 ? ' style="background-color: #ffbf4b;"' : '') . '>' . htmlspecialchars($row['sortie_operation']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['pj_operation']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['ref']) . '</td>';
-                echo '<td' . ($row['nom_pre_fournisseur'] == null ? ' style="background-color: orange;"' : '') . '>' . htmlspecialchars($row['nom_pre_fournisseur']) . '</td>';
-                echo '<td' . ($row['service_operation'] == null ? ' style="background-color: yellow;"' : '') . '>' . htmlspecialchars($row['service_operation']) . '</td>';
-                echo '<td' . ($row['unite_operation'] == 0 ? ' style="background-color: yellow;"' : '') . '>' . htmlspecialchars($row['unite_operation']) . '</td>';
+                echo '<td' . ($row['nom_pre_fournisseur'] == null ? ' style="background-color: #00ff44;"' : '') . '>' . htmlspecialchars($row['nom_pre_fournisseur']) . '</td>';
+                echo '<td' . ($row['service_operation'] == null ? ' style="background-color: #ffbf4b;"' : '') . '>' . htmlspecialchars($row['service_operation']) . '</td>';
+                echo '<td' . ($row['unite_operation'] == 0 ? ' style="background-color: #ffbf4b;"' : '') . '>' . htmlspecialchars($row['unite_operation']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['depense_entre']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['prix_operation']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['depense_sortie']) . '</td>';
-//
+                echo '<td style="padding: 5px" class="text-center">';
+                echo '<a href="#" style="color:green;" class="modify-btn" 
+    data-id="' . htmlspecialchars($row['id']) . '"
+    data-lot="' . htmlspecialchars($row['lot_name']) . '"
+    data-sous-lot="' . htmlspecialchars($row['sous_lot_name']) . '"
+    data-ref="' . htmlspecialchars($row['ref']) . '" 
+    data-sortie="' . htmlspecialchars($row['sortie_operation']) . '">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+    </svg>
+</a> | ';
+
+                echo '<a style="color:red" href="supprimer_operation.php?id=' . urlencode($row['id']) . '" onclick="return confirm(\'Êtes-vous sûr de vouloir supprimer cette opération ?\')">';
+                echo '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16"><path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/></svg>';
+                echo '</a>';
+                echo '<a href="#" data-bs-toggle="modal" data-bs-target="#reclamationModal" data-operation-id="' . htmlspecialchars($row['id']) . '"><button class="btn-12"><span>Reclamation</span></button>
+</a>';
+                echo '</td>';
                 echo '</tr>';
             }
             ?>
@@ -160,7 +209,5 @@ if (!$result) {
     </div>
 
 </div>
-
-
 
 
