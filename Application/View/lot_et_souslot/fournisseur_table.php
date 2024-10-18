@@ -4,9 +4,10 @@ include '../../config/connect_db.php';
 // Exécution de la requête pour obtenir les données des fournisseurs et le nom du lot associé
 $query = "
     SELECT f.id_fournisseur, f.nom_fournisseur, l.lot_name
-    FROM lot_fournisseurs lf
+    FROM lot_fournisseurs lf 
     JOIN fournisseurs f ON lf.id_fournisseur = f.id_fournisseur
     JOIN lots l ON lf.lot_id = l.lot_id
+    WHERE f.action_A_D = 1
     ORDER BY l.lot_name
 ";
 $result = mysqli_query($conn, $query);

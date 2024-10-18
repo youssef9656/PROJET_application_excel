@@ -51,8 +51,8 @@ if (!$result) {
         }
     </style>
 
-    <table id="serviceZoneTable" class="table-service-zone">
-        <thead>
+    <table id="serviceZoneTable" class="table-service-zone table sheetjs">
+        <thead class="tbody1">
         <tr>
             <th>ID</th>
             <th>Service</th>

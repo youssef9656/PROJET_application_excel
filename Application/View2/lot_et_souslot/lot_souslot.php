@@ -61,26 +61,31 @@ if (isset($_GET['message'])) {
 <style>
     .les-tables{
         width: 100%;
+        height: 90vh;
         display: flex;
         align-items: start;
         justify-content: space-around;
+        overflow: auto;
+
+
     }
     .div-table1 , .div-table2{
         width: 40%;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        height: 100%;
+        /*justify-content: center;*/
+        /*align-items: center;*/
         flex-direction: column;
-        margin-top: 40px;
-        /*overflow: scroll;*/
+        /*margin-top: 40px;*/
+        overflow: scroll;
     }
-    .table1 ,.table2 , .table3{
-        margin-top: 50px;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+    /*.table1 ,.table2 , .table3{*/
+    /*    margin-top: 50px;*/
+    /*    width: 100%;*/
+    /*    display: flex;*/
+    /*    justify-content: center;*/
+    /*    align-items: center;*/
+    /*}*/
     .ajouter_table1 , .ajouter_table2{
         width: 100%;
         display: flex;
@@ -103,18 +108,29 @@ if (isset($_GET['message'])) {
         margin-top: 20px;
     }
     .table-fournisseur{
-        margin-top: 40px;
+        /*margin-top: 40px; */
     }
     .table-fournisseur-tete{
-        margin: 30px;
         display: flex;
+        justify-content: center;
     }
-    .table-fournisseur-tete{
-        font-size: 30px;
-        color: transparent;
-        background-image: linear-gradient(-20deg , #00a357, #21ffe8);
-        background-clip: text;
+
+
+    .tableau-lot , .tableau-fournisseur , .tableau-soulot , .tableau-service{
+        height: 50%;
+        width: auto;
+        overflow: auto;
     }
+    .tableau-service{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+
+
+
+
 </style>
 
 
@@ -355,140 +371,136 @@ if (isset($_GET['message'])) {
 
 <div class="les-tables">
     <div class="div-table1">
-        <div class="ajouter_table1">
-            <h4>ajouter un lot</h4>
-            <button type="button" style="background: green; color:white; border: 1px solid white ; border-radius: 4px; font-size: 20px ; margin-left: 10px;padding-bottom: 4px"  id="openAddLotModal">
-                +
-            </button>
+        <div class="tableau-lot">
+            <div class="ajouter_table1">
+                <h4>ajouter un lot</h4>
+                <button type="button" style="background: green; color:white; border: 1px solid white ; border-radius: 4px; font-size: 20px ; margin-left: 10px;padding-bottom: 4px"  id="openAddLotModal">
+                    +
+                </button>
 
 
+            </div>
+            <div class="table1">
+                <!-- le tableau de donnêes de lot           -->
+            </div>
         </div>
 
+        <div class="tableau-fournisseur">
+            <div class="table-fournisseur-tete">
+                <h4>Gérer vos fournisseurs ici</h4> <!-- Bouton pour ouvrir la modal d'ajout de fournisseur -->
+                <button type="button" style="background: green; color:white; border: 1px solid white ; border-radius: 4px; font-size: 20px ; margin-left: 10px;padding-bottom: 4px" class="btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterFournisseurModal">
+                    +
+                </button>
+            </div>
+            <!-- Inputs pour filtrer les données -->
+            <div class="row">
+                <div class="col-6 d-flex justify-content-around align-items-center gap-1">
+                    <label for="filterLotfournisseur" class="form-label">Lot</label>
+                    <input type="text" id="filterLotfourniseur" class="form-control" placeholder="Tapez pour filtrer" list="lotOptions">
+                    <datalist id="lotOptions">
+                        <?php
+                        // Récupérer les lots depuis la base de données pour le datalist
+                        $lotQuery = "SELECT DISTINCT l.lot_name FROM lot_fournisseurs lf JOIN lots l ON lf.lot_id = l.lot_id";
+                        $lotResult = mysqli_query($conn, $lotQuery);
+                        while ($lotRow = mysqli_fetch_assoc($lotResult)) {
+                            echo '<option value="' . htmlspecialchars($lotRow['lot_name']) . '">';
+                        }
 
+                        ?>
+                    </datalist>
+                </div>
+                <div class="col-6 d-flex justify-content-around align-items-center gap-1">
+                    <label for="filterFournisseur" class="form-label">Fournisseur</label>
+                    <input type="text" id="filterFournisseur" class="form-control" placeholder="Tapez pour filtrer" list="fournisseurOptions">
+                    <datalist id="fournisseurOptions">
+                        <?php
+                        // Récupérer les fournisseurs depuis la base de données pour le datalist
+                        $fournisseurQuery = "SELECT DISTINCT f.nom_fournisseur FROM lot_fournisseurs lf JOIN fournisseurs f ON lf.id_fournisseur = f.id_fournisseur";
+                        $fournisseurResult = mysqli_query($conn, $fournisseurQuery);
+                        while ($fournisseurRow = mysqli_fetch_assoc($fournisseurResult)) {
+                            echo '<option value="' . htmlspecialchars($fournisseurRow['nom_fournisseur']) . '">';
+                        }
+                        ?>
+                    </datalist>
+                </div>
+            </div>
 
-        <div class="table1">
-            <!-- le tableau de donnêes de lot           -->
-        </div>
-        <div class="table-fournisseur-tete">
-            <div>Gérer vos fournisseurs ici</div> <!-- Bouton pour ouvrir la modal d'ajout de fournisseur -->
-            <button type="button" style="background: green; color:white; border: 1px solid white ; border-radius: 4px; font-size: 20px ; margin-left: 10px;padding-bottom: 4px" class="btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterFournisseurModal">
-                +
-            </button>
-        </div>
-        <!-- Inputs pour filtrer les données -->
-        <div class="mb-3">
-            <label for="filterLotfournisseur" class="form-label">Filtrer par Lot</label>
-            <input type="text" id="filterLotfourniseur" class="form-control" placeholder="Tapez pour filtrer" list="lotOptions">
-            <datalist id="lotOptions">
-                <?php
-                // Récupérer les lots depuis la base de données pour le datalist
-                $lotQuery = "SELECT DISTINCT l.lot_name FROM lot_fournisseurs lf JOIN lots l ON lf.lot_id = l.lot_id";
-                $lotResult = mysqli_query($conn, $lotQuery);
-                while ($lotRow = mysqli_fetch_assoc($lotResult)) {
-                    echo '<option value="' . htmlspecialchars($lotRow['lot_name']) . '">';
-                }
-
-                ?>
-            </datalist>
-        </div>
-
-        <div class="mb-3">
-            <label for="filterFournisseur" class="form-label">Filtrer par Fournisseur</label>
-            <input type="text" id="filterFournisseur" class="form-control" placeholder="Tapez pour filtrer" list="fournisseurOptions">
-            <datalist id="fournisseurOptions">
-                <?php
-                // Récupérer les fournisseurs depuis la base de données pour le datalist
-                $fournisseurQuery = "SELECT DISTINCT f.nom_fournisseur FROM lot_fournisseurs lf JOIN fournisseurs f ON lf.id_fournisseur = f.id_fournisseur";
-                $fournisseurResult = mysqli_query($conn, $fournisseurQuery);
-                while ($fournisseurRow = mysqli_fetch_assoc($fournisseurResult)) {
-                    echo '<option value="' . htmlspecialchars($fournisseurRow['nom_fournisseur']) . '">';
-                }
-                ?>
-            </datalist>
-        </div>
-
-
-        <div class="table-fournisseur">
-            <!-- Le tableau de données de fournisseurs            -->
+            <div class="table-fournisseur">
+                <!-- Le tableau de données de fournisseurs            -->
+            </div>
         </div>
     </div>
 
     <div class="div-table2">
-        <div class="ajouter_table2">
-            <h4>ajouter un sous lot</h4>
-            <button type="button" style="background: green; color:white; border: 1px solid white ; border-radius: 4px; font-size: 20px ; margin-left: 10px;padding-bottom: 4px" onclick="$('#ajouterSousLotModal').modal('show');"  id="ajouterSousLotModal">
-                +
-            </button>
-        </div>
-        <div class="filter-seleects">
-            <div>
-                <label for="filterSousLotId">Filtrer par Sous-Lot ID :</label>
-                <input list="sousLotIds" id="filterSousLotId" name="filterSousLotId">
-                <datalist id="sousLotIds">
-                    <!-- Options générées dynamiquement -->
-                    <?php
-                    $query = "SELECT DISTINCT sous_lot_id FROM sous_lots";
-                    $result = mysqli_query($conn, $query);
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        echo '<option value="' . htmlspecialchars($row['sous_lot_id']) . '">';
-                    }
-                    ?>
-                </datalist>
+      <div class="tableau-soulot">
+          <div class="ajouter_table2">
+              <h4>ajouter un sous lot</h4>
+              <button type="button" style="background: green; color:white; border: 1px solid white ; border-radius: 4px; font-size: 20px ; margin-left: 10px;padding-bottom: 4px" onclick="$('#ajouterSousLotModal').modal('show');"  id="ajouterSousLotModal">
+                  +
+              </button>
+          </div>
+          <div class="filter-seleects row">
+
+              <div class="col-4">
+<!--                  <label for="filterLot">Filtrer par Lot :</label>-->
+                  <input list="lotNames" id="filterLot" placeholder="Filtrer par Lot :" name="filterLot">
+                  <datalist id="lotNames">
+                      <!-- Options générées dynamiquement -->
+                      <?php
+                      $query = "SELECT DISTINCT lot_name FROM lots";
+                      $result = mysqli_query($conn, $query);
+                      while ($row = mysqli_fetch_assoc($result)) {
+                          echo '<option value="' . htmlspecialchars($row['lot_name']) . '">';
+                      }
+                      ?>
+                  </datalist>
+              </div>
+              <div class="col-4">
+
+
+<!--                  <label for="filterSousLotName">Filtrer par Sous-Lot :</label>-->
+                  <input list="sousLotNames" id="filterSousLotName" placeholder="Filtrer par Sous-Lot :" name="filterSousLotName">
+                  <datalist id="sousLotNames">
+                      <!-- Options générées dynamiquement -->
+                      <?php
+                      $query = "SELECT DISTINCT sous_lot_name FROM sous_lots";
+                      $result = mysqli_query($conn, $query);
+                      while ($row = mysqli_fetch_assoc($result)) {
+                          echo '<option value="' . htmlspecialchars($row['sous_lot_name']) . '">';
+                      }
+                      ?>
+                  </datalist>
+              </div>
+              <div class="col-4">
+                  <button id="afficher_souslot" class="btn p-1 btn-primary">Afficher tous</button>
+              </div>
+
+
+
+          </div>
+          <div class="table2">
+
+              <!-- Le tableau de données de sous lots -->
+          </div>
+      </div>
+
+
+        <div class="tableau-service">
+
+            <div class="ajouter_table1">
+                <h4>Ajouter un Service</h4>
+                <button type="button" style="background: green; color:white; border: 1px solid white ; border-radius: 4px; font-size: 20px ; margin-left: 10px;padding-bottom: 4px" class="btn btn-primary" data-toggle="modal" data-target="#addServiceModal">
+                    +
+                </button>
             </div>
-            <div>
-                <label for="filterLot">Filtrer par Lot :</label>
-                <input list="lotNames" id="filterLot" name="filterLot">
-                <datalist id="lotNames">
-                    <!-- Options générées dynamiquement -->
-                    <?php
-                    $query = "SELECT DISTINCT lot_name FROM lots";
-                    $result = mysqli_query($conn, $query);
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        echo '<option value="' . htmlspecialchars($row['lot_name']) . '">';
-                    }
-                    ?>
-                </datalist>
+
+            <div class="table3">
+
             </div>
-            <div>
-
-
-                <label for="filterSousLotName">Filtrer par Sous-Lot :</label>
-                <input list="sousLotNames" id="filterSousLotName" name="filterSousLotName">
-                <datalist id="sousLotNames">
-                    <!-- Options générées dynamiquement -->
-                    <?php
-                    $query = "SELECT DISTINCT sous_lot_name FROM sous_lots";
-                    $result = mysqli_query($conn, $query);
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        echo '<option value="' . htmlspecialchars($row['sous_lot_name']) . '">';
-                    }
-                    ?>
-                </datalist>
-            </div>
-
-            <div>
-                <button id="afficher_souslot" class="btn btn-primary">Afficher tous</button>
-            </div>
-
-
-
-        </div>
-
-        <div class="table2">
-
-            <!-- Le tableau de données de sous lots -->
         </div>
 
 
 
-        <button style="margin-top: 50px" type="button" class="btn btn-primary" data-toggle="modal" data-target="#addServiceModal">
-            Ajouter un Service
-        </button>
-
-        <div class="table3">
-
-
-        </div>
     </div>
 
 </div>

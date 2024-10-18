@@ -13,8 +13,8 @@ if (!$result) {
     die('Erreur de requête : ' . mysqli_error($conn));
 }
 ?>
-<table id="sousLotsTable" class="table table-striped table-hover table-bordered">
-    <thead>
+<table id="sousLotsTable" class="table table-striped table-hover table-bordered sheetjs">
+    <thead class="tbody1">
     <tr>
         <th style="min-width: 100px ; padding: 5px">Order</th>
         <th style="min-width: 100px ; padding: 5px">Lot</th>

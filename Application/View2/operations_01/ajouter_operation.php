@@ -391,7 +391,7 @@ if ($articleTrouve){
         }
 //        $redirectUrl .= "?message=$message";
     } else {
-        $message = "eppuisement&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
+        $message = "ssajouter&nomArticle=$articleName&stockFinaleValue=$stockFinaleValue";
 //        $redirectUrl .= "?message=$message";
     }
 }else{

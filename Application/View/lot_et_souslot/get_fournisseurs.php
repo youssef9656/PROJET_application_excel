@@ -1,7 +1,7 @@
 <?php
 include '../../config/connect_db.php';
 
-$query = "SELECT nom_fournisseur FROM fournisseurs";
+$query = "SELECT nom_fournisseur FROM fournisseurs WHERE action_A_D = 1";
 $result = mysqli_query($conn, $query);
 
 $fournisseurs = array();

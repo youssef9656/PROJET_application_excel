@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Vérifier que les champs ne sont pas vides
     if (!empty($lot_id) && !empty($fournisseur_id)) {
         // Vérifier si le fournisseur est déjà associé au lot
-        $checkQuery = "SELECT COUNT(*) AS count FROM lot_fournisseurs WHERE lot_id = ? AND id_fournisseur = ?";
+        $checkQuery = "SELECT COUNT(*) AS count FROM lot_fournisseurs WHERE lot_id = ? AND id_fournisseur = ? ";
         $stmt = $conn->prepare($checkQuery);
         $stmt->bind_param("ii", $lot_id, $fournisseur_id);
         $stmt->execute();
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(['success' => false, 'error' => 'Le fournisseur est déjà associé à ce lot.']);
         } else {
             // Insérer le nouveau fournisseur pour le lot
-            $insertQuery = "INSERT INTO lot_fournisseurs (lot_id, id_fournisseur) VALUES (?, ?)";
+            $insertQuery = "INSERT INTO lot_fournisseurs (lot_id, id_fournisseur) VALUES (?, ?) ";
             $stmt = $conn->prepare($insertQuery);
             $stmt->bind_param("ii", $lot_id, $fournisseur_id);
 

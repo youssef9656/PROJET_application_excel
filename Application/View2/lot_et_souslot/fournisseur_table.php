@@ -18,8 +18,8 @@ if (!$result) {
 }
 ?>
 
-<table id="fournisseursTable" class="table-bordered table table-striped table-hover">
-    <thead>
+<table id="fournisseursTable" class="table-bordered table table-striped table-hover sheetjs">
+    <thead class="tbody1">
     <tr>
         <th style="min-width: 150px">ID Fournisseur</th>
         <th style="min-width: 150px; padding: 5px">Nom du Lot</th>

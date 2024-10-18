@@ -49,8 +49,8 @@ if (isset($_GET['message'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">
+<!--nnn-->
+<!--    <link rel="stylesheet" href="../../includes/css/bootstrap.min.css">-->
     <script src="../../includes/js/jquery.min.js"></script> <!-- Assurez-vous d'utiliser la version complète -->
     <script src="../../includes/js/bootstrap.bundle.min.js"></script>
     <script src="../../includes/js/bootstrap123.min.js"></script>
@@ -75,7 +75,7 @@ if (isset($_GET['message'])) {
         /*overflow: scroll;*/
     }
     .table1 ,.table2 , .table3{
-        margin-top: 50px;
+        /*margin-top: 50px;*/
         width: 100%;
         display: flex;
         justify-content: center;
@@ -250,7 +250,7 @@ if (isset($_GET['message'])) {
                             $lotQuery = "SELECT lot_id, lot_name FROM lots";
                             $lotResult = mysqli_query($conn, $lotQuery);
                             while ($lotRow = mysqli_fetch_assoc($lotResult)) {
-                                echo '<option value="' . htmlspecialchars($lotRow['lot_id']) . '">' . htmlspecialchars($lotRow['lot_name']) . '</option>';
+                                echo '<option value="' . htmlspecialchars($lotRow['lot_id']) . '">' . htmlspecialchars($lotRow['lot_name']) .  '</option>';
                             }
                             ?>
                         </select>
@@ -261,10 +261,10 @@ if (isset($_GET['message'])) {
                             <option value="" selected disabled>Choisir un fournisseur</option>
                             <?php
                             // Récupérer les fournisseurs depuis la base de données
-                            $fournisseurQuery = "SELECT id_fournisseur, nom_fournisseur FROM fournisseurs";
+                            $fournisseurQuery = "SELECT id_fournisseur, nom_fournisseur , prenom_fournisseur FROM fournisseurs WHERE action_A_D = 1";
                             $fournisseurResult = mysqli_query($conn, $fournisseurQuery);
                             while ($fournisseurRow = mysqli_fetch_assoc($fournisseurResult)) {
-                                echo '<option value="' . htmlspecialchars($fournisseurRow['id_fournisseur']) . '">' . htmlspecialchars($fournisseurRow['nom_fournisseur']) . '</option>';
+                                echo '<option value="' . htmlspecialchars($fournisseurRow['id_fournisseur']) . '">' . htmlspecialchars($fournisseurRow['nom_fournisseur']) . " ". htmlspecialchars($fournisseurRow['prenom_fournisseur']) . '</option>';
                             }
                             ?>
                         </select>
@@ -279,7 +279,6 @@ if (isset($_GET['message'])) {
 
 
 <!-- Modal pour ajouter service -->
-
 <div class="modal fade" id="addServiceModal" tabindex="-1" role="dialog" aria-labelledby="addServiceModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -308,6 +307,44 @@ if (isset($_GET['message'])) {
                         <input type="text" class="form-control" id="equip" name="equip" required>
                     </div>
                     <button type="submit" class="btn btn-success">Ajouter</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal pour modifier service -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Modifier
+                    Service</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+
+                    <input type="hidden"
+                           id="editId" name="id">
+                    <div class="mb-3">
+                        <label for="editService" class="form-label">Service</label>
+                        <input type="text" class="form-control" id="editService" name="service" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editZone" class="form-label">Zone</label>
+                        <input type="text" class="form-control" id="editZone" name="zone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editRef" class="form-label">Référence</label>
+                        <input type="text" class="form-control" id="editRef" name="ref" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEquip" class="form-label">Équipe</label>
+                        <input type="text" class="form-control" id="editEquip" name="equip" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
                 </form>
             </div>
         </div>
@@ -502,6 +539,7 @@ if (isset($_GET['message'])) {
             // Pré-remplir les champs de la modal
             $('#lot_id').val(lot_id);
             $('#lot_name').val(lot_name);
+
 
             // Ouvrir la modal
             $('#modifyLotModal').modal('show');
@@ -946,7 +984,48 @@ if (isset($_GET['message'])) {
 
 
 
+    $(document).ready(function() {
+        setTimeout(()=>{
+            $('.editServiceBtn').click(function() {
+                console.log('clicked')
+                var id = $(this).data('id');
+                // Faire une requête AJAX pour récupérer les données de la ligne avec l'ID correspondant
+                $.ajax({
+                    url: 'get_service_data.php', // Crée un fichier get_service_data.php pour gérer la requête AJAX
+                    type: 'GET',
+                    data: { id: id },
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log("get_service_data success id : "+ response.id)
+                        // Remplir le modal avec les données reçues
+                        $('#editId').val(response.id);
+                        $('#editService').val(response.service);
+                        $('#editZone').val(response.zone);
+                        $('#editRef').val(response.ref);
+                        $('#editEquip').val(response.equip);
+                    }
+                });
+            });
 
+            // Gérer la soumission du formulaire
+            $('#editForm').submit(function(event) {
+                event.preventDefault();
+                var idsd = $("#editId").val();
+                $.ajax({
+                    url: `modifier_service.php?id=${idsd}`,
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        // console.log("modifier : " + data)
+                        console.log(response)
+                        $('#editModal').modal('hide');
+                        location.reload()
+                        // alert('Service mis à jour avec succès !');
+                    }
+                });
+            });
+        } , 1000)
+    });
 
 </script>
 

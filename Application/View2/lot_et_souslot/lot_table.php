@@ -10,8 +10,18 @@ if (!$result) {
     die('Erreur de requête : ' . mysqli_error($conn));
 }
 ?>
-<table class="table-bordered table table-striped table-hover">
-    <thead>
+
+<style>
+    .tbody1{
+        position: sticky;
+        top: 0;
+        left: 0;
+    }
+</style>
+
+
+<table class="table-bordered table table-striped table-hover sheetjs">
+    <thead class="tbody1">
     <tr>
         <th style="min-width: 100px; padding: 5px">ID Lot</th>
         <th style="min-width: 100px; padding: 5px">Lot</th>
